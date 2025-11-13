@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://img.youtube.com data:; connect-src 'self';"
+    />
+    <title>CCNA Modules</title>
+    <style>
+      /* Inline loading screen for instant display */
+      #initial-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      }
+      #initial-loader .content {
+        text-align: center;
+        color: white;
+      }
+      #initial-loader .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <!-- Initial loading screen (removed when React loads) -->
+      <div id="initial-loader">
+        <div class="content">
+          <h1 style="font-size: 32px; margin-bottom: 20px">CCNA 200-301 Course</h1>
+          <div class="spinner"></div>
+          <p style="font-size: 16px; opacity: 0.9">Loading modules...</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
