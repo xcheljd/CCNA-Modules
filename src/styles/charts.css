@@ -1,0 +1,277 @@
+/* ============================================================================
+   CHARTS.CSS - Consolidated chart-related styles
+   ============================================================================
+
+   Contains styles from:
+   - PerformanceCharts.css (152 lines)
+   - ActivityHeatmap.css (108 lines)
+
+   Total: 260 lines consolidated
+   ============================================================================ */
+
+/* ============================================================================
+   PERFORMANCE CHARTS SECTION
+   ============================================================================ */
+
+/* Chart Container with Background and Border */
+.chart-container {
+  background: var(--color-chart-background);
+  border: 2px solid var(--color-chart-border);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 8px 0;
+}
+
+.performance-charts {
+  margin-top: 24px;
+}
+
+/* Chart Controls */
+.chart-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.time-range-buttons {
+  display: flex;
+  gap: 8px;
+  background: hsl(var(--muted));
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.range-btn {
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: hsl(var(--muted-foreground));
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.range-btn:hover {
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--primary) / 0.3);
+  transform: scale(1.05);
+}
+
+.range-btn.active {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-color: hsl(var(--primary));
+  box-shadow:
+    0 2px 6px hsl(var(--primary) / 0.3),
+    inset 0 1px 0 hsl(var(--primary-foreground) / 0.1);
+}
+
+.completion-prediction {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: hsl(var(--muted));
+  border-radius: 8px;
+  border: 1px solid hsl(var(--border));
+}
+
+.prediction-label {
+  font-size: 13px;
+  color: hsl(var(--foreground));
+  font-weight: 500;
+}
+
+.prediction-date {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-progress-complete);
+}
+
+/* Charts Grid */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 24px;
+}
+
+.chart-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chart-card h3 {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.chart-description {
+  margin: 0 0 16px 0;
+  font-size: 13px;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ============================================================================
+   ACTIVITY HEATMAP SECTION
+   ============================================================================ */
+
+.activity-heatmap {
+  padding: 16px;
+}
+
+.heatmap-container {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.heatmap-week {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.heatmap-cell {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.15);
+  border-color: hsl(var(--primary));
+  z-index: 10;
+}
+
+.cell-count {
+  font-size: 13px;
+  font-weight: 900;
+  color: hsl(var(--foreground));
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.8),
+    0 0 2px rgba(0, 0, 0, 0.6);
+  position: relative;
+  z-index: 10;
+}
+
+/* Intensity levels */
+.intensity-0 {
+  background: hsl(var(--muted));
+}
+
+.intensity-0 .cell-count {
+  display: none;
+}
+
+.intensity-1 {
+  background: var(--color-progress-low);
+}
+
+.intensity-2 {
+  background: var(--color-progress-medium);
+}
+
+.intensity-3 {
+  background: var(--color-progress-complete);
+}
+
+.intensity-4 {
+  background: var(--color-progress-complete);
+  border: 2px solid hsl(var(--primary));
+}
+
+/* Legend */
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.legend-label {
+  font-size: 11px;
+  color: hsl(var(--muted-foreground));
+}
+
+.legend-cells {
+  display: flex;
+  gap: 3px;
+}
+
+.legend-cell {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+}
+
+/* ============================================================================
+   DARK MODE OVERRIDES
+   ============================================================================ */
+
+/* Theme-specific styles removed - now uses CSS variables */
+
+/* Theme-specific styles removed - now uses CSS variables */
+
+/* ============================================================================
+   RESPONSIVE BREAKPOINTS
+   ============================================================================ */
+
+@media (max-width: 1200px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Performance Charts - Mobile */
+  .chart-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .time-range-buttons {
+    justify-content: center;
+  }
+
+  .completion-prediction {
+    justify-content: center;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .chart-card {
+    padding: 16px;
+  }
+
+  /* Activity Heatmap - Mobile */
+  .heatmap-cell {
+    width: 24px;
+    height: 24px;
+  }
+
+  .cell-count {
+    font-size: 9px;
+  }
+}

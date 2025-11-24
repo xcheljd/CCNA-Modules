@@ -1,13 +1,11 @@
 import React from 'react';
-import '../styles/VideoCard.css';
+import '../styles/modules.css';
 
 function VideoCard({ video, moduleId, isCompleted, onMarkComplete }) {
   const openVideoWindow = async () => {
     try {
       const result = await window.electronAPI.openVideoWindow(video.id, moduleId);
-      if (result.success) {
-        console.log('Video window opened:', result.windowId);
-      } else {
+      if (!result.success) {
         console.error('Failed to open video window:', result.error);
       }
     } catch (error) {

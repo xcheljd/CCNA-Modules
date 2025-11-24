@@ -1,13 +1,13 @@
 import React from 'react';
-import '../styles/ConfidenceRating.css';
+import '../styles/modules.css';
 
 function ConfidenceRating({ moduleId, confidence, onRate, compact = false }) {
   const ratings = [
-    { value: 1, label: 'Need Review', emoji: '😰', color: '#f44336' },
-    { value: 2, label: 'Unsure', emoji: '😕', color: '#ff9800' },
-    { value: 3, label: 'Okay', emoji: '😐', color: '#ffc107' },
-    { value: 4, label: 'Confident', emoji: '😊', color: '#4caf50' },
-    { value: 5, label: 'Mastered', emoji: '🎯', color: '#2196f3' },
+    { value: 1, label: 'Need Review', emoji: '😰', color: 'var(--color-confidence-low)' },
+    { value: 2, label: 'Unsure', emoji: '😕', color: 'var(--color-confidence-medium)' },
+    { value: 3, label: 'Okay', emoji: '😐', color: 'var(--color-confidence-okay)' },
+    { value: 4, label: 'Confident', emoji: '😊', color: 'var(--color-confidence-high)' },
+    { value: 5, label: 'Mastered', emoji: '🎯', color: 'var(--color-confidence-mastered)' },
   ];
 
   if (compact) {
@@ -29,24 +29,20 @@ function ConfidenceRating({ moduleId, confidence, onRate, compact = false }) {
       <div className="confidence-header">
         <h4>How confident are you with this module?</h4>
         {confidence > 0 && (
-          <button
-            className="clear-confidence"
-            onClick={() => onRate(0)}
-            title="Clear rating"
-          >
+          <button className="clear-confidence" onClick={() => onRate(0)} title="Clear rating">
             Clear
           </button>
         )}
       </div>
 
       <div className="confidence-options">
-        {ratings.map((rating) => (
+        {ratings.map(rating => (
           <button
             key={rating.value}
             className={`confidence-option ${confidence === rating.value ? 'selected' : ''}`}
             onClick={() => onRate(rating.value)}
             style={{
-              borderColor: confidence === rating.value ? rating.color : '#e0e0e0',
+              borderColor: confidence === rating.value ? rating.color : 'hsl(var(--border))',
               backgroundColor: confidence === rating.value ? `${rating.color}15` : 'transparent',
             }}
           >

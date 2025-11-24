@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import ModuleList from './components/ModuleList';
 import ModuleDetail from './components/ModuleDetail';
+import Dashboard from './components/Dashboard';
+import Settings from './components/Settings';
 import LoadingScreen from './components/LoadingScreen';
+import { LayoutDashboard, List } from 'lucide-react';
 import modules from './data/modules';
 import ProgressTracker from './utils/progressTracker';
-import './styles/App.css';
+import ActivityTracker from './utils/activityTracker';
+import themes from './utils/themes';
 
-const { ipcRenderer } = window.require ? window.require('electron') : { ipcRenderer: null };
+const { electronAPI } = window;
 
 function App() {
   const [currentView, setCurrentView] = useState('list');
@@ -14,18 +18,26 @@ function App() {
   const [resourcesAvailable, setResourcesAvailable] = useState(true);
   const [overallProgress, setOverallProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(() => {
-    // Load dark mode preference from localStorage
-    const saved = localStorage.getItem('darkMode');
-    return saved ? JSON.parse(saved) : false;
+  const [currentTheme, setCurrentTheme] = useState(() => {
+    // Load theme preference from localStorage
+    const saved = localStorage.getItem('app-theme');
+    return saved || 'light';
   });
   const [menuOpen, setMenuOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
+    // Force width on mount before anything else
+    document.documentElement.style.width = '100%';
+    document.body.style.width = '100%';
+
     // Simulate loading time and initialize app
     const initializeApp = async () => {
       await checkResources();
       calculateOverallProgress();
+
+      // Initialize all tracking systems (streak, performance snapshots)
+      ActivityTracker.initializeTracking(modules);
 
       // Minimum loading time to show the screen
       setTimeout(() => {
@@ -37,22 +49,73 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Apply dark mode class to body and save preference
-    if (darkMode) {
-      document.body.classList.add('dark-mode');
-    } else {
-      document.body.classList.remove('dark-mode');
-    }
-    localStorage.setItem('darkMode', JSON.stringify(darkMode));
-  }, [darkMode]);
+    // Apply theme colors and class
+    const theme = themes[currentTheme];
+    if (theme) {
+      try {
+        // Apply CSS custom properties; normalize camelCase keys to kebab-case CSS vars
+        Object.entries(theme.colors).forEach(([property, value]) => {
+          if (value && typeof value === 'string') {
+            const cssVarName = property.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`);
+            document.documentElement.style.setProperty(`--${cssVarName}`, value);
+          }
+        });
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
+        // Apply theme class for additional styling (append, don't replace)
+        document.body.classList.remove(
+          'theme-light',
+          'theme-dark',
+          'theme-ocean',
+          'theme-neon',
+          'theme-dracula',
+          'theme-nord',
+          'theme-rose-pine',
+          'theme-mocha',
+          'theme-gruvbox-dark',
+          'theme-gruvbox-light',
+          'theme-spacegray',
+          'theme-spacegray-light',
+          'theme-spacegray-eighties',
+          'theme-spacegray-oceanic'
+        );
+        // Convert camelCase theme ID to kebab-case for CSS class
+        const themeClass = `theme-${currentTheme.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`)}`;
+        document.body.classList.add(themeClass);
+
+        // Ensure html/body/app maintain width during theme switch
+        document.documentElement.style.width = '100%';
+        document.body.style.width = '100%';
+        const appEl = document.querySelector('.app');
+        if (appEl) {
+          appEl.style.width = '100%';
+        }
+
+        // Save theme preference
+        localStorage.setItem('app-theme', currentTheme);
+      } catch (error) {
+        console.error('Error applying theme:', error);
+        // Fallback to light theme
+        document.body.classList.remove('theme-dark', 'theme-ocean', 'theme-neon', 'theme-dracula');
+        document.body.classList.add('theme-light');
+      }
+    } else {
+      console.error('Theme not found:', currentTheme);
+    }
+  }, [currentTheme]);
+
+  // Listen for theme changes from settings
+  useEffect(() => {
+    const handleThemeChange = event => {
+      setCurrentTheme(event.detail);
+    };
+
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
 
   const checkResources = async () => {
-    if (ipcRenderer) {
-      const result = await ipcRenderer.invoke('check-resources-folder');
+    if (electronAPI) {
+      const result = await electronAPI.checkResourcesFolder();
       setResourcesAvailable(result.exists);
     }
   };
@@ -74,12 +137,12 @@ function App() {
   };
 
   const handleOpenResource = async (type, filename) => {
-    if (!ipcRenderer) {
+    if (!electronAPI) {
       alert('File opening is only available in the desktop app');
       return;
     }
 
-    const result = await ipcRenderer.invoke('open-resource', filename);
+    const result = await electronAPI.openResource(filename);
 
     if (!result.success) {
       alert(
@@ -102,63 +165,6 @@ function App() {
     setMenuOpen(!menuOpen);
   };
 
-  const handleExportProgress = () => {
-    const progressData = localStorage.getItem('ccna-progress');
-    const darkModeData = localStorage.getItem('darkMode');
-    const exportData = {
-      progress: progressData ? JSON.parse(progressData) : {},
-      darkMode: darkModeData ? JSON.parse(darkModeData) : false,
-      exportDate: new Date().toISOString()
-    };
-
-    const dataStr = JSON.stringify(exportData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `ccna-progress-${new Date().toISOString().split('T')[0]}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
-    setMenuOpen(false);
-  };
-
-  const handleImportProgress = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/json';
-    input.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          try {
-            const importData = JSON.parse(event.target.result);
-            if (importData.progress) {
-              localStorage.setItem('ccna-progress', JSON.stringify(importData.progress));
-            }
-            if (importData.darkMode !== undefined) {
-              localStorage.setItem('darkMode', JSON.stringify(importData.darkMode));
-              setDarkMode(importData.darkMode);
-            }
-            calculateOverallProgress();
-            alert('Progress imported successfully!');
-            setMenuOpen(false);
-          } catch (error) {
-            alert('Error importing progress: Invalid file format');
-          }
-        };
-        reader.readAsText(file);
-      }
-    };
-    input.click();
-  };
-
-  const handleSaveProgress = () => {
-    // Progress is automatically saved to localStorage, just show confirmation
-    alert('Progress is automatically saved! Use Export to create a backup file.');
-    setMenuOpen(false);
-  };
-
   // Show loading screen while app initializes
   if (isLoading) {
     return <LoadingScreen />;
@@ -173,23 +179,40 @@ function App() {
             <span></span>
             <span></span>
           </button>
-          <h1>CCNA 200-301 Course</h1>
+          
+          <div className="header-title-group">
+            <h1>CCNA 200-301 Course</h1>
+            <div className="view-toggle">
+              <button
+                className={`view-toggle-btn ${currentView === 'dashboard' ? 'active' : ''}`}
+                onClick={() => setCurrentView('dashboard')}
+                aria-label="Dashboard view"
+              >
+                <LayoutDashboard size={20} />
+              </button>
+              <button
+                className={`view-toggle-btn ${currentView === 'list' ? 'active' : ''}`}
+                onClick={() => setCurrentView('list')}
+                aria-label="Modules view"
+              >
+                <List size={20} />
+              </button>
+            </div>
+          </div>
+
           <div className="header-right">
             <div className="header-stats">
               <span>Overall Progress: {Math.round(overallProgress)}%</span>
               <div className="progress-bar-small">
-                <div className="progress-fill-small" style={{ width: `${overallProgress}%` }} />
+                <div
+                  className="progress-fill-small"
+                  style={{
+                    width: `${overallProgress}%`,
+                    background: overallProgress === 100 ? 'var(--color-progress-complete)' : undefined
+                  }}
+                />
               </div>
             </div>
-            <label className="dark-mode-switch">
-              <input
-                type="checkbox"
-                checked={darkMode}
-                onChange={toggleDarkMode}
-                aria-label="Toggle dark mode"
-              />
-              <span className="slider"></span>
-            </label>
           </div>
         </div>
 
@@ -197,29 +220,65 @@ function App() {
           <>
             <div className="menu-overlay" onClick={toggleMenu}></div>
             <div className="dropdown-menu">
-              <button onClick={handleSaveProgress} className="menu-item">
-                <svg className="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                  <polyline points="17 21 17 13 7 13 7 21" />
-                  <polyline points="7 3 7 8 15 8" />
+              <button
+                onClick={() => {
+                  setCurrentView('dashboard');
+                  setMenuOpen(false);
+                }}
+                className="menu-item"
+              >
+                <svg
+                  className="menu-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <rect x="3" y="3" width="7" height="7" />
+                  <rect x="14" y="3" width="7" height="7" />
+                  <rect x="14" y="14" width="7" height="7" />
+                  <rect x="3" y="14" width="7" height="7" />
                 </svg>
-                Save Progress
+                Dashboard
               </button>
-              <button onClick={handleExportProgress} className="menu-item">
-                <svg className="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
+              <button
+                onClick={() => {
+                  setCurrentView('list');
+                  setMenuOpen(false);
+                }}
+                className="menu-item"
+              >
+                <svg
+                  className="menu-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <rect x="3" y="3" width="18" height="4" />
+                  <rect x="3" y="10" width="18" height="4" />
+                  <rect x="3" y="17" width="18" height="4" />
                 </svg>
-                Export Progress
+                All Modules
               </button>
-              <button onClick={handleImportProgress} className="menu-item">
-                <svg className="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" y1="3" x2="12" y2="15" />
+              <button
+                onClick={() => {
+                  setSettingsOpen(true);
+                  setMenuOpen(false);
+                }}
+                className="menu-item"
+              >
+                <svg
+                  className="menu-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+                  <circle cx="12" cy="12" r="3" />
                 </svg>
-                Import Progress
+                Settings
               </button>
             </div>
           </>
@@ -240,6 +299,10 @@ function App() {
       )}
 
       <main className="app-content">
+        {currentView === 'dashboard' && (
+          <Dashboard modules={modules} onModuleSelect={handleModuleSelect} />
+        )}
+
         {currentView === 'list' && (
           <>
             {ProgressTracker.getLastWatchedVideo() && (
@@ -262,6 +325,8 @@ function App() {
             onModuleSelect={handleModuleSelect}
           />
         )}
+
+        <Settings open={settingsOpen} onOpenChange={setSettingsOpen} />
       </main>
     </div>
   );

@@ -1,5 +1,20 @@
 // Progress tracking utilities using localStorage
 
+export const PROGRESS_KEY_PREFIXES = [
+  'video_',
+  'lab_',
+  'flashcards_',
+  'confidence_',
+  'last_watched',
+  'study-streak',
+  'learning-goals',
+  'performance-data',
+];
+
+export function isProgressKey(key) {
+  return PROGRESS_KEY_PREFIXES.some(prefix => key.startsWith(prefix));
+}
+
 export const ProgressTracker = {
   // Video progress
   saveVideoProgress(moduleId, videoId, timestamp) {
@@ -13,6 +28,10 @@ export const ProgressTracker = {
 
   markVideoComplete(moduleId, videoId) {
     localStorage.setItem(`video_${moduleId}_${videoId}_completed`, 'true');
+  },
+
+  unmarkVideoComplete(moduleId, videoId) {
+    localStorage.removeItem(`video_${moduleId}_${videoId}_completed`);
   },
 
   isVideoComplete(moduleId, videoId) {
@@ -30,6 +49,10 @@ export const ProgressTracker = {
     localStorage.setItem(`lab_${moduleId}_completed`, 'true');
   },
 
+  unmarkLabComplete(moduleId) {
+    localStorage.removeItem(`lab_${moduleId}_completed`);
+  },
+
   isLabComplete(moduleId) {
     return localStorage.getItem(`lab_${moduleId}_completed`) === 'true';
   },
@@ -37,6 +60,10 @@ export const ProgressTracker = {
   // Flashcard progress
   markFlashcardsAdded(moduleId) {
     localStorage.setItem(`flashcards_${moduleId}_added`, 'true');
+  },
+
+  unmarkFlashcardsAdded(moduleId) {
+    localStorage.removeItem(`flashcards_${moduleId}_added`);
   },
 
   areFlashcardsAdded(moduleId) {
@@ -101,12 +128,14 @@ export const ProgressTracker = {
     );
   },
 
-  // Export all progress data
+  // Export all progress-related data (without settings or UI-only keys)
   exportProgress() {
     const data = {};
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      data[key] = localStorage.getItem(key);
+      if (isProgressKey(key)) {
+        data[key] = localStorage.getItem(key);
+      }
     }
     return data;
   },
@@ -118,9 +147,18 @@ export const ProgressTracker = {
     });
   },
 
-  // Clear all progress
+  // Clear all progress-related data while preserving app settings & theme
   clearAllProgress() {
-    localStorage.clear();
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (isProgressKey(key)) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(key => {
+      localStorage.removeItem(key);
+    });
   },
 
   // Confidence rating (1-5 scale)
@@ -147,8 +185,90 @@ export const ProgressTracker = {
       const confidence = this.getModuleConfidence(module.id);
       const progress = this.getModuleProgress(module);
       // Need review if: completed but low confidence (1-2) or in progress with low confidence
-      return (progress > 0 && confidence > 0 && confidence <= 2);
+      return progress > 0 && confidence > 0 && confidence <= 2;
     });
+  },
+
+  // Get module statistics - used by performance and goal trackers
+  getModuleStatistics(modules) {
+    let completedModules = 0;
+    let completedVideos = 0;
+    let completedLabs = 0;
+    let addedFlashcards = 0;
+    let totalConfidence = 0;
+    let ratedModules = 0;
+    let totalVideos = 0;
+    let totalLabs = 0;
+    let totalFlashcards = 0;
+
+    modules.forEach(module => {
+      // Count completed modules
+      if (this.getModuleProgress(module) === 100) {
+        completedModules++;
+      }
+
+      // Count completed videos and total videos
+      if (module.videos) {
+        totalVideos += module.videos.length;
+        module.videos.forEach(video => {
+          if (this.isVideoComplete(module.id, video.id)) {
+            completedVideos++;
+          }
+        });
+      }
+
+      // Count completed labs and total labs
+      if (module.resources?.lab) {
+        totalLabs++;
+        if (this.isLabComplete(module.id)) {
+          completedLabs++;
+        }
+      }
+
+      // Count added flashcards and total flashcards
+      if (module.resources?.flashcards) {
+        totalFlashcards++;
+        if (this.areFlashcardsAdded(module.id)) {
+          addedFlashcards++;
+        }
+      }
+
+      // Calculate average confidence
+      const confidence = this.getModuleConfidence(module.id);
+      if (confidence > 0) {
+        totalConfidence += confidence;
+        ratedModules++;
+      }
+    });
+
+    return {
+      totalModules: modules.length,
+      completedModules,
+      totalVideos,
+      completedVideos,
+      totalLabs,
+      completedLabs,
+      totalFlashcards,
+      addedFlashcards,
+      avgConfidence: ratedModules > 0 ? totalConfidence / ratedModules : 0,
+    };
+  },
+
+  // Get last watched module with its details
+  getLastWatchedModule(modules) {
+    const lastWatched = this.getLastWatchedVideo();
+    if (!lastWatched) return null;
+
+    const module = modules.find(m => m.id === lastWatched.moduleId);
+    if (!module) return null;
+
+    const video = module.videos?.find(v => v.id === lastWatched.videoId);
+
+    return {
+      module,
+      video,
+      timestamp: lastWatched.timestamp,
+    };
   },
 };
 

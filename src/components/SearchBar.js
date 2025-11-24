@@ -1,7 +1,14 @@
 import React from 'react';
-import '../styles/SearchBar.css';
+import '../styles/modules.css';
 
-function SearchBar({ searchQuery, onSearchChange, filterStatus, onFilterChange, filterConfidence, onConfidenceFilterChange }) {
+function SearchBar({
+  searchQuery,
+  onSearchChange,
+  filterStatus,
+  onFilterChange,
+  filterConfidence,
+  onConfidenceFilterChange,
+}) {
   return (
     <div className="search-filter-container">
       <div className="search-input-wrapper">
@@ -23,7 +30,11 @@ function SearchBar({ searchQuery, onSearchChange, filterStatus, onFilterChange, 
           onChange={e => onSearchChange(e.target.value)}
         />
         {searchQuery && (
-          <button className="clear-search" onClick={() => onSearchChange('')} aria-label="Clear search">
+          <button
+            className="clear-search"
+            onClick={() => onSearchChange('')}
+            aria-label="Clear search"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />

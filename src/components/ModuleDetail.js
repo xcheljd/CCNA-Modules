@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import VideoCard from './VideoCard';
 import ConfidenceRating from './ConfidenceRating';
 import ProgressTracker from '../utils/progressTracker';
-import '../styles/ModuleDetail.css';
+import ActivityTracker from '../utils/activityTracker';
+import '../styles/modules.css';
 
 function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect }) {
   const [labCompleted, setLabCompleted] = useState(false);
@@ -20,7 +21,7 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
       setAnimationClass('slide-right');
       setTimeout(() => {
         onModuleSelect(nextModule);
-      }, 50);
+      }, 300);
     }
   };
 
@@ -29,7 +30,7 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
       setAnimationClass('slide-left');
       setTimeout(() => {
         onModuleSelect(prevModule);
-      }, 50);
+      }, 300);
     }
   };
 
@@ -51,29 +52,37 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
   }, [module]);
 
   const handleVideoComplete = (moduleId, videoId, isComplete) => {
-    if (isComplete) {
-      ProgressTracker.markVideoComplete(moduleId, videoId);
-    }
+    // Use ActivityTracker to coordinate all tracking systems
+    ActivityTracker.recordVideoCompletion(moduleId, videoId, isComplete, modules);
     setVideoCompletions(prev => ({ ...prev, [videoId]: isComplete }));
   };
 
   const handleLabToggle = () => {
-    if (!labCompleted) {
-      ProgressTracker.markLabComplete(module.id);
-      setLabCompleted(true);
-    }
+    const newState = !labCompleted;
+    // Use ActivityTracker to coordinate all tracking systems
+    ActivityTracker.recordLabCompletion(module.id, newState, modules);
+    setLabCompleted(newState);
   };
 
   const handleFlashcardsToggle = () => {
-    if (!flashcardsAdded) {
-      ProgressTracker.markFlashcardsAdded(module.id);
-      setFlashcardsAdded(true);
-    }
+    const newState = !flashcardsAdded;
+    // Use ActivityTracker to coordinate all tracking systems
+    ActivityTracker.recordFlashcardsAdded(module.id, newState, modules);
+    setFlashcardsAdded(newState);
   };
 
   const handleOpenLab = () => {
     if (module.resources && module.resources.lab) {
       onOpenResource('lab', module.resources.lab);
+    }
+  };
+
+  const handleOpenAnki = () => {
+    // Just open Anki application without a specific file
+    if (window.electronAPI && window.electronAPI.openAnki) {
+      window.electronAPI.openAnki();
+    } else {
+      alert('Opening Anki requires the desktop app. Please install Anki separately.');
     }
   };
 
@@ -83,12 +92,15 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
     }
   };
 
-  const handleConfidenceChange = (newConfidence) => {
-    if (newConfidence === 0) {
-      ProgressTracker.clearModuleConfidence(module.id);
-    } else {
-      ProgressTracker.setModuleConfidence(module.id, newConfidence);
+  const handleOpenSpreadsheet = () => {
+    if (module.resources && module.resources.spreadsheet) {
+      onOpenResource('spreadsheet', module.resources.spreadsheet);
     }
+  };
+
+  const handleConfidenceChange = newConfidence => {
+    // Use ActivityTracker to coordinate all tracking systems
+    ActivityTracker.recordConfidenceRating(module.id, newConfidence, modules);
     setConfidence(newConfidence);
   };
 
@@ -97,17 +109,17 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
       <div className="detail-header">
         <div className="header-navigation">
           <button onClick={onBack} className="back-button">
-            ← Back to Modules
+            Back to Modules
           </button>
           <div className="module-navigation">
             {prevModule && (
               <button onClick={handlePrevModule} className="prev-button">
-                ← Previous
+                Previous
               </button>
             )}
             {nextModule && (
               <button onClick={handleNextModule} className="next-button">
-                Next →
+                Next
               </button>
             )}
           </div>
@@ -159,9 +171,17 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
                 <h4>Anki Flashcards</h4>
                 <p>{module.resources.flashcards}</p>
               </div>
-              <button onClick={handleOpenFlashcards} className="open-button">
-                Open Flashcards
-              </button>
+              <div className="resource-buttons">
+                <button onClick={handleOpenAnki} className="open-button">
+                  Open Anki
+                </button>
+                <button
+                  onClick={handleOpenFlashcards}
+                  className={`open-button add-flashcards-btn ${flashcardsAdded ? 'added' : ''}`}
+                >
+                  {flashcardsAdded ? '✓ Added to Deck' : 'Add Flashcards'}
+                </button>
+              </div>
               <label className="checkbox-label">
                 <input
                   type="checkbox"
@@ -173,9 +193,23 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
             </div>
           )}
 
-          {!module.resources.lab && !module.resources.flashcards && (
-            <p className="no-resources">No resources available for this module.</p>
+          {module.resources.spreadsheet && (
+            <div className="resource-item">
+              <div className="resource-info">
+                <h4>Excel Spreadsheet</h4>
+                <p>{module.resources.spreadsheet}</p>
+              </div>
+              <button onClick={handleOpenSpreadsheet} className="open-button spreadsheet-button">
+                Open Spreadsheet
+              </button>
+            </div>
           )}
+
+          {!module.resources.lab &&
+            !module.resources.flashcards &&
+            !module.resources.spreadsheet && (
+              <p className="no-resources">No resources available for this module.</p>
+            )}
 
           <ConfidenceRating
             moduleId={module.id}

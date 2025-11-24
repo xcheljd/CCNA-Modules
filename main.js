@@ -8,6 +8,37 @@ app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
 let mainWindow;
 const videoWindows = new Map();
 
+// Config file for storing custom resources path
+const configPath = path.join(app.getPath('userData'), 'config.json');
+
+// Load config from file
+function loadConfig() {
+  try {
+    if (fs.existsSync(configPath)) {
+      const data = fs.readFileSync(configPath, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Error loading config:', error);
+  }
+  return {};
+}
+
+// Save config to file
+function saveConfig(config) {
+  try {
+    const dir = path.dirname(configPath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
+    return true;
+  } catch (error) {
+    console.error('Error saving config:', error);
+    return false;
+  }
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
@@ -32,8 +63,16 @@ function createWindow() {
   }
 }
 
-// Get resources folder path (in development, it's in project root)
+// Get resources folder path (checks custom path first, then defaults)
 function getResourcesPath() {
+  const config = loadConfig();
+
+  // If custom path is set and valid, use it
+  if (config.customResourcesPath) {
+    return config.customResourcesPath;
+  }
+
+  // Otherwise use default path
   const isDev = !app.isPackaged;
   if (isDev) {
     // In development, use project directory
@@ -66,6 +105,32 @@ ipcMain.handle('get-resources-files', async () => {
   }
 });
 
+// Open Anki application (without a specific file)
+ipcMain.handle('open-anki', async () => {
+  try {
+    // Platform-specific Anki application paths/commands
+    const platform = process.platform;
+    let ankiPath;
+
+    if (platform === 'darwin') {
+      // macOS
+      ankiPath = '/Applications/Anki.app';
+    } else if (platform === 'win32') {
+      // Windows - try common installation paths
+      const programFiles = process.env['ProgramFiles'] || 'C:\\Program Files';
+      ankiPath = path.join(programFiles, 'Anki', 'anki.exe');
+    } else {
+      // Linux - use command
+      ankiPath = 'anki';
+    }
+
+    await shell.openPath(ankiPath);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
 // Open resource file in external application
 ipcMain.handle('open-resource', async (event, filename) => {
   const resourcesPath = getResourcesPath();
@@ -83,6 +148,35 @@ ipcMain.handle('open-resource', async (event, filename) => {
   }
 });
 
+// Get resources folder information
+ipcMain.handle('get-resources-info', async () => {
+  const config = loadConfig();
+  const customPath = config.customResourcesPath || null;
+
+  // Get default path (without custom path applied)
+  const isDev = !app.isPackaged;
+  const defaultPath = isDev
+    ? path.join(__dirname, 'resources')
+    : path.join(process.resourcesPath, 'resources');
+
+  const currentPath = customPath || defaultPath;
+
+  let exists = false;
+  try {
+    await fs.promises.access(currentPath);
+    exists = true;
+  } catch {
+    exists = false;
+  }
+
+  return {
+    currentPath,
+    customPath,
+    exists,
+    isCustom: customPath !== null,
+  };
+});
+
 // Show dialog to select resources folder
 ipcMain.handle('select-resources-folder', async () => {
   const result = await dialog.showOpenDialog(mainWindow, {
@@ -92,10 +186,65 @@ ipcMain.handle('select-resources-folder', async () => {
   });
 
   if (!result.canceled && result.filePaths.length > 0) {
-    return { success: true, path: result.filePaths[0] };
+    const selectedPath = result.filePaths[0];
+
+    // Save custom path to config
+    const config = loadConfig();
+    config.customResourcesPath = selectedPath;
+
+    if (saveConfig(config)) {
+      return { success: true, path: selectedPath };
+    } else {
+      return { success: false, error: 'Failed to save custom path' };
+    }
   }
 
   return { success: false };
+});
+
+// Reset to default resources path
+ipcMain.handle('reset-resources-path', async () => {
+  try {
+    // Load config and remove custom path
+    const config = loadConfig();
+    delete config.customResourcesPath;
+
+    // Save updated config
+    if (saveConfig(config)) {
+      return { success: true };
+    } else {
+      return { success: false, error: 'Failed to save config' };
+    }
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
+// Export progress backup to a user-selected file
+ipcMain.handle('export-progress-backup', async (event, exportData) => {
+  try {
+    const dateStr = new Date().toISOString().split('T')[0];
+    const defaultPath = path.join(app.getPath('documents'), `ccna-backup-${dateStr}.json`);
+
+    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+      title: 'Save Progress Backup',
+      defaultPath,
+      buttonLabel: 'Save Backup',
+      filters: [{ name: 'JSON Files', extensions: ['json'] }],
+    });
+
+    if (canceled || !filePath) {
+      return { success: false, canceled: true };
+    }
+
+    const dataStr = JSON.stringify(exportData, null, 2);
+    await fs.promises.writeFile(filePath, dataStr, 'utf8');
+
+    return { success: true, filePath };
+  } catch (error) {
+    console.error('Error exporting progress backup:', error);
+    return { success: false, error: error.message };
+  }
 });
 
 // Open video in separate window
