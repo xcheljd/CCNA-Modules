@@ -1,6 +1,6 @@
 import React from 'react';
 
-function LoadingScreen() {
+function LoadingScreen({ status = 'Loading...', progress = 0 }) {
   return (
     <div className="loading-screen">
       <div className="loading-content">
@@ -17,7 +17,13 @@ function LoadingScreen() {
         <div className="loading-spinner">
           <div className="spinner"></div>
         </div>
-        <p>Loading modules...</p>
+        <p className="loading-status">{status}</p>
+        <div className="loading-progress">
+          <div className="progress-bar">
+            <div className="progress-fill" style={{ width: `${progress}%` }} />
+          </div>
+          <span className="progress-text">{Math.round(progress)}%</span>
+        </div>
       </div>
     </div>
   );

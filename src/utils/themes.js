@@ -657,63 +657,7 @@ export const themes = {
       colorConfidenceTextOnHigh: '#000',
     },
   },
-  spacegrayEighties: {
-    name: 'Spacegray Eighties',
-    icon: '🕹️',
-    description: 'Retro 80s-inspired dark theme with warm, vibrant colors',
-    colors: {
-      // Primary: Base0D Blue (#6699CC) - HSL: 210, 50%, 60%
-      primary: '210 50% 60%',
-      primaryForeground: '0 0% 98%',
-      // Background: base00 (#2D2D2D) - HSL: 0, 0%, 18%
-      background: '0 0% 18%',
-      // Foreground: base05 (#D3D0C8) - HSL: 40, 15%, 81%
-      foreground: '40 15% 81%',
-      // Card: base01 (#393939) - HSL: 0, 0%, 22%
-      card: '0 0% 22%',
-      cardForeground: '40 15% 81%',
-      // Secondary: base02 (#515151) - HSL: 0, 0%, 32%
-      secondary: '0 0% 32%',
-      secondaryForeground: '40 15% 81%',
-      // Muted: base03 (#747369) - HSL: 46, 3%, 44%
-      muted: '46 3% 44%',
-      // Muted foreground: base04 (#A09F93) - HSL: 48, 8%, 60%
-      mutedForeground: '48 8% 60%',
-      // Accent: Base0C Cyan (#66CCCC) - HSL: 180, 50%, 60%
-      accent: '180 50% 60%',
-      accentForeground: '0 0% 18%',
-      // Destructive: Base08 Red (#F2777A) - HSL: 358, 82%, 71%
-      destructive: '358 82% 71%',
-      destructiveForeground: '0 0% 98%',
-      // Border: base02
-      border: '0 0% 32%',
-      input: '0 0% 32%',
-      // Ring: Base0D
-      ring: '210 50% 60%',
-      radius: '0.5rem',
-      // Progress colors using Base16 Eighties
-      colorProgressEmpty: '#515151', // base02
-      colorProgressLow: '#FFCC66', // base0A yellow
-      colorProgressMedium: '#6699CC', // base0D blue
-      colorProgressComplete: '#99CC99', // base0B green
-      // Confidence colors using Base16 Eighties
-      colorConfidenceNone: '#515151', // base02
-      colorConfidenceLow: '#F2777A', // base08 red
-      colorConfidenceMedium: '#F99157', // base09 orange
-      colorConfidenceOkay: '#FFCC66', // base0A yellow
-      colorConfidenceHigh: '#99CC99', // base0B green
-      colorConfidenceMastered: '#6699CC', // base0D blue
-      colorChartBackground: '#2D2D2D', // base00
-      colorChartBorder: '#393939', // base01
-      // Text colors for displaying on colored backgrounds
-      colorProgressTextOnLow: '#000',
-      colorProgressTextOnMedium: '#000',
-      colorProgressTextOnComplete: '#000',
-      colorConfidenceTextOnLow: '#000',
-      colorConfidenceTextOnMedium: '#000',
-      colorConfidenceTextOnHigh: '#000',
-    },
-  },
+
   spacegrayOceanic: {
     name: 'Spacegray Oceanic',
     icon: '🌊',

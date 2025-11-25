@@ -28,4 +28,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   // Data export
   exportProgressBackup: exportData => ipcRenderer.invoke('export-progress-backup', exportData),
+
+  // External URL handling
+  openExternalUrl: url => ipcRenderer.invoke('open-external-url', url),
 });
