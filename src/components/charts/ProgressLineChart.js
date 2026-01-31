@@ -41,7 +41,14 @@ function ProgressLineChart({ data }) {
           <p style={{ margin: '0 0 4px 0', fontSize: '13px', fontWeight: '600' }}>
             {payload[0].payload.date}
           </p>
-          <p style={{ margin: 0, fontSize: '14px', color: 'hsl(var(--foreground))', fontWeight: 'bold' }}>
+          <p
+            style={{
+              margin: 0,
+              fontSize: '14px',
+              color: 'hsl(var(--foreground))',
+              fontWeight: 'bold',
+            }}
+          >
             Progress: {payload[0].value.toFixed(1)}%
           </p>
         </div>

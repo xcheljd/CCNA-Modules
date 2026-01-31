@@ -33,7 +33,14 @@ function VelocityBarChart({ data }) {
           <p style={{ margin: '0 0 4px 0', fontSize: '13px', fontWeight: '600' }}>
             Week of {payload[0].payload.week}
           </p>
-          <p style={{ margin: 0, fontSize: '14px', color: 'hsl(var(--foreground))', fontWeight: 'bold' }}>
+          <p
+            style={{
+              margin: 0,
+              fontSize: '14px',
+              color: 'hsl(var(--foreground))',
+              fontWeight: 'bold',
+            }}
+          >
             {payload[0].value} modules completed
           </p>
         </div>
@@ -47,7 +54,11 @@ function VelocityBarChart({ data }) {
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-          <XAxis dataKey="week" stroke="hsl(var(--muted-foreground))" style={{ fontSize: '12px' }} />
+          <XAxis
+            dataKey="week"
+            stroke="hsl(var(--muted-foreground))"
+            style={{ fontSize: '12px' }}
+          />
           <YAxis
             stroke="hsl(var(--muted-foreground))"
             style={{ fontSize: '12px' }}

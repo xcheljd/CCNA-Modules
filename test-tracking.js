@@ -25,7 +25,7 @@ console.log('Streak History:', afterStreak.streakHistory);
 
 // Test 2: Verify streak increases on different days
 const today = new Date().toISOString().split('T')[0];
-console.log('\nToday\'s date:', today);
+console.log("\nToday's date:", today);
 console.log('Last study date:', afterStreak.lastStudyDate);
 
 console.log('\n=== TEST COMPLETE ===');
