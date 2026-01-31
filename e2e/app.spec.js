@@ -108,15 +108,15 @@ test.describe('Settings Panel', () => {
   });
 
   test('should open settings panel', async ({ page }) => {
-    const settingsButton = page.locator('[aria-label="Settings"]');
-    await settingsButton.click();
+    await page.getByRole('button', { name: 'Toggle menu' }).click();
+    await page.getByRole('button', { name: 'Settings' }).click();
 
     await expect(page.locator('.settings-dialog')).toBeVisible();
   });
 
   test('should switch between setting tabs', async ({ page }) => {
-    const settingsButton = page.locator('[aria-label="Settings"]');
-    await settingsButton.click();
+    await page.getByRole('button', { name: 'Toggle menu' }).click();
+    await page.getByRole('button', { name: 'Settings' }).click();
 
     await expect(page.locator('.settings-tabs')).toBeVisible();
 
@@ -132,8 +132,8 @@ test.describe('Settings Panel', () => {
   });
 
   test('should close settings panel', async ({ page }) => {
-    const settingsButton = page.locator('[aria-label="Settings"]');
-    await settingsButton.click();
+    await page.getByRole('button', { name: 'Toggle menu' }).click();
+    await page.getByRole('button', { name: 'Settings' }).click();
 
     await expect(page.locator('.settings-dialog')).toBeVisible();
 
