@@ -19,7 +19,14 @@ function LoadingScreen({ status = 'Loading...', progress = 0 }) {
         </div>
         <p className="loading-status">{status}</p>
         <div className="loading-progress">
-          <div className="progress-bar">
+          <div
+            className="progress-bar"
+            role="progressbar"
+            aria-valuenow={Math.round(progress)}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Loading progress"
+          >
             <div className="progress-fill" style={{ width: `${progress}%` }} />
           </div>
           <span className="progress-text">{Math.round(progress)}%</span>
