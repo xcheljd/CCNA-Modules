@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import GoalTracker from '../utils/goalTracker';
 import GoalModal from './GoalModal';
 import '../styles/dashboard.css';
@@ -9,11 +9,7 @@ function GoalCard({ modules }) {
   const [showModal, setShowModal] = useState(false);
   const [successRate, setSuccessRate] = useState(0);
 
-  useEffect(() => {
-    loadGoalData();
-  }, [modules]);
-
-  const loadGoalData = () => {
+  const loadGoalData = useCallback(() => {
     const activeGoal = GoalTracker.getActiveGoal();
     if (activeGoal) {
       const updated = GoalTracker.updateGoalProgress(modules);
@@ -29,7 +25,11 @@ function GoalCard({ modules }) {
 
     const rate = GoalTracker.getSuccessRate();
     setSuccessRate(rate);
-  };
+  }, [modules]);
+
+  useEffect(() => {
+    loadGoalData();
+  }, [modules, loadGoalData]);
 
   const handleCreateGoal = goalData => {
     GoalTracker.createGoal(goalData.type, goalData.targets);
@@ -111,7 +111,13 @@ function GoalCard({ modules }) {
       <div className="goal-metrics goal-metrics-grid">
         {goal.target.modulesCompleted > 0 && (
           <div className="goal-metric-card">
-            <svg className="goal-metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              className="goal-metric-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <rect x="3" y="3" width="7" height="7" />
               <rect x="14" y="3" width="7" height="7" />
               <rect x="14" y="14" width="7" height="7" />
@@ -129,7 +135,10 @@ function GoalCard({ modules }) {
                   className="goal-metric-fill"
                   style={{
                     width: `${getProgressPercentage(goal.progress.modulesCompleted, goal.target.modulesCompleted)}%`,
-                    background: getProgressColor(goal.progress.modulesCompleted, goal.target.modulesCompleted),
+                    background: getProgressColor(
+                      goal.progress.modulesCompleted,
+                      goal.target.modulesCompleted
+                    ),
                   }}
                 />
               </div>
@@ -139,7 +148,13 @@ function GoalCard({ modules }) {
 
         {goal.target.videosWatched > 0 && (
           <div className="goal-metric-card">
-            <svg className="goal-metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              className="goal-metric-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <rect x="2" y="4" width="20" height="16" rx="4" ry="4" />
               <polygon points="10 8 16 12 10 16" fill="currentColor" stroke="none" />
             </svg>
@@ -155,7 +170,10 @@ function GoalCard({ modules }) {
                   className="goal-metric-fill"
                   style={{
                     width: `${getProgressPercentage(goal.progress.videosWatched, goal.target.videosWatched)}%`,
-                    background: getProgressColor(goal.progress.videosWatched, goal.target.videosWatched),
+                    background: getProgressColor(
+                      goal.progress.videosWatched,
+                      goal.target.videosWatched
+                    ),
                   }}
                 />
               </div>
@@ -165,7 +183,13 @@ function GoalCard({ modules }) {
 
         {goal.target.labsCompleted > 0 && (
           <div className="goal-metric-card">
-            <svg className="goal-metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              className="goal-metric-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <circle cx="12" cy="12" r="1" fill="currentColor" />
               <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-45 12 12)" />
               <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(45 12 12)" />
@@ -183,7 +207,10 @@ function GoalCard({ modules }) {
                   className="goal-metric-fill"
                   style={{
                     width: `${getProgressPercentage(goal.progress.labsCompleted, goal.target.labsCompleted)}%`,
-                    background: getProgressColor(goal.progress.labsCompleted, goal.target.labsCompleted),
+                    background: getProgressColor(
+                      goal.progress.labsCompleted,
+                      goal.target.labsCompleted
+                    ),
                   }}
                 />
               </div>
@@ -193,10 +220,32 @@ function GoalCard({ modules }) {
 
         {goal.target.flashcardsAdded > 0 && (
           <div className="goal-metric-card">
-            <svg className="goal-metric-icon" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2">
-              <rect x="2" y="4" width="12" height="16" rx="2" transform="rotate(-15 8 12)" fill="none" />
+            <svg
+              className="goal-metric-icon"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <rect
+                x="2"
+                y="4"
+                width="12"
+                height="16"
+                rx="2"
+                transform="rotate(-15 8 12)"
+                fill="none"
+              />
               <rect x="6" y="3" width="12" height="16" rx="2" fill="hsl(var(--card))" />
-              <rect x="10" y="4" width="12" height="16" rx="2" transform="rotate(15 16 12)" fill="hsl(var(--card))" />
+              <rect
+                x="10"
+                y="4"
+                width="12"
+                height="16"
+                rx="2"
+                transform="rotate(15 16 12)"
+                fill="hsl(var(--card))"
+              />
             </svg>
             <div className="goal-metric-content">
               <div className="goal-metric-header">
@@ -210,7 +259,10 @@ function GoalCard({ modules }) {
                   className="goal-metric-fill"
                   style={{
                     width: `${getProgressPercentage(goal.progress.flashcardsAdded, goal.target.flashcardsAdded)}%`,
-                    background: getProgressColor(goal.progress.flashcardsAdded, goal.target.flashcardsAdded),
+                    background: getProgressColor(
+                      goal.progress.flashcardsAdded,
+                      goal.target.flashcardsAdded
+                    ),
                   }}
                 />
               </div>
