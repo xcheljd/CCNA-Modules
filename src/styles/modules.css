@@ -733,7 +733,6 @@
     0 2px 8px hsl(var(--accent) / 0.15);
 }
 
-
 /* Animate arrows on hover - they slide further than the button */
 .back-button:hover::before,
 .prev-button:hover::before {
@@ -866,6 +865,33 @@
   border-color: hsl(var(--primary-foreground));
   transform: translateY(-1px);
   box-shadow: 0 2px 8px hsl(var(--primary-foreground) / 0.2);
+}
+
+.resource-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  margin-bottom: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.resource-buttons .open-button {
+  margin-top: 0;
+  margin-bottom: 0;
+  flex: 0 1 auto;
+}
+
+.resource-button-single {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+.resource-button-single .open-button {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .checkbox-label {
@@ -1038,6 +1064,7 @@
   flex-direction: column;
   justify-content: space-evenly;
   flex: 1;
+  align-items: center;
 }
 
 .video-title {
@@ -1088,8 +1115,13 @@
 }
 
 @keyframes playPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
 }
 
 .completion-checkbox {
@@ -1282,17 +1314,6 @@
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes slideFromRight {
   from {
     opacity: 0;
@@ -1312,15 +1333,6 @@
   to {
     opacity: 1;
     transform: translateX(0);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
   }
 }
 

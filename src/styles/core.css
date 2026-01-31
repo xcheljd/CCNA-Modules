@@ -42,6 +42,14 @@
     --ring: 207 90% 54%;
     --radius: 0.5rem;
 
+    /* Surface area color variables */
+    --header: var(--primary);
+    --header-foreground: var(--primary-foreground);
+    --loading: var(--primary);
+    --loading-foreground: var(--primary-foreground);
+    --sidebar: var(--card);
+    --sidebar-foreground: var(--card-foreground);
+
     /* Custom color variables for progress and confidence indicators */
     --color-progress-empty: #e0e0e0;
     --color-progress-low: #ff9800;
@@ -71,12 +79,18 @@
 
   /* Enhanced sequential theme color transitions */
   :root {
-    transition: 
+    transition:
       /* Phase 1: Foundation colors (0s delay) */
       --background var(--transition-slower) ease 0s,
       --card var(--transition-slower) ease 0s,
+      --header var(--transition-slower) ease 0s,
+      --loading var(--transition-slower) ease 0s,
+      --sidebar var(--transition-slower) ease 0s,
       /* Phase 2: Primary colors (0.1s delay) */ --primary var(--transition-slow) ease 0.1s,
       --primary-foreground var(--transition-slow) ease 0.1s,
+      --header-foreground var(--transition-slow) ease 0.1s,
+      --loading-foreground var(--transition-slow) ease 0.1s,
+      --sidebar-foreground var(--transition-slow) ease 0.1s,
       /* Phase 3: Secondary colors (0.2s delay) */ --secondary var(--transition-base) ease 0.2s,
       --secondary-foreground var(--transition-base) ease 0.2s,
       --accent var(--transition-base) ease 0.2s,
@@ -177,7 +191,7 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
+  background: hsl(var(--muted-foreground) / 0.5);
   border-radius: 5px;
 }
 
@@ -204,19 +218,13 @@ a {
 /* App already uses theme variables above - no theme-specific overrides needed */
 
 .app-header {
-  background: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
+  background: hsl(var(--header));
+  color: hsl(var(--header-foreground));
   padding: 20px;
-  box-shadow: 0 1px 4px hsl(var(--primary-foreground) / 0.1);
+  box-shadow: 0 1px 4px hsl(var(--header-foreground) / 0.1);
   position: sticky;
   top: 0;
   z-index: 100;
-}
-
-/* Neon theme: darker header with card background */
-.theme-neon .app-header {
-  background: hsl(var(--card));
-  color: hsl(var(--primary));
 }
 
 .header-content {
@@ -239,18 +247,13 @@ a {
 .header-content h1 {
   margin: 0;
   font-size: 28px;
-  color: hsl(var(--primary-foreground));
-}
-
-/* Neon theme: cyan title text */
-.theme-neon .header-content h1 {
-  color: hsl(var(--primary));
+  color: hsl(var(--header-foreground));
 }
 
 .view-toggle {
   display: flex;
   gap: 0.25rem;
-  background: hsl(var(--primary-foreground) / 0.1);
+  background: hsl(var(--header-foreground) / 0.1);
   border-radius: 6px;
   padding: 0.25rem;
 }
@@ -265,35 +268,25 @@ a {
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  color: hsl(var(--primary-foreground));
+  color: hsl(var(--header-foreground));
   opacity: 0.7;
 }
 
 .view-toggle-btn:hover {
   opacity: 1;
-  background: hsl(var(--primary-foreground) / 0.15);
-  border-color: hsl(var(--primary-foreground) / 0.3);
+  background: hsl(var(--header-foreground) / 0.15);
+  border-color: hsl(var(--header-foreground) / 0.3);
   transform: scale(1.05);
 }
 
 .view-toggle-btn.active {
-  background: hsl(var(--primary-foreground));
-  color: hsl(var(--primary));
-  border-color: hsl(var(--primary-foreground));
+  background: hsl(var(--header-foreground));
+  color: hsl(var(--header));
+  border-color: hsl(var(--header-foreground));
   opacity: 1;
   box-shadow:
-    0 2px 6px hsl(var(--primary-foreground) / 0.3),
-    inset 0 1px 0 hsl(var(--primary) / 0.1);
-}
-
-/* Neon theme: cyan icon buttons */
-.theme-neon .view-toggle-btn {
-  color: hsl(var(--primary));
-}
-
-.theme-neon .view-toggle-btn.active {
-  background: hsl(var(--primary));
-  color: hsl(var(--card));
+    0 2px 6px hsl(var(--header-foreground) / 0.3),
+    inset 0 1px 0 hsl(var(--header) / 0.1);
 }
 
 .header-nav {
@@ -307,7 +300,7 @@ a {
 .nav-buttons {
   display: flex;
   gap: 8px;
-  background: hsl(var(--primary-foreground) / 0.1);
+  background: hsl(var(--header-foreground) / 0.1);
   border-radius: 8px;
   padding: 4px;
 }
@@ -317,7 +310,7 @@ a {
   background: none;
   border: none;
   border-radius: 6px;
-  color: hsl(var(--primary-foreground) / 0.8);
+  color: hsl(var(--header-foreground) / 0.8);
   cursor: pointer;
   transition: all var(--transition-base) ease;
   font-size: 14px;
@@ -325,13 +318,13 @@ a {
 }
 
 .nav-btn:hover {
-  background: hsl(var(--primary-foreground) / 0.2);
-  color: hsl(var(--primary-foreground));
+  background: hsl(var(--header-foreground) / 0.2);
+  color: hsl(var(--header-foreground));
 }
 
 .nav-btn.active {
-  background: hsl(var(--primary-foreground) / 0.3);
-  color: hsl(var(--primary-foreground));
+  background: hsl(var(--header-foreground) / 0.3);
+  color: hsl(var(--header-foreground));
   font-weight: 600;
 }
 
@@ -346,12 +339,7 @@ a {
   display: flex;
   align-items: center;
   gap: 15px;
-  color: hsl(var(--primary-foreground));
-}
-
-/* Neon theme: cyan text for stats */
-.theme-neon .header-stats {
-  color: hsl(var(--primary));
+  color: hsl(var(--header-foreground));
 }
 
 .progress-bar-small {
@@ -381,13 +369,13 @@ a {
 }
 
 .settings-button:hover {
-  background: hsl(var(--primary-foreground) / 0.1);
+  background: hsl(var(--header-foreground) / 0.1);
 }
 
 .settings-icon {
   width: 1.5rem;
   height: 1.5rem;
-  color: hsl(var(--primary-foreground));
+  color: hsl(var(--header-foreground));
   transition: transform var(--transition-base) ease;
 }
 
@@ -410,22 +398,13 @@ a {
 .hamburger-menu span {
   width: 24px;
   height: 3px;
-  background: hsl(var(--primary-foreground));
+  background: hsl(var(--header-foreground));
   border-radius: 2px;
   transition: all var(--transition-base) ease;
 }
 
 .hamburger-menu:hover span {
-  background: hsl(var(--primary-foreground) / 0.8);
-}
-
-/* Neon theme: cyan hamburger menu */
-.theme-neon .hamburger-menu span {
-  background: hsl(var(--primary));
-}
-
-.theme-neon .hamburger-menu:hover span {
-  background: hsl(var(--primary) / 0.8);
+  background: hsl(var(--header-foreground) / 0.8);
 }
 
 .menu-overlay {
@@ -445,8 +424,8 @@ a {
   left: 0;
   bottom: 0;
   width: 280px;
-  background: hsl(var(--card));
-  color: hsl(var(--card-foreground));
+  background: hsl(var(--sidebar));
+  color: hsl(var(--sidebar-foreground));
   box-shadow: 2px 0 8px hsl(var(--primary-foreground) / 0.15);
   padding: 80px 20px 20px 20px;
   z-index: 1000;
@@ -467,7 +446,7 @@ a {
   border-radius: 12px;
   cursor: pointer;
   font-size: 16px;
-  color: hsl(var(--card-foreground));
+  color: hsl(var(--sidebar-foreground));
   text-align: left;
   transition: all var(--transition-base) ease;
   font-weight: 500;
@@ -569,7 +548,7 @@ a {
   left: 0;
   width: 100%;
   height: 100%;
-  background: hsl(var(--primary));
+  background: hsl(var(--loading));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -579,7 +558,7 @@ a {
 
 .loading-content {
   text-align: center;
-  color: white;
+  color: hsl(var(--loading-foreground));
 }
 
 .loading-logo {
@@ -699,11 +678,9 @@ a {
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.8), white, rgba(255, 255, 255, 0.8));
-  background-size: 200% 100%;
+  background: white;
   border-radius: 2px;
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: shimmer 2s infinite;
 }
 
 .progress-text {
@@ -712,15 +689,6 @@ a {
   font-size: 14px;
   opacity: 0.8;
   font-weight: 400;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
 }
 
 /* Fade out animation when loading is done */
@@ -747,6 +715,17 @@ a {
   }
   to {
     opacity: 0;
+  }
+}
+
+@keyframes fadeInSubtle {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
