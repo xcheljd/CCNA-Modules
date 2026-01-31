@@ -3,9 +3,21 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recha
 
 function ConfidenceDistribution({ distribution }) {
   const data = [
-    { name: 'Needs Review (1-2★)', value: distribution.needsReview, color: 'var(--color-confidence-low)' },
-    { name: 'Moderate (3★)', value: distribution.moderate, color: 'var(--color-confidence-medium)' },
-    { name: 'Confident (4-5★)', value: distribution.confident, color: 'var(--color-confidence-high)' },
+    {
+      name: 'Needs Review (1-2★)',
+      value: distribution.needsReview,
+      color: 'var(--color-confidence-low)',
+    },
+    {
+      name: 'Moderate (3★)',
+      value: distribution.moderate,
+      color: 'var(--color-confidence-medium)',
+    },
+    {
+      name: 'Confident (4-5★)',
+      value: distribution.confident,
+      color: 'var(--color-confidence-high)',
+    },
     { name: 'Not Rated', value: distribution.notRated, color: 'var(--color-confidence-none)' },
   ].filter(item => item.value > 0); // Only show non-zero values
 
@@ -113,7 +125,12 @@ function ConfidenceDistribution({ distribution }) {
             ))}
           </Pie>
           <Tooltip content={<CustomTooltip />} />
-          <Legend content={<CustomLegend />} verticalAlign="middle" align="right" layout="vertical" />
+          <Legend
+            content={<CustomLegend />}
+            verticalAlign="middle"
+            align="right"
+            layout="vertical"
+          />
         </PieChart>
       </ResponsiveContainer>
     </div>

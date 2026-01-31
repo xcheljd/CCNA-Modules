@@ -37,7 +37,13 @@ export const OverallProgressSection = ({ overallProgress, stats, onAction }) => 
       <div className="progress-stats-container">
         <div className="progress-stats progress-stats-grid">
           <div className="stat-card">
-            <svg className="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              className="stat-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <rect x="3" y="3" width="7" height="7" />
               <rect x="14" y="3" width="7" height="7" />
               <rect x="14" y="14" width="7" height="7" />
@@ -51,7 +57,13 @@ export const OverallProgressSection = ({ overallProgress, stats, onAction }) => 
             </div>
           </div>
           <div className="stat-card">
-            <svg className="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              className="stat-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <rect x="2" y="4" width="20" height="16" rx="4" ry="4" />
               <polygon points="10 8 16 12 10 16" fill="currentColor" stroke="none" />
             </svg>
@@ -63,7 +75,13 @@ export const OverallProgressSection = ({ overallProgress, stats, onAction }) => 
             </div>
           </div>
           <div className="stat-card">
-            <svg className="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              className="stat-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <circle cx="12" cy="12" r="1" fill="currentColor" />
               <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-45 12 12)" />
               <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(45 12 12)" />
@@ -77,10 +95,32 @@ export const OverallProgressSection = ({ overallProgress, stats, onAction }) => 
             </div>
           </div>
           <div className="stat-card">
-            <svg className="stat-icon" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2">
-              <rect x="2" y="4" width="12" height="16" rx="2" transform="rotate(-15 8 12)" fill="none" />
+            <svg
+              className="stat-icon"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <rect
+                x="2"
+                y="4"
+                width="12"
+                height="16"
+                rx="2"
+                transform="rotate(-15 8 12)"
+                fill="none"
+              />
               <rect x="6" y="3" width="12" height="16" rx="2" fill="hsl(var(--card))" />
-              <rect x="10" y="4" width="12" height="16" rx="2" transform="rotate(15 16 12)" fill="hsl(var(--card))" />
+              <rect
+                x="10"
+                y="4"
+                width="12"
+                height="16"
+                rx="2"
+                transform="rotate(15 16 12)"
+                fill="hsl(var(--card))"
+              />
             </svg>
             <div className="stat-content">
               <span className="stat-value">
