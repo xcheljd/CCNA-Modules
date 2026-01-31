@@ -3,8 +3,10 @@ import { test, expect } from '@playwright/test';
 test.describe('CCNA Modules App - Basic Functionality', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    // Wait for the app to load (wait for LoadingScreen to disappear)
-    await page.waitForSelector('text=CCNA 200-301 Course', { timeout: 15000 });
+    // Wait for the loading screen to appear and then disappear
+    await page.waitForSelector('.loading-screen', { timeout: 5000 });
+    // Wait for loading screen to disappear and main app to appear
+    await page.waitForSelector('.app', { timeout: 15000 });
   });
 
   test('should load application', async ({ page }) => {
@@ -92,7 +94,8 @@ test.describe('CCNA Modules App - Basic Functionality', () => {
 test.describe('Settings Panel', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('text=CCNA 200-301 Course', { timeout: 15000 });
+    await page.waitForSelector('.loading-screen', { timeout: 5000 });
+    await page.waitForSelector('.app', { timeout: 15000 });
   });
 
   test('should open settings panel', async ({ page }) => {
@@ -135,7 +138,8 @@ test.describe('Settings Panel', () => {
 test.describe('Module Progress Tracking', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('text=CCNA 200-301 Course', { timeout: 15000 });
+    await page.waitForSelector('.loading-screen', { timeout: 5000 });
+    await page.waitForSelector('.app', { timeout: 15000 });
 
     // Navigate to modules view
     const listButton = page.locator('[aria-label="Modules view"]');
