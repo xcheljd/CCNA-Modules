@@ -1,5 +1,5 @@
 // Learning goals tracking utility using localStorage
-import { format, addDays, addWeeks, addMonths, startOfWeek, endOfWeek } from 'date-fns';
+import { format, addDays, addWeeks, addMonths, endOfWeek } from 'date-fns';
 import ProgressTracker from './progressTracker';
 
 export const GoalTracker = {
@@ -175,8 +175,11 @@ export const GoalTracker = {
   },
 
   // Get goal history
-  getGoalHistory(limit = 10) {
+  getGoalHistory(limit) {
     const data = this.getGoalsData();
+    if (limit === undefined || limit === null) {
+      throw new Error('getGoalHistory() requires a limit parameter');
+    }
     return data.history.slice(-limit).reverse();
   },
 
