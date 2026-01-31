@@ -371,6 +371,7 @@ function AppContent() {
                   setMenuOpen(false);
                 }}
                 className="menu-item"
+                aria-label="Settings"
               >
                 <svg
                   className="menu-icon"
