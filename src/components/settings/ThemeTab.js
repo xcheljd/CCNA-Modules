@@ -6,23 +6,24 @@ import { Check } from 'lucide-react';
 import themes from '../../utils/themes';
 
 function ThemeTab() {
-  const [currentTheme, setCurrentTheme] = useState(
-    localStorage.getItem('app-theme') || 'spacegrayLight'
-  );
+  const [currentTheme, setCurrentTheme] = useState(localStorage.getItem('app-theme') || 'light');
 
   // Define the desired theme order
   const themeOrder = [
+    'light',
+    'dark',
+    'ayuLight',
+    'ayuDark',
     'spacegrayLight',
     'spacegray',
     'spacegrayOceanic',
     'gruvboxLight',
     'gruvboxDark',
-    'light',
-    'dark',
+    'ocean',
+    'neon',
     'nord',
     'rosePine',
     'mocha',
-    'dracula',
   ];
 
   // Filter and map themes according to the desired order
