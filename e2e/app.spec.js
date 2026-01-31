@@ -4,6 +4,12 @@ test.describe('CCNA Modules App - Basic Functionality', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.waitForSelector('.app', { timeout: 30000 });
+
+    // Close welcome dialog if present
+    const welcomeDialog = page.locator('dialog:has-text("Welcome")');
+    if (await welcomeDialog.isVisible().catch(() => false)) {
+      await page.click('button:has-text("Get Started")');
+    }
   });
 
   test('should load application', async ({ page }) => {
@@ -92,6 +98,11 @@ test.describe('Settings Panel', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.waitForSelector('.app', { timeout: 30000 });
+
+    const welcomeDialog = page.locator('dialog:has-text("Welcome")');
+    if (await welcomeDialog.isVisible().catch(() => false)) {
+      await page.click('button:has-text("Get Started")');
+    }
   });
 
   test('should open settings panel', async ({ page }) => {
@@ -135,6 +146,11 @@ test.describe('Module Progress Tracking', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.waitForSelector('.app', { timeout: 30000 });
+
+    const welcomeDialog = page.locator('dialog:has-text("Welcome")');
+    if (await welcomeDialog.isVisible().catch(() => false)) {
+      await page.click('button:has-text("Get Started")');
+    }
 
     // Navigate to modules view
     const listButton = page.locator('[aria-label="Modules view"]');
