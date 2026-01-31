@@ -1,87 +1,130 @@
-import React, { useState, useEffect } from 'react';
-import ModuleList from './components/ModuleList';
-import ModuleDetail from './components/ModuleDetail';
-import Dashboard from './components/Dashboard';
-import Settings from './components/Settings';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import LoadingScreen from './components/LoadingScreen';
 import WelcomeDialog from './components/WelcomeDialog';
+import { ToastProvider, useToast } from '@/components/ui/toast';
 import { LayoutDashboard, List } from 'lucide-react';
 import modules from './data/modules';
 import ProgressTracker from './utils/progressTracker';
 import ActivityTracker from './utils/activityTracker';
 import themes from './utils/themes';
 
+// Lazy load heavy components for code splitting
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const ModuleList = lazy(() => import('./components/ModuleList'));
+const ModuleDetail = lazy(() => import('./components/ModuleDetail'));
+const Settings = lazy(() => import('./components/Settings'));
+
+// Loading fallback component
+const LazyLoadingFallback = () => (
+  <div className="lazy-loading" style={{ padding: '20px', textAlign: 'center' }}>
+    <div
+      className="spinner"
+      style={{
+        width: '40px',
+        height: '40px',
+        border: '3px solid rgba(0,0,0,0.1)',
+        borderTop: '3px solid var(--primary)',
+        borderRadius: '50%',
+        animation: 'spin 1s linear infinite',
+        margin: '20px auto',
+      }}
+    ></div>
+    <p>Loading...</p>
+  </div>
+);
+
 const { electronAPI } = window;
 
-function App() {
+function AppContent() {
+  const { error, info } = useToast();
   const [currentView, setCurrentView] = useState('dashboard');
   const [selectedModule, setSelectedModule] = useState(null);
   const [resourcesAvailable, setResourcesAvailable] = useState(true);
   const [overallProgress, setOverallProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [currentTheme, setCurrentTheme] = useState(() => {
-    // Load theme preference from localStorage
     const saved = localStorage.getItem('app-theme');
-    return saved || 'spacegrayLight';
+    return saved || 'light';
   });
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [showWelcome, setShowWelcome] = useState(() => {
-    // Check if user has seen welcome
     const hasSeenWelcome = localStorage.getItem('hasSeenWelcome');
-    return !hasSeenWelcome; // Show if flag doesn't exist
+    return !hasSeenWelcome;
   });
   const [loadingStatus, setLoadingStatus] = useState('Initializing...');
   const [loadingProgress, setLoadingProgress] = useState(0);
 
   useEffect(() => {
-    // Force width on mount before anything else
-    document.documentElement.style.width = '100%';
-    document.body.style.width = '100%';
+    console.log('🎬 App component mounting...');
 
-    // Smart loading with progress tracking
     const initializeApp = async () => {
+      console.log('🚀 App initialization starting...');
       const startTime = Date.now();
 
-      // Define loading phases
       const phases = [
         {
           name: 'Checking course resources...',
           action: async () => {
+            console.log('Phase 1: Checking course resources...');
             setLoadingStatus('Checking course resources...');
-            await checkResources();
+            try {
+              await checkResources();
+              console.log('Phase 1 complete');
+            } catch (error) {
+              console.error('Phase 1 error:', error);
+            }
           },
         },
         {
           name: 'Calculating your progress...',
           action: async () => {
+            console.log('Phase 2: Calculating progress...');
             setLoadingStatus('Calculating your progress...');
-            calculateOverallProgress();
+            try {
+              calculateOverallProgress();
+              console.log('Phase 2 complete');
+            } catch (error) {
+              console.error('Phase 2 error:', error);
+            }
           },
         },
         {
           name: 'Setting up activity tracking...',
           action: async () => {
+            console.log('Phase 3: Setting up activity tracking...');
             setLoadingStatus('Setting up activity tracking...');
-            ActivityTracker.initializeTracking(modules);
+            try {
+              ActivityTracker.initializeTracking(modules);
+              console.log('Phase 3 complete');
+            } catch (error) {
+              console.error('Phase 3 error:', error);
+            }
           },
         },
       ];
 
-      // Execute phases with progress updates
       for (let i = 0; i < phases.length; i++) {
         setLoadingProgress(((i + 1) / phases.length) * 100);
-        await phases[i].action();
+        console.log(`Starting phase ${i + 1}/${phases.length}: ${phases[i].name}`);
+        try {
+          await phases[i].action();
+        } catch (error) {
+          console.error(`Phase ${i + 1} failed:`, error);
+        }
       }
 
-      // Smart timing: minimum 800ms for professional feel, but no artificial delay
       const elapsed = Date.now() - startTime;
       const remainingTime = Math.max(0, 800 - elapsed);
 
       setLoadingStatus('Almost ready...');
+      console.log('All phases complete in', elapsed, 'ms');
+      console.log('Setting loading to false in', remainingTime, 'ms');
 
       setTimeout(() => {
+        console.log('🔔 Calling setIsLoading(false)');
         setIsLoading(false);
+        console.log('✅ Main content should now be visible');
       }, remainingTime);
     };
 
@@ -89,11 +132,17 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Apply theme colors and class
-    const theme = themes[currentTheme];
+    let theme = themes[currentTheme];
+
+    if (!theme) {
+      const fallbackTheme = 'light';
+      theme = themes[fallbackTheme];
+      localStorage.setItem('app-theme', fallbackTheme);
+      setCurrentTheme(fallbackTheme);
+    }
+
     if (theme) {
       try {
-        // Apply CSS custom properties; normalize camelCase keys to kebab-case CSS vars
         Object.entries(theme.colors).forEach(([property, value]) => {
           if (value && typeof value === 'string') {
             const cssVarName = property.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`);
@@ -101,13 +150,13 @@ function App() {
           }
         });
 
-        // Apply theme class for additional styling (append, don't replace)
         document.body.classList.remove(
           'theme-light',
           'theme-dark',
+          'theme-ayu-light',
+          'theme-ayu-dark',
           'theme-ocean',
           'theme-neon',
-          'theme-dracula',
           'theme-nord',
           'theme-rose-pine',
           'theme-mocha',
@@ -117,11 +166,9 @@ function App() {
           'theme-spacegray-light',
           'theme-spacegray-oceanic'
         );
-        // Convert camelCase theme ID to kebab-case for CSS class
         const themeClass = `theme-${currentTheme.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`)}`;
         document.body.classList.add(themeClass);
 
-        // Ensure html/body/app maintain width during theme switch
         document.documentElement.style.width = '100%';
         document.body.style.width = '100%';
         const appEl = document.querySelector('.app');
@@ -129,20 +176,29 @@ function App() {
           appEl.style.width = '100%';
         }
 
-        // Save theme preference
         localStorage.setItem('app-theme', currentTheme);
-      } catch (error) {
-        console.error('Error applying theme:', error);
-        // Fallback to light theme
-        document.body.classList.remove('theme-dark', 'theme-ocean', 'theme-neon', 'theme-dracula');
+      } catch {
+        document.body.classList.remove(
+          'theme-light',
+          'theme-dark',
+          'theme-ayu-light',
+          'theme-ayu-dark',
+          'theme-ocean',
+          'theme-neon',
+          'theme-nord',
+          'theme-rose-pine',
+          'theme-mocha',
+          'theme-gruvbox-dark',
+          'theme-gruvbox-light',
+          'theme-spacegray',
+          'theme-spacegray-light',
+          'theme-spacegray-oceanic'
+        );
         document.body.classList.add('theme-light');
       }
-    } else {
-      console.error('Theme not found:', currentTheme);
     }
   }, [currentTheme]);
 
-  // Listen for theme changes from settings
   useEffect(() => {
     const handleThemeChange = event => {
       setCurrentTheme(event.detail);
@@ -154,8 +210,17 @@ function App() {
 
   const checkResources = async () => {
     if (electronAPI) {
-      const result = await electronAPI.checkResourcesFolder();
-      setResourcesAvailable(result.exists);
+      try {
+        const result = await electronAPI.checkResourcesFolder();
+        console.log('Resources check result:', result);
+        setResourcesAvailable(result.exists);
+      } catch (error) {
+        console.error('Resources check failed:', error);
+        setResourcesAvailable(true);
+      }
+    } else {
+      console.log('electronAPI not available, defaulting resources to available');
+      setResourcesAvailable(true);
     }
   };
 
@@ -172,20 +237,20 @@ function App() {
   const handleBackToList = () => {
     setCurrentView('list');
     setSelectedModule(null);
-    calculateOverallProgress(); // Recalculate after viewing a module
+    calculateOverallProgress();
   };
 
   const handleOpenResource = async (type, filename) => {
     if (!electronAPI) {
-      alert('File opening is only available in the desktop app');
+      info('File opening is only available in the desktop app');
       return;
     }
 
     const result = await electronAPI.openResource(filename);
 
     if (!result.success) {
-      alert(
-        `Failed to open ${type}: ${result.error}\n\nMake sure the file exists in the /resources folder and you have the appropriate application installed (Packet Tracer for .pkt files, Anki for .apkg files).`
+      error(
+        `Failed to open ${type}: ${result.error}. Make sure the file exists in the /resources folder and you have the appropriate application installed (Packet Tracer for .pkt files, Anki for .apkg files).`
       );
     }
   };
@@ -204,7 +269,6 @@ function App() {
     setMenuOpen(!menuOpen);
   };
 
-  // Show loading screen while app initializes
   if (isLoading) {
     return <LoadingScreen status={loadingStatus} progress={loadingProgress} />;
   }
@@ -339,39 +403,48 @@ function App() {
       )}
 
       <main className="app-content">
-        {currentView === 'dashboard' && (
-          <Dashboard modules={modules} onModuleSelect={handleModuleSelect} />
-        )}
+        <Suspense fallback={<LazyLoadingFallback />}>
+          {currentView === 'dashboard' && (
+            <Dashboard modules={modules} onModuleSelect={handleModuleSelect} />
+          )}
 
-        {currentView === 'list' && (
-          <>
-            {ProgressTracker.getLastWatchedVideo() && (
-              <div className="continue-watching">
-                <button onClick={handleContinueWatching} className="continue-button">
-                  ▶ Continue Watching
-                </button>
-              </div>
-            )}
-            <ModuleList modules={modules} onModuleSelect={handleModuleSelect} />
-          </>
-        )}
+          {currentView === 'list' && (
+            <>
+              {ProgressTracker.getLastWatchedVideo() && (
+                <div className="continue-watching">
+                  <button onClick={handleContinueWatching} className="continue-button">
+                    ▶ Continue Watching
+                  </button>
+                </div>
+              )}
+              <ModuleList modules={modules} onModuleSelect={handleModuleSelect} />
+            </>
+          )}
 
-        {currentView === 'detail' && selectedModule && (
-          <ModuleDetail
-            module={selectedModule}
-            modules={modules}
-            onBack={handleBackToList}
-            onOpenResource={handleOpenResource}
-            onModuleSelect={handleModuleSelect}
-          />
-        )}
+          {currentView === 'detail' && selectedModule && (
+            <ModuleDetail
+              module={selectedModule}
+              modules={modules}
+              onBack={handleBackToList}
+              onOpenResource={handleOpenResource}
+              onModuleSelect={handleModuleSelect}
+            />
+          )}
 
-        <Settings open={settingsOpen} onOpenChange={setSettingsOpen} />
+          <Settings open={settingsOpen} onOpenChange={setSettingsOpen} />
+        </Suspense>
       </main>
 
-      {/* Welcome Dialog - appears on first load */}
       <WelcomeDialog open={showWelcome && !isLoading} onOpenChange={setShowWelcome} />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ToastProvider>
+      <AppContent />
+    </ToastProvider>
   );
 }
 

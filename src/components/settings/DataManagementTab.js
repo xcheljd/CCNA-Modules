@@ -4,10 +4,12 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Save, Download, Upload, Trash2, AlertTriangle } from 'lucide-react';
+import { useToast } from '@/components/ui/toast';
 import ProgressTracker, { isProgressKey } from '../../utils/progressTracker';
 import SettingsManager from '../../utils/settingsManager';
 
 function DataManagementTab() {
+  const { success, error, info } = useToast();
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   const handleExport = async () => {
@@ -53,7 +55,7 @@ function DataManagementTab() {
         const result = await window.electronAPI.exportProgressBackup(exportData);
 
         if (result && result.canceled) {
-          alert('Export cancelled.');
+          info('Export cancelled');
           return;
         }
 
@@ -61,7 +63,7 @@ function DataManagementTab() {
           throw new Error(result?.error || 'Failed to save backup file');
         }
 
-        alert(`Progress exported successfully!\n\nSaved to:\n${result.filePath}`);
+        success('Progress exported successfully', { duration: 5000 });
       } else {
         // Fallback: browser-like download behavior
         const dataStr = JSON.stringify(exportData, null, 2);
@@ -73,10 +75,10 @@ function DataManagementTab() {
         link.click();
         URL.revokeObjectURL(url);
 
-        alert('Progress exported successfully! (saved via browser download)');
+        success('Progress exported successfully (browser download)');
       }
-    } catch (error) {
-      alert(`Export failed: ${error.message}`);
+    } catch (err) {
+      error(`Export failed: ${err.message}`);
     }
   };
 
@@ -137,9 +139,9 @@ function DataManagementTab() {
             }
           }
 
-          alert('Import successful! Please refresh the page to see changes.');
-        } catch (error) {
-          alert(`Import failed: ${error.message}`);
+          success('Import successful! Refresh to see changes', { duration: 5000 });
+        } catch (err) {
+          error(`Import failed: ${err.message}`);
         }
       };
 
@@ -159,11 +161,11 @@ function DataManagementTab() {
     ProgressTracker.clearAllProgress();
     setShowClearConfirm(false);
 
-    alert('All progress data has been cleared. Please refresh the page.');
+    success('All progress data cleared. Refresh to see changes', { duration: 5000 });
   };
 
   const handleSave = () => {
-    alert('Progress is automatically saved to localStorage. Use Export to create a backup file.');
+    info('Progress is auto-saved. Use Export to create a backup file');
   };
 
   return (

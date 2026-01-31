@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { FolderOpen, LayoutDashboard, Database, Palette, Info } from 'lucide-react';
 import ResourcesPathTab from './settings/ResourcesPathTab';
 import DashboardTab from './settings/DashboardTab';
@@ -24,6 +30,9 @@ function Settings({ open, onOpenChange }) {
       <DialogContent className="settings-dialog">
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
+          <DialogDescription>
+            Configure your CCNA course preferences, resources, and data management options.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="settings-container">
