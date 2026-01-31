@@ -6,9 +6,10 @@ test.describe('CCNA Modules App - Basic Functionality', () => {
     await page.waitForSelector('.app', { timeout: 30000 });
 
     // Close welcome dialog if present
-    const welcomeDialog = page.locator('dialog:has-text("Welcome")');
+    const welcomeDialog = page.getByRole('dialog', { name: /Welcome/ });
     if (await welcomeDialog.isVisible().catch(() => false)) {
-      await page.click('button:has-text("Get Started")');
+      await page.getByRole('button', { name: 'Get Started' }).click();
+      await welcomeDialog.waitFor({ state: 'hidden' });
     }
   });
 
@@ -99,9 +100,10 @@ test.describe('Settings Panel', () => {
     await page.goto('/');
     await page.waitForSelector('.app', { timeout: 30000 });
 
-    const welcomeDialog = page.locator('dialog:has-text("Welcome")');
+    const welcomeDialog = page.getByRole('dialog', { name: /Welcome/ });
     if (await welcomeDialog.isVisible().catch(() => false)) {
-      await page.click('button:has-text("Get Started")');
+      await page.getByRole('button', { name: 'Get Started' }).click();
+      await welcomeDialog.waitFor({ state: 'hidden' });
     }
   });
 
@@ -147,9 +149,10 @@ test.describe('Module Progress Tracking', () => {
     await page.goto('/');
     await page.waitForSelector('.app', { timeout: 30000 });
 
-    const welcomeDialog = page.locator('dialog:has-text("Welcome")');
+    const welcomeDialog = page.getByRole('dialog', { name: /Welcome/ });
     if (await welcomeDialog.isVisible().catch(() => false)) {
-      await page.click('button:has-text("Get Started")');
+      await page.getByRole('button', { name: 'Get Started' }).click();
+      await welcomeDialog.waitFor({ state: 'hidden' });
     }
 
     // Navigate to modules view
