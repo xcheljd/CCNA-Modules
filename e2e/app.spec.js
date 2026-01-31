@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('CCNA Modules App - Basic Functionality', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:9000');
+    await page.goto('/');
     // Wait for the app to load (wait for LoadingScreen to disappear)
     await page.waitForSelector('text=CCNA 200-301 Course', { timeout: 15000 });
   });
@@ -91,7 +91,7 @@ test.describe('CCNA Modules App - Basic Functionality', () => {
 
 test.describe('Settings Panel', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:9000');
+    await page.goto('/');
     await page.waitForSelector('text=CCNA 200-301 Course', { timeout: 15000 });
   });
 
@@ -134,7 +134,7 @@ test.describe('Settings Panel', () => {
 
 test.describe('Module Progress Tracking', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:9000');
+    await page.goto('/');
     await page.waitForSelector('text=CCNA 200-301 Course', { timeout: 15000 });
 
     // Navigate to modules view
