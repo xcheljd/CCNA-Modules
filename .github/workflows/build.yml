@@ -57,7 +57,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: List release directory
-        run: ls -la release/ || echo "No release directory found"
+        run: |
+          echo "Checking for release artifacts..."
+          ls -la release/ || echo "No release directory found"
 
       - name: Upload macOS artifacts
         if: matrix.os == 'macos-latest'
