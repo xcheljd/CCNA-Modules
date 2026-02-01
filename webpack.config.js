@@ -51,6 +51,10 @@ module.exports = {
     alias: {
       '@': path.resolve(__dirname, 'src'),
     },
+    fallback: {
+      process: require.resolve('process/browser'),
+      buffer: require.resolve('buffer/'),
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
