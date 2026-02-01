@@ -33,50 +33,52 @@ jobs:
         run: npm run build
 
       - name: Create empty resources folder
-        run: mkdir -p resources
+        run: mkdir -p resources && echo "Resources folder created for build"
 
       - name: Build macOS
         if: matrix.os == 'macos-latest'
-        run: npm run dist:mac
+        run: |
+          npx electron-builder --mac --publish=never
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
-        run: npm run dist:linux
+        run: |
+          npx electron-builder --linux --publish=never
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Windows
         if: matrix.os == 'windows-latest'
-        run: npm run dist:win
+        run: |
+          npx electron-builder --win --publish=never
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: List release directory
+        run: ls -la release/ || echo "No release directory found"
 
       - name: Upload macOS artifacts
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v4
         with:
           name: macOS-builds
-          path: |
-            release/*.dmg
-            release/*.zip
+          path: release/*
 
       - name: Upload Linux artifacts
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: Linux-builds
-          path: |
-            release/*.AppImage
-            release/*.deb
+          path: release/*
 
       - name: Upload Windows artifacts
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
           name: Windows-builds
-          path: release/*.exe
+          path: release/*
 
   release:
     needs: build
