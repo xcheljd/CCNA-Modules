@@ -10,19 +10,24 @@ The CCNA Modules desktop application is now packaged and ready for distribution.
 
 Located in `release/`:
 
-- **CCNA Modules-1.0.0.dmg** - Intel Mac installer (444 MB)
-- **CCNA Modules-1.0.0-arm64.dmg** - Apple Silicon installer (439 MB)
-- **CCNA Modules-1.0.0-mac.zip** - Intel Mac portable (437 MB)
-- **CCNA Modules-1.0.0-arm64-mac.zip** - Apple Silicon portable (432 MB)
+- **CCNA Modules-1.0.0.dmg** - Intel Mac installer (~127 MB)
+- **CCNA Modules-1.0.0-arm64.dmg** - Apple Silicon installer (~122 MB)
+- **CCNA Modules-1.0.0-mac.zip** - Intel Mac portable (~123 MB)
+- **CCNA Modules-1.0.0-arm64-mac.zip** - Apple Silicon portable (~118 MB)
 
 ### What's Included
 
 ✅ All 63 CCNA course modules (Days 1-63)
-✅ All lab files (.pkt) - 63 Packet Tracer labs
-✅ All flashcard decks (.apkg) - 56 Anki flashcard sets
+✅ All lab files (.pkt) - 59 Packet Tracer labs
+✅ All flashcard decks (.apkg) - 97 Anki flashcard sets
 ✅ Video links to Jeremy's IT Lab YouTube channel
 ✅ Progress tracking (saved locally)
 ✅ Module completion tracking
+✅ Search and filter functionality
+✅ 14 color themes (Nord, Catppuccin, Ayu, Rose Pine, Gruvbox, and more)
+✅ Study streak tracking
+✅ Performance analytics and charts
+✅ Smart study recommendations
 
 ## Distribution Methods
 
@@ -105,9 +110,10 @@ Host on a website with download links
 
 ### Videos
 
-- Click "Watch on YouTube" to open videos in browser
+- Click "Watch Video" to open videos in browser
 - Manually mark videos as watched
 - Duration shown for each video
+- All videos have actual YouTube IDs (no placeholders)
 
 ### Labs
 
@@ -129,6 +135,23 @@ Host on a website with download links
   - Videos watched
   - Labs completed
   - Flashcards added
+  - Confidence ratings (1-5 stars per module)
+
+### Search & Filter
+
+- Search modules by title or content
+- Filter by completion status (completed, in progress, not started)
+- Filter by confidence level (need review, okay, confident)
+
+### Settings
+
+Access via the settings gear icon:
+
+- **Resources Path** - Set custom location for lab/flashcard files
+- **Dashboard** - Customize which dashboard sections to show/hide
+- **Theme** - Choose from 14 color themes
+- **Data Management** - Export/import progress backups
+- **About** - App information and links
 
 ## Building for Windows/Linux
 
@@ -168,14 +191,6 @@ If users encounter issues:
 2. Check system requirements are met
 3. Try right-click "Open" method for security warnings
 4. Ensure resource files are accessible in app bundle
-
-## Video ID Updates (Future Enhancement)
-
-Current build has PLACEHOLDER video IDs. To update:
-
-1. Edit `src/data/modules.js`
-2. Replace 'PLACEHOLDER' with actual YouTube video IDs
-3. Rebuild: `npm run dist`
 
 ## License and Attribution
 

@@ -30,3 +30,6 @@ Thumbs.db
 # Test results
 playwright-report/
 test-results/
+
+# Project planning (not needed in repo)
+FEATURE_IDEAS.md

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, shell, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, dialog, nativeImage } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -39,10 +39,21 @@ function saveConfig(config) {
   }
 }
 
+function getAppIcon() {
+  const platform = process.platform;
+  const iconFile =
+    platform === 'darwin' ? 'icon.icns' : platform === 'win32' ? 'icon.ico' : 'icon.png';
+  const iconPath = path.join(__dirname, 'build', iconFile);
+  return fs.existsSync(iconPath) ? iconPath : undefined;
+}
+
 function createWindow() {
+  const iconPath = getAppIcon();
+
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    icon: iconPath,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
@@ -52,11 +63,20 @@ function createWindow() {
     },
   });
 
-  // Load from dist folder after webpack build
+  if (process.platform === 'darwin' && iconPath) {
+    try {
+      const dockIcon = nativeImage.createFromPath(iconPath);
+      if (!dockIcon.isEmpty()) {
+        app.dock.setIcon(dockIcon);
+      }
+    } catch (err) {
+      console.log('Could not set dock icon:', err.message);
+    }
+  }
+
   const isDev = !app.isPackaged;
   if (isDev) {
     mainWindow.loadFile('dist/index.html');
-    // Open dev tools in development
     mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadFile(path.join(__dirname, 'dist/index.html'));

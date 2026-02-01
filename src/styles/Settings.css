@@ -814,38 +814,33 @@
 /* Dark mode theme adjustments */
 .theme-dark .theme-list-item,
 .theme-ocean .theme-list-item,
-.theme-neon .theme-list-item,
-.theme-dracula .theme-list-item {
+.theme-neon .theme-list-item {
   border-color: hsl(var(--border));
 }
 
 .theme-dark .theme-list-item:hover,
 .theme-ocean .theme-list-item:hover,
-.theme-neon .theme-list-item:hover,
-.theme-dracula .theme-list-item:hover {
+.theme-neon .theme-list-item:hover {
   border-color: hsl(var(--primary));
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .theme-dark .theme-list-item.active,
 .theme-ocean .theme-list-item.active,
-.theme-neon .theme-list-item.active,
-.theme-dracula .theme-list-item.active {
+.theme-neon .theme-list-item.active {
   background: hsl(var(--accent) / 0.1);
 }
 
 .theme-dark .theme-card:hover,
 .theme-ocean .theme-card:hover,
-.theme-neon .theme-card:hover,
-.theme-dracula .theme-card:hover {
+.theme-neon .theme-card:hover {
   border-color: hsl(var(--primary));
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .theme-dark .theme-card.active,
 .theme-ocean .theme-card.active,
-.theme-neon .theme-card.active,
-.theme-dracula .theme-card.active {
+.theme-neon .theme-card.active {
   background: hsl(var(--accent) / 0.1);
 }
 
