@@ -78,7 +78,9 @@ Download the latest release for your platform from the [Releases](../../releases
 
 ### 1. Download Resources
 
-Sign up for Jeremy's IT Lab email list to get free access to:
+Sign up for Jeremy's IT Lab email list to get free access:
+
+👉 **[Download Resources](https://jitl.jp/ccna-files)**
 
 - **Packet Tracer Labs** - 59 hands-on lab files (.pkt)
 - **Anki Flashcards** - 97 flashcard decks (.apkg)
