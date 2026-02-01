@@ -44,8 +44,8 @@ _Choose from 14 beautiful color themes including Nord, Catppuccin, Ayu, Rose Pin
 
 ✅ **63 Complete Modules** - All days of the CCNA course
 ✅ **Video Integration** - Direct links to YouTube course videos
-✅ **Lab Management** - Open .pkt files directly in Packet Tracer
-✅ **Flashcard Support** - Import .apkg files into Anki
+✅ **Lab Management** - Opens downloaded .pkt files in Packet Tracer
+✅ **Flashcard Support** - Opens downloaded .apkg files in Anki
 ✅ **Progress Tracking** - Local storage-based completion tracking
 ✅ **Search & Filter** - Find modules quickly with advanced filtering
 ✅ **Study Streak** - Track daily study habits with visual calendar
@@ -53,7 +53,8 @@ _Choose from 14 beautiful color themes including Nord, Catppuccin, Ayu, Rose Pin
 ✅ **Smart Recommendations** - AI-powered suggestions for what to study next
 ✅ **Confidence Ratings** - Rate your understanding of each module (1-5 stars)
 ✅ **14 Themes** - Customizable color schemes (Nord, Catppuccin, Ayu, Rose Pine, Gruvbox, and more)
-✅ **Offline-Ready** - All resources bundled (videos require internet)
+✅ **Offline-Ready** - Track progress locally (videos require internet)
+⚠️ **Resources Required** - Download labs & flashcards from Jeremy's IT Lab (free with email signup)
 ✅ **Cross-Platform** - Builds for macOS, Windows, and Linux
 
 ## Tech Stack
@@ -72,6 +73,24 @@ _Choose from 14 beautiful color themes including Nord, Catppuccin, Ayu, Rose Pin
 ### For End Users
 
 Download the latest release for your platform from the [Releases](../../releases) page.
+
+## Getting Started
+
+### 1. Download Resources
+
+Sign up for Jeremy's IT Lab email list to get free access to:
+
+- **Packet Tracer Labs** - 59 hands-on lab files (.pkt)
+- **Anki Flashcards** - 97 flashcard decks (.apkg)
+
+_These materials are © Jeremy's IT Lab and provided for educational use_
+
+### 2. Configure Resource Path
+
+1. Launch the app
+2. Go to **Settings → Resources Path**
+3. Select the folder where you downloaded the labs/flashcards
+4. Start learning!
 
 ### For Developers
 
