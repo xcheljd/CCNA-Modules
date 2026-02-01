@@ -29,28 +29,6 @@ Located in `release/`:
 ✅ Performance analytics and charts
 ✅ Smart study recommendations
 
-## Distribution Methods
-
-### 1. Direct File Sharing
-
-Share the DMG or ZIP files directly with students:
-
-- **Recommended**: DMG files for easiest installation
-- **Alternative**: ZIP files for users who prefer portable apps
-
-### 2. Cloud Storage
-
-Upload to:
-
-- Google Drive
-- Dropbox
-- OneDrive
-- Any file hosting service
-
-### 3. Website Download
-
-Host on a website with download links
-
 ## User Installation Instructions
 
 ### macOS (DMG)
