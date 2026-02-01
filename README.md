@@ -154,7 +154,7 @@ CCNA-Modules/
 │   └── index.js           # React entry point
 ├── public/
 │   └── index.html
-├── resources/             # Lab and flashcard files (156 files: 59 labs + 97 flashcards)
+├── resources/             # User-provided lab/flashcard files (not in repo, see Setup)
 ├── build/                 # Build assets (icons)
 ├── main.js               # Electron main process
 ├── preload.js            # Electron preload script
@@ -207,9 +207,9 @@ Videos open in a new window.
 
 ### Resource Handling
 
-- **Development**: Resources loaded from `./resources/` directory
-- **Production**: Resources bundled using electron-builder's `extraResources`
-- Access via `process.resourcesPath` in packaged apps
+- **User-provided**: Resources are downloaded by users from Jeremy's IT Lab
+- **Configurable**: Users set custom path in Settings → Resources Path
+- **Fallback**: App checks default locations if no custom path set
 
 ### Progress Tracking
 
