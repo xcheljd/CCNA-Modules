@@ -110,10 +110,21 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R artifacts
 
+      - name: Prepare release files
+        shell: bash
+        run: |
+          mkdir -p release-files
+          # Copy only installer files (exclude metadata and blockmaps)
+          find artifacts -type f \( -name "*.dmg" -o -name "*.zip" -o -name "*.exe" -o -name "*.AppImage" -o -name "*.deb" \) \
+            ! -name "*.blockmap" \
+            -exec cp {} release-files/ \;
+          echo "Release files prepared:"
+          ls -lh release-files/
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: artifacts/**/*
+          files: release-files/*
           draft: true
           prerelease: false
           generate_release_notes: true
