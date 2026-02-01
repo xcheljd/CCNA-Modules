@@ -58,6 +58,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: List release directory
+        shell: bash
         run: |
           echo "Checking for release artifacts..."
           ls -la release/ || echo "No release directory found"
