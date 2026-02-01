@@ -184,7 +184,7 @@ To use all features, users need:
 
 ### Video Playback
 
-Initially attempted to embed YouTube videos using react-youtube, but Jeremy's IT Lab has disabled embedding (Error 153). Solution: Videos now open in external browser with thumbnail previews.
+Videos open in a new window.
 
 ### Resource Handling
 
