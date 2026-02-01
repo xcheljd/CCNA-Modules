@@ -27,7 +27,10 @@
     "networking",
     "education"
   ],
-  "author": "CCNA Course",
+  "author": {
+    "name": "CCNA Course",
+    "email": "support@example.com"
+  },
   "license": "MIT",
   "description": "Desktop application for Jeremy's IT Lab CCNA 200-301 Course with progress tracking",
   "build": {
