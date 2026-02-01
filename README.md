@@ -71,7 +71,7 @@ _Choose from 14 beautiful color themes including Nord, Catppuccin, Ayu, Rose Pin
 
 ### For End Users
 
-See [DISTRIBUTION_GUIDE.md](DISTRIBUTION_GUIDE.md) for installation instructions.
+Download the latest release for your platform from the [Releases](../../releases) page.
 
 ### For Developers
 
@@ -286,9 +286,9 @@ Course materials and videos are © Jeremy's IT Lab.
 
 ## Support
 
-For application issues, see [DISTRIBUTION_GUIDE.md](DISTRIBUTION_GUIDE.md).
+For application issues, please open an [issue](../../issues).
 
-For course content questions, visit Jeremy's IT Lab YouTube channel.
+For course content questions, visit [Jeremy's IT Lab YouTube channel](https://www.youtube.com/@JeremysITLab).
 
 ## Changelog
 
