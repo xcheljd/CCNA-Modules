@@ -33,6 +33,7 @@ jobs:
         run: npm run build
 
       - name: Create empty resources folder
+        shell: bash
         run: mkdir -p resources && echo "Resources folder created for build"
 
       - name: Build macOS
