@@ -68,21 +68,31 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macOS-builds
-          path: release/*
+          path: |
+            release/*.dmg
+            release/*.zip
+            release/*.blockmap
+            release/*.yml
 
       - name: Upload Linux artifacts
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: Linux-builds
-          path: release/*
+          path: |
+            release/*.AppImage
+            release/*.deb
+            release/*.yml
 
       - name: Upload Windows artifacts
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
           name: Windows-builds
-          path: release/*
+          path: |
+            release/*.exe
+            release/*.blockmap
+            release/*.yml
 
   release:
     needs: build
