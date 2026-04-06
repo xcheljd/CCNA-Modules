@@ -3,7 +3,7 @@ import ProgressTracker from '../utils/progressTracker';
 import '../styles/dashboard.css';
 
 function UpcomingMilestones({ modules }) {
-  const getProgressColor = (progress) => {
+  const getProgressColor = progress => {
     if (progress === 0) return 'hsl(var(--muted))';
     if (progress === 100) return 'var(--color-progress-complete)';
     return 'hsl(var(--ring))';
@@ -54,7 +54,7 @@ function UpcomingMilestones({ modules }) {
       <div className="milestone-progress">
         <h3>Course Milestones</h3>
         <div className="milestone-track">
-          {milestones.map((milestone, index) => (
+          {milestones.map(milestone => (
             <div
               key={milestone.percent}
               className={`milestone-marker ${milestone.isCompleted ? 'completed' : ''} ${milestone.isNext ? 'next' : ''}`}
@@ -97,7 +97,11 @@ function UpcomingMilestones({ modules }) {
               className="milestone-progress-fill"
               style={{
                 width: `${((nextMilestone.modulesNeeded - nextMilestone.modulesRemaining) / nextMilestone.modulesNeeded) * 100}%`,
-                background: getProgressColor(((nextMilestone.modulesNeeded - nextMilestone.modulesRemaining) / nextMilestone.modulesNeeded) * 100),
+                background: getProgressColor(
+                  ((nextMilestone.modulesNeeded - nextMilestone.modulesRemaining) /
+                    nextMilestone.modulesNeeded) *
+                    100
+                ),
               }}
             />
           </div>
@@ -120,7 +124,10 @@ function UpcomingMilestones({ modules }) {
                   {progress > 0 && (
                     <div className="upcoming-module-progress">
                       <div className="upcoming-progress-bar">
-                        <div className="upcoming-progress-fill" style={{ width: `${progress}%`, background: getProgressColor(progress) }} />
+                        <div
+                          className="upcoming-progress-fill"
+                          style={{ width: `${progress}%`, background: getProgressColor(progress) }}
+                        />
                       </div>
                       <span className="upcoming-progress-text">{Math.round(progress)}%</span>
                     </div>
