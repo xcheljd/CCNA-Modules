@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FolderSearch, RotateCcw, CheckCircle2, XCircle, Info } from 'lucide-react';
+import { useToast } from '@/components/ui/toast';
 
 const { electronAPI } = window;
 
 function ResourcesPathTab() {
+  const { error, info } = useToast();
   const [resourcesInfo, setResourcesInfo] = useState({
     currentPath: '',
     customPath: null,
@@ -29,7 +31,7 @@ function ResourcesPathTab() {
 
   const handleSelectFolder = async () => {
     if (!electronAPI) {
-      alert('Folder selection is only available in the desktop app');
+      info('Folder selection is only available in the desktop app');
       return;
     }
 
@@ -37,7 +39,7 @@ function ResourcesPathTab() {
     if (result.success) {
       await loadResourcesInfo();
     } else if (result.error) {
-      alert(`Error: ${result.error}`);
+      error(`Error: ${result.error}`);
     }
   };
 
@@ -45,7 +47,7 @@ function ResourcesPathTab() {
     if (!window.confirm('Reset to default resources folder?')) return;
 
     if (!electronAPI) {
-      alert('Reset is only available in the desktop app');
+      info('Reset is only available in the desktop app');
       return;
     }
 
@@ -53,7 +55,7 @@ function ResourcesPathTab() {
     if (result.success) {
       await loadResourcesInfo();
     } else {
-      alert(`Error: ${result.error}`);
+      error(`Error: ${result.error}`);
     }
   };
 

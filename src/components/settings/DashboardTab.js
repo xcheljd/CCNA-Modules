@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronUp, ChevronDown } from 'lucide-react';
+import { useToast } from '@/components/ui/toast';
 import SettingsManager from '../../utils/settingsManager';
 import { DASHBOARD_SECTIONS, getDefaultDashboardConfig } from '../../utils/dashboardConfig';
 
 function DashboardTab() {
+  const { success } = useToast();
   const [sections, setSections] = useState([]);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
@@ -54,7 +56,7 @@ function DashboardTab() {
 
     const result = SettingsManager.saveDashboardConfig(config);
     if (result.success) {
-      alert('Dashboard configuration saved! Refresh to see changes.');
+      success('Dashboard configuration saved! Refresh to see changes');
     }
   };
 
@@ -226,8 +228,8 @@ function DashboardTab() {
       </div>
 
       <div className="dashboard-note">
-        <strong>Note:</strong> Conditional sections only appear when relevant (for example,
-        some sections only show once you have enough progress data).
+        <strong>Note:</strong> Conditional sections only appear when relevant (for example, some
+        sections only show once you have enough progress data).
       </div>
     </div>
   );

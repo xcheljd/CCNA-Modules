@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import VideoCard from './VideoCard';
 import ConfidenceRating from './ConfidenceRating';
+import { useToast } from '@/components/ui/toast';
 import ProgressTracker from '../utils/progressTracker';
 import ActivityTracker from '../utils/activityTracker';
 import '../styles/modules.css';
 
 function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect }) {
+  const { info } = useToast();
   const [labCompleted, setLabCompleted] = useState(false);
   const [flashcardsAdded, setFlashcardsAdded] = useState(false);
   const [videoCompletions, setVideoCompletions] = useState({});
@@ -78,11 +80,10 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
   };
 
   const handleOpenAnki = () => {
-    // Just open Anki application without a specific file
     if (window.electronAPI && window.electronAPI.openAnki) {
       window.electronAPI.openAnki();
     } else {
-      alert('Opening Anki requires the desktop app. Please install Anki separately.');
+      info('Opening Anki requires the desktop app. Please install Anki separately.');
     }
   };
 
@@ -155,9 +156,11 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
                 <h4>Packet Tracer Lab</h4>
                 <p>{module.resources.lab}</p>
               </div>
-              <button onClick={handleOpenLab} className="open-button">
-                Open Lab
-              </button>
+              <div className="resource-button-single">
+                <button onClick={handleOpenLab} className="open-button">
+                  Open Lab
+                </button>
+              </div>
               <label className="checkbox-label">
                 <input type="checkbox" checked={labCompleted} onChange={handleLabToggle} />
                 <span>Mark as completed</span>
@@ -199,9 +202,11 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
                 <h4>Excel Spreadsheet</h4>
                 <p>{module.resources.spreadsheet}</p>
               </div>
-              <button onClick={handleOpenSpreadsheet} className="open-button spreadsheet-button">
-                Open Spreadsheet
-              </button>
+              <div className="resource-button-single">
+                <button onClick={handleOpenSpreadsheet} className="open-button spreadsheet-button">
+                  Open Spreadsheet
+                </button>
+              </div>
             </div>
           )}
 
