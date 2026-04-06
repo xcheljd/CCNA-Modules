@@ -4,6 +4,7 @@ import ModuleDetail from './components/ModuleDetail';
 import Dashboard from './components/Dashboard';
 import Settings from './components/Settings';
 import LoadingScreen from './components/LoadingScreen';
+import WelcomeDialog from './components/WelcomeDialog';
 import { LayoutDashboard, List } from 'lucide-react';
 import modules from './data/modules';
 import ProgressTracker from './utils/progressTracker';
@@ -25,6 +26,11 @@ function App() {
   });
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(() => {
+    // Check if user has seen welcome
+    const hasSeenWelcome = localStorage.getItem('hasSeenWelcome');
+    return !hasSeenWelcome; // Show if flag doesn't exist
+  });
   const [loadingStatus, setLoadingStatus] = useState('Initializing...');
   const [loadingProgress, setLoadingProgress] = useState(0);
 
@@ -362,6 +368,9 @@ function App() {
 
         <Settings open={settingsOpen} onOpenChange={setSettingsOpen} />
       </main>
+
+      {/* Welcome Dialog - appears on first load */}
+      <WelcomeDialog open={showWelcome && !isLoading} onOpenChange={setShowWelcome} />
     </div>
   );
 }

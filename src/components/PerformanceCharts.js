@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PerformanceTracker from '../utils/performanceTracker';
 import ProgressLineChart from './charts/ProgressLineChart';
 import ActivityHeatmap from './charts/ActivityHeatmap';
@@ -18,19 +18,7 @@ function PerformanceCharts({ modules }) {
   });
   const [prediction, setPrediction] = useState(null);
 
-  useEffect(() => {
-    if (!modules || modules.length === 0) return;
-
-    try {
-      // Load data based on time range
-      // Note: Snapshots are now handled by ActivityTracker on user actions
-      loadChartData();
-    } catch (error) {
-      console.error('Error loading performance data:', error);
-    }
-  }, [modules, timeRange]);
-
-  const loadChartData = () => {
+  const loadChartData = useCallback(() => {
     // Get progress over time data
     const progressHistory = PerformanceTracker.getRecentPerformance(timeRange);
     setProgressData(progressHistory);
@@ -46,7 +34,19 @@ function PerformanceCharts({ modules }) {
     // Get completion prediction
     const pred = PerformanceTracker.predictCompletionDate(modules, modules.length);
     setPrediction(pred);
-  };
+  }, [timeRange, modules]);
+
+  useEffect(() => {
+    if (!modules || modules.length === 0) return;
+
+    try {
+      // Load data based on time range
+      // Note: Snapshots are now handled by ActivityTracker on user actions
+      loadChartData();
+    } catch (error) {
+      console.error('Error loading performance data:', error);
+    }
+  }, [modules, loadChartData]);
 
   const handleTimeRangeChange = range => {
     setTimeRange(range);
