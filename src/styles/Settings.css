@@ -31,7 +31,8 @@
 }
 
 /* Dialog Close Button */
-.settings-dialog > button[class*='absolute'] {
+.settings-dialog > button[class*='absolute'],
+.welcome-dialog > button[class*='absolute'] {
   top: 20px !important;
   right: 20px !important;
   width: 36px !important;
@@ -44,21 +45,25 @@
   justify-content: center !important;
 }
 
-.settings-dialog > button[class*='absolute']:hover {
+.settings-dialog > button[class*='absolute']:hover,
+.welcome-dialog > button[class*='absolute']:hover {
   background: hsl(var(--muted) / 0.8) !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
-.settings-dialog > button[class*='absolute']:active {
+.settings-dialog > button[class*='absolute']:active,
+.welcome-dialog > button[class*='absolute']:active {
   transform: scale(0.95) !important;
 }
 
-.settings-dialog .close-icon {
+.settings-dialog .close-icon,
+.welcome-dialog .close-icon {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: hsl(var(--destructive));
 }
 
-.settings-dialog > button[class*='absolute']:hover .close-icon {
+.settings-dialog > button[class*='absolute']:hover .close-icon,
+.welcome-dialog > button[class*='absolute']:hover .close-icon {
   transform: rotate(90deg);
   stroke-width: 2.5;
 }
@@ -130,18 +135,7 @@
   flex: 1;
   overflow-y: auto;
   padding: 0.75rem 0.5rem 1rem 0;
-  animation: fadeIn 0.3s ease-in;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  animation: fadeInSubtle 0.3s ease-in;
 }
 
 .tab-loading {
@@ -1040,6 +1034,7 @@
   max-height: 90vh;
   overflow-y: auto;
   padding: 1.5rem;
+  z-index: 9999 !important;
 }
 
 .welcome-content {

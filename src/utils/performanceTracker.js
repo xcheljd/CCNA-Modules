@@ -106,8 +106,7 @@ export const PerformanceTracker = {
   },
 
   // Calculate weekly aggregated data
-  calculateWeeklyData(modules) {
-    const data = this.getPerformanceData();
+  calculateWeeklyData(_modules) {
     const today = new Date();
     const weekStart = startOfWeek(today, { weekStartsOn: 1 }); // Monday
     const weekEnd = endOfWeek(today, { weekStartsOn: 1 }); // Sunday
@@ -132,7 +131,6 @@ export const PerformanceTracker = {
 
   // Get modules completed per week (velocity)
   getWeeklyVelocity(weeks = 8) {
-    const data = this.getPerformanceData();
     const velocityData = [];
 
     for (let i = weeks - 1; i >= 0; i--) {

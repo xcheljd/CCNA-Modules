@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/modules.css';
 
-function ConfidenceRating({ moduleId, confidence, onRate, compact = false }) {
+function ConfidenceRating({ confidence, onRate, compact = false }) {
   const ratings = [
     { value: 1, label: 'Need Review', emoji: '😰', color: 'var(--color-confidence-low)' },
     { value: 2, label: 'Unsure', emoji: '😕', color: 'var(--color-confidence-medium)' },

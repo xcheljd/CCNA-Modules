@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ProgressTracker from '../utils/progressTracker';
 import ActivityTracker from '../utils/activityTracker';
 import SettingsManager from '../utils/settingsManager';
-import { DASHBOARD_SECTIONS, getDefaultDashboardConfig } from '../utils/dashboardConfig';
+import { getDefaultDashboardConfig } from '../utils/dashboardConfig';
 import {
   OverallProgressSection,
   ModulesNeedingReviewSection,

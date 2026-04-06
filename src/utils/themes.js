@@ -1,6 +1,6 @@
 // Theme definitions
 export const themes = {
-  light: {
+  ayuLight: {
     name: 'Ayu Light',
     icon: '☀️',
     description: 'Clean, bright theme with warm accent colors from Ayu',
@@ -34,6 +34,13 @@ export const themes = {
       // Ring: Ayu accent
       ring: '37 100% 60%',
       radius: '0.5rem',
+      // Surface area colors
+      header: '210 17% 98%',
+      headerForeground: '210 4% 38%',
+      loading: '37 100% 60%',
+      loadingForeground: '0 0% 98%',
+      sidebar: '210 17% 98%',
+      sidebarForeground: '210 4% 38%',
       // Progress colors using Ayu palette
       colorProgressEmpty: '#E5E7E9',
       colorProgressLow: '#FA8D3E', // keyword/operator
@@ -57,7 +64,7 @@ export const themes = {
       colorConfidenceTextOnHigh: '#000',
     },
   },
-  dark: {
+  ayuDark: {
     name: 'Ayu Mirage',
     icon: '🌙',
     description: 'Dark theme with vibrant syntax colors inspired by twilight',
@@ -86,11 +93,18 @@ export const themes = {
       destructive: '0 100% 70%',
       destructiveForeground: '0 0% 98%',
       // Border: slightly lighter than bg
-      border: '216 15% 22%',
+      border: '216 15% 26%',
       input: '218 20% 12%',
       // Ring: Ayu accent
       ring: '40 100% 70%',
       radius: '0.5rem',
+      // Surface area colors
+      header: '220 19% 14%',
+      headerForeground: '40 11% 78%',
+      loading: '40 100% 70%',
+      loadingForeground: '216 19% 16%',
+      sidebar: '220 19% 14%',
+      sidebarForeground: '40 11% 78%',
       // Progress colors using Ayu Mirage palette
       colorProgressEmpty: '#2A303D',
       colorProgressLow: '#FFAD66', // keyword
@@ -128,15 +142,22 @@ export const themes = {
       secondary: '220 20% 18%',
       secondaryForeground: '0 0% 70%',
       muted: '220 15% 22%',
-      mutedForeground: '0 0% 60%',
+      mutedForeground: '0 0% 65%',
       accent: '195 80% 55%',
       accentForeground: '0 0% 100%',
       destructive: '0 62% 50%',
       destructiveForeground: '0 0% 98%',
-      border: '220 15% 25%',
+      border: '220 15% 28%',
       input: '220 15% 20%',
       ring: '200 100% 45%',
       radius: '0.5rem',
+      // Surface area colors
+      header: '220 25% 12%',
+      headerForeground: '0 0% 85%',
+      loading: '200 100% 45%',
+      loadingForeground: '0 0% 98%',
+      sidebar: '220 25% 12%',
+      sidebarForeground: '0 0% 80%',
       colorProgressEmpty: '#2a3d4a',
       colorProgressLow: '#ff8a65',
       colorProgressMedium: '#4fc3f7',
@@ -181,6 +202,13 @@ export const themes = {
       input: '256 40% 10%',
       ring: '189 87% 48%',
       radius: '0.375rem',
+      // Surface area colors (dark header with cyan text - eliminates CSS override)
+      header: '256 40% 4%',
+      headerForeground: '189 70% 80%',
+      loading: '189 87% 45%',
+      loadingForeground: '0 0% 5%',
+      sidebar: '256 40% 4%',
+      sidebarForeground: '189 60% 75%',
       colorProgressEmpty: '#0f0f1a',
       colorProgressLow: '#1ECDE6',
       colorProgressMedium: '#1ECDE6',
@@ -193,62 +221,6 @@ export const themes = {
       colorConfidenceMastered: '#2DB83D',
       colorChartBackground: '#0a0a15',
       colorChartBorder: '#189AB4',
-      // Text colors for displaying on colored backgrounds
-      colorProgressTextOnLow: '#000',
-      colorProgressTextOnMedium: '#000',
-      colorProgressTextOnComplete: '#000',
-      colorConfidenceTextOnLow: '#000',
-      colorConfidenceTextOnMedium: '#000',
-      colorConfidenceTextOnHigh: '#000',
-    },
-  },
-  dracula: {
-    name: 'Dracula',
-    icon: '🧛',
-    description: 'Official Dracula theme with purple and pink accents',
-    colors: {
-      // Primary: Purple (#BD93F9) - HSL: 265, 89%, 78%
-      primary: '265 89% 78%',
-      primaryForeground: '231 15% 18%', // Background
-      // Background: #282A36 - HSL: 231, 15%, 18%
-      background: '231 15% 18%',
-      // Foreground: #F8F8F2 - HSL: 60, 30%, 96%
-      foreground: '60 30% 96%',
-      // Card: slightly lighter than background
-      card: '232 14% 21%',
-      cardForeground: '60 30% 96%',
-      // Secondary: Current Line (#44475A) - HSL: 232, 14%, 31%
-      secondary: '232 14% 31%',
-      secondaryForeground: '60 30% 96%',
-      // Muted: Comment (#6272A4) - HSL: 225, 27%, 51%
-      muted: '232 14% 31%',
-      mutedForeground: '225 27% 51%',
-      // Accent: Pink (#FF79C6) - HSL: 326, 100%, 74%
-      accent: '326 100% 74%',
-      accentForeground: '231 15% 18%',
-      // Destructive: Red (#FF5555) - HSL: 0, 100%, 67%
-      destructive: '0 100% 67%',
-      destructiveForeground: '60 30% 96%',
-      // Border: Selection (#44475A)
-      border: '232 14% 31%',
-      input: '232 14% 31%',
-      // Ring: Cyan (#8BE9FD) - HSL: 191, 97%, 77%
-      ring: '191 97% 77%',
-      radius: '0.5rem',
-      // Progress colors using Dracula palette
-      colorProgressEmpty: '#44475A', // Current Line
-      colorProgressLow: '#FFB86C', // Orange
-      colorProgressMedium: '#8BE9FD', // Cyan
-      colorProgressComplete: '#50FA7B', // Green
-      // Confidence colors using Dracula palette
-      colorConfidenceNone: '#44475A', // Current Line
-      colorConfidenceLow: '#FF5555', // Red
-      colorConfidenceMedium: '#FFB86C', // Orange
-      colorConfidenceOkay: '#F1FA8C', // Yellow
-      colorConfidenceHigh: '#50FA7B', // Green
-      colorConfidenceMastered: '#FF79C6', // Pink
-      colorChartBackground: '#21222C',
-      colorChartBorder: '#6272A4',
       // Text colors for displaying on colored backgrounds
       colorProgressTextOnLow: '#000',
       colorProgressTextOnMedium: '#000',
@@ -279,7 +251,7 @@ export const themes = {
       secondaryForeground: '219 28% 88%', // nord4
       // Muted: Nord3 (Polar Night) (#4C566A) - HSL: 220, 16%, 36%
       muted: '220 17% 32%', // nord2
-      mutedForeground: '219 28% 88%', // nord4 - Snow Storm for better contrast
+      mutedForeground: '229 10% 55%', // Nord overlay 0 - FIXED: was too bright
       // Accent: Nord8 (Frost) (#88C0D0) - HSL: 193, 43%, 67%
       accent: '193 43% 67%',
       accentForeground: '220 16% 22%', // nord0
@@ -293,6 +265,13 @@ export const themes = {
       // Ring: Nord9 (Frost) (#81A1C1) - HSL: 210, 34%, 63%
       ring: '210 34% 63%',
       radius: '0.5rem',
+      // Surface area colors
+      header: '222 16% 28%',
+      headerForeground: '219 28% 88%',
+      loading: '213 32% 52%',
+      loadingForeground: '218 27% 94%',
+      sidebar: '222 16% 28%',
+      sidebarForeground: '219 28% 88%',
       // Progress colors using Nord Aurora palette
       colorProgressEmpty: '#4c566a', // nord3 - Polar Night
       colorProgressLow: '#ebcb8b', // nord13 - Aurora Yellow
@@ -349,6 +328,13 @@ export const themes = {
       // Ring: Iris (#C4A7E7) - HSL: 267, 57%, 78%
       ring: '267 57% 78%',
       radius: '0.5rem',
+      // Surface area colors
+      header: '246 24% 15%',
+      headerForeground: '245 50% 91%',
+      loading: '4 54% 67%',
+      loadingForeground: '249 22% 12%',
+      sidebar: '246 24% 15%',
+      sidebarForeground: '245 50% 91%',
       // Progress colors using Rose Pine palette
       colorProgressEmpty: '#26233a', // overlay
       colorProgressLow: '#c4a7e7', // iris
@@ -374,7 +360,7 @@ export const themes = {
   },
   mocha: {
     name: 'Catppuccin Mocha',
-    icon: '🍫',
+    icon: '😺',
     description: 'Soothing pastel theme with rich, warm colors perfect for night owls',
     colors: {
       // Primary: Mauve (#CBA6F7) - HSL: 267, 84%, 81%
@@ -406,6 +392,13 @@ export const themes = {
       // Ring: Mauve
       ring: '267 84% 81%',
       radius: '0.5rem',
+      // Surface area colors
+      header: '237 16% 23%',
+      headerForeground: '227 68% 88%',
+      loading: '267 84% 81%',
+      loadingForeground: '240 21% 15%',
+      sidebar: '237 16% 23%',
+      sidebarForeground: '227 68% 88%',
       // Progress colors using Catppuccin Mocha palette
       colorProgressEmpty: '#45475a', // surface1
       colorProgressLow: '#fab387', // peach
@@ -463,6 +456,13 @@ export const themes = {
       // Ring: Bright Orange
       ring: '25 99% 55%',
       radius: '0.5rem',
+      // Surface area colors
+      header: '20 4% 22%',
+      headerForeground: '39 43% 80%',
+      loading: '25 99% 55%',
+      loadingForeground: '0 0% 98%',
+      sidebar: '20 4% 22%',
+      sidebarForeground: '39 43% 80%',
       // Progress colors using Gruvbox palette
       colorProgressEmpty: '#504945', // dark2
       colorProgressLow: '#fabd2f', // bright_yellow
@@ -520,6 +520,13 @@ export const themes = {
       // Ring: Neutral Orange
       ring: '20 93% 44%',
       radius: '0.5rem',
+      // Surface area colors
+      header: '49 56% 91%',
+      headerForeground: '20 4% 22%',
+      loading: '20 93% 44%',
+      loadingForeground: '0 0% 98%',
+      sidebar: '39 43% 80%',
+      sidebarForeground: '20 4% 22%',
       // Progress colors using Gruvbox light palette
       colorProgressEmpty: '#D5C4A1', // light2
       colorProgressLow: '#d79921', // neutral_yellow
@@ -577,6 +584,13 @@ export const themes = {
       // Ring: Base0D
       ring: '206 24% 63%',
       radius: '0.5rem',
+      // Surface area colors
+      header: '209 15% 25%',
+      headerForeground: '214 16% 78%',
+      loading: '206 24% 63%',
+      loadingForeground: '0 0% 98%',
+      sidebar: '209 15% 25%',
+      sidebarForeground: '214 16% 78%',
       // Progress colors using Base16 Ocean
       colorProgressEmpty: '#4F5B66', // base02
       colorProgressLow: '#EBCB8B', // base0A yellow
@@ -634,6 +648,13 @@ export const themes = {
       // Ring: Base0D
       ring: '206 24% 63%',
       radius: '0.5rem',
+      // Surface area colors
+      header: '218 27% 95%',
+      headerForeground: '207 13% 36%',
+      loading: '206 24% 63%',
+      loadingForeground: '0 0% 98%',
+      sidebar: '225 18% 90%',
+      sidebarForeground: '207 13% 36%',
       // Progress colors using Base16 Ocean
       colorProgressEmpty: '#C0C5CE', // base05
       colorProgressLow: '#D08770', // base09 orange
@@ -692,6 +713,13 @@ export const themes = {
       // Ring: Base0D
       ring: '210 50% 60%',
       radius: '0.5rem',
+      // Surface area colors
+      header: '209 15% 25%',
+      headerForeground: '214 16% 78%',
+      loading: '210 50% 60%',
+      loadingForeground: '0 0% 98%',
+      sidebar: '209 15% 25%',
+      sidebarForeground: '214 16% 78%',
       // Progress colors using Base16 OceanicNext
       colorProgressEmpty: '#4F5B66', // base02
       colorProgressLow: '#FAC863', // base0A yellow
@@ -713,6 +741,134 @@ export const themes = {
       colorConfidenceTextOnLow: '#fff',
       colorConfidenceTextOnMedium: '#000',
       colorConfidenceTextOnHigh: '#000',
+    },
+  },
+  dark: {
+    name: 'Dark',
+    icon: '🌙',
+    description: 'Easy on the eyes dark theme for comfortable studying',
+    colors: {
+      // Primary: GitHub blue (#58a6ff) - HSL: 212, 100%, 68%
+      primary: '212 100% 68%',
+      primaryForeground: '215 28% 7%',
+      // Background: GitHub canvas default (#0d1117) - HSL: 215, 28%, 7%
+      background: '215 28% 7%',
+      // Foreground: GitHub fg default (#e6edf3) - HSL: 213, 31%, 91%
+      foreground: '213 31% 91%',
+      // Card: GitHub canvas overlay (#161b22) - HSL: 213, 17%, 12%
+      card: '213 17% 12%',
+      cardForeground: '213 31% 91%',
+      // Secondary: GitHub gray-7 (#30363d) - HSL: 213, 12%, 21%
+      secondary: '213 12% 21%',
+      secondaryForeground: '213 31% 91%',
+      // Muted: same as secondary
+      muted: '213 12% 21%',
+      // Muted foreground: GitHub gray-5 (#6e7681) - HSL: 213, 11%, 46%
+      mutedForeground: '213 11% 46%',
+      // Accent: GitHub accent emphasis (#2f81f7) - HSL: 217, 92%, 58%
+      accent: '217 92% 58%',
+      accentForeground: '0 0% 100%',
+      // Destructive: GitHub danger (#f85149) - HSL: 2, 93%, 64%
+      destructive: '2 93% 64%',
+      destructiveForeground: '0 0% 100%',
+      // Border: GitHub border default (#30363d)
+      border: '213 12% 21%',
+      input: '213 12% 21%',
+      // Ring: GitHub blue
+      ring: '212 100% 68%',
+      radius: '0.5rem',
+      // Surface area colors
+      header: '213 17% 12%',
+      headerForeground: '213 31% 91%',
+      loading: '212 100% 68%',
+      loadingForeground: '215 28% 7%',
+      sidebar: '213 17% 12%',
+      sidebarForeground: '213 31% 91%',
+      // Progress colors using GitHub dark palette
+      colorProgressEmpty: '#21262d',
+      colorProgressLow: '#f0883e', // orange-4
+      colorProgressMedium: '#58a6ff', // blue-4
+      colorProgressComplete: '#3fb950', // green-4
+      // Confidence colors using GitHub dark palette
+      colorConfidenceNone: '#21262d',
+      colorConfidenceLow: '#f85149', // red-5
+      colorConfidenceMedium: '#f0883e', // orange-4
+      colorConfidenceOkay: '#d29922', // yellow-4
+      colorConfidenceHigh: '#56d364', // green-3
+      colorConfidenceMastered: '#58a6ff', // blue-4
+      colorChartBackground: '#161b22',
+      colorChartBorder: '#30363d',
+      // Text colors for displaying on colored backgrounds
+      colorProgressTextOnLow: '#000',
+      colorProgressTextOnMedium: '#000',
+      colorProgressTextOnComplete: '#000',
+      colorConfidenceTextOnLow: '#000',
+      colorConfidenceTextOnMedium: '#000',
+      colorConfidenceTextOnHigh: '#000',
+    },
+  },
+  light: {
+    name: 'Light',
+    icon: '☀️',
+    description: 'Clean, modern light theme with excellent readability',
+    colors: {
+      // Primary: GitHub blue (#0969da) - HSL: 212, 93%, 45%
+      primary: '212 93% 45%',
+      primaryForeground: '0 0% 100%',
+      // Background: GitHub canvas default (#ffffff) - HSL: 0, 0%, 100%
+      background: '0 0% 100%',
+      // Foreground: GitHub fg default (#24292f) - HSL: 210, 11%, 17%
+      foreground: '210 11% 17%',
+      // Card: GitHub canvas subtle (#f6f8fa) - HSL: 210, 22%, 97%
+      card: '210 22% 97%',
+      cardForeground: '210 11% 17%',
+      // Secondary: GitHub gray-2 (#eaeef2) - HSL: 213, 23%, 94%
+      secondary: '213 23% 94%',
+      secondaryForeground: '210 11% 17%',
+      // Muted: same as secondary
+      muted: '213 23% 94%',
+      // Muted foreground: GitHub gray-6 (#6e7781) - HSL: 213, 11%, 46%
+      mutedForeground: '213 11% 46%',
+      // Accent: GitHub blue (#0969da) - HSL: 212, 93%, 45%
+      accent: '212 93% 45%',
+      accentForeground: '0 0% 100%',
+      // Destructive: GitHub danger (#cf222e) - HSL: 356, 72%, 47%
+      destructive: '356 72% 47%',
+      destructiveForeground: '0 0% 100%',
+      // Border: GitHub border default (#d0d7de)
+      border: '213 14% 86%',
+      input: '213 14% 86%',
+      // Ring: GitHub blue
+      ring: '212 93% 45%',
+      radius: '0.5rem',
+      // Surface area colors
+      header: '212 93% 45%',
+      headerForeground: '0 0% 100%',
+      loading: '212 93% 45%',
+      loadingForeground: '0 0% 100%',
+      sidebar: '210 22% 97%',
+      sidebarForeground: '210 11% 17%',
+      // Progress colors using GitHub light palette
+      colorProgressEmpty: '#eaeef2',
+      colorProgressLow: '#e16f24', // orange-5
+      colorProgressMedium: '#0969da', // blue-6
+      colorProgressComplete: '#1a7f37', // green-6
+      // Confidence colors using GitHub light palette
+      colorConfidenceNone: '#eaeef2',
+      colorConfidenceLow: '#cf222e', // red-6
+      colorConfidenceMedium: '#e16f24', // orange-5
+      colorConfidenceOkay: '#9a6700', // yellow-6
+      colorConfidenceHigh: '#1a7f37', // green-6
+      colorConfidenceMastered: '#0969da', // blue-6
+      colorChartBackground: '#f6f8fa',
+      colorChartBorder: '#d0d7de',
+      // Text colors for displaying on colored backgrounds
+      colorProgressTextOnLow: '#fff',
+      colorProgressTextOnMedium: '#fff',
+      colorProgressTextOnComplete: '#fff',
+      colorConfidenceTextOnLow: '#fff',
+      colorConfidenceTextOnMedium: '#fff',
+      colorConfidenceTextOnHigh: '#fff',
     },
   },
 };
