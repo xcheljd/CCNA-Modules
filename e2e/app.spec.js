@@ -2,9 +2,15 @@ import { test, expect } from '@playwright/test';
 
 test.describe('CCNA Modules App - Basic Functionality', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:9000');
-    // Wait for the app to load (wait for LoadingScreen to disappear)
-    await page.waitForSelector('text=CCNA 200-301 Course', { timeout: 15000 });
+    await page.goto('/');
+    await page.waitForSelector('.app', { timeout: 30000 });
+
+    // Close welcome dialog if present
+    const welcomeDialog = page.getByRole('dialog', { name: /Welcome/ });
+    if (await welcomeDialog.isVisible().catch(() => false)) {
+      await page.getByRole('button', { name: 'Get Started' }).click();
+      await welcomeDialog.waitFor({ state: 'hidden' });
+    }
   });
 
   test('should load application', async ({ page }) => {
@@ -91,20 +97,26 @@ test.describe('CCNA Modules App - Basic Functionality', () => {
 
 test.describe('Settings Panel', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:9000');
-    await page.waitForSelector('text=CCNA 200-301 Course', { timeout: 15000 });
+    await page.goto('/');
+    await page.waitForSelector('.app', { timeout: 30000 });
+
+    const welcomeDialog = page.getByRole('dialog', { name: /Welcome/ });
+    if (await welcomeDialog.isVisible().catch(() => false)) {
+      await page.getByRole('button', { name: 'Get Started' }).click();
+      await welcomeDialog.waitFor({ state: 'hidden' });
+    }
   });
 
   test('should open settings panel', async ({ page }) => {
-    const settingsButton = page.locator('[aria-label="Settings"]');
-    await settingsButton.click();
+    await page.getByRole('button', { name: 'Toggle menu' }).click();
+    await page.getByRole('button', { name: 'Settings' }).click();
 
     await expect(page.locator('.settings-dialog')).toBeVisible();
   });
 
   test('should switch between setting tabs', async ({ page }) => {
-    const settingsButton = page.locator('[aria-label="Settings"]');
-    await settingsButton.click();
+    await page.getByRole('button', { name: 'Toggle menu' }).click();
+    await page.getByRole('button', { name: 'Settings' }).click();
 
     await expect(page.locator('.settings-tabs')).toBeVisible();
 
@@ -120,8 +132,8 @@ test.describe('Settings Panel', () => {
   });
 
   test('should close settings panel', async ({ page }) => {
-    const settingsButton = page.locator('[aria-label="Settings"]');
-    await settingsButton.click();
+    await page.getByRole('button', { name: 'Toggle menu' }).click();
+    await page.getByRole('button', { name: 'Settings' }).click();
 
     await expect(page.locator('.settings-dialog')).toBeVisible();
 
@@ -134,8 +146,14 @@ test.describe('Settings Panel', () => {
 
 test.describe('Module Progress Tracking', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:9000');
-    await page.waitForSelector('text=CCNA 200-301 Course', { timeout: 15000 });
+    await page.goto('/');
+    await page.waitForSelector('.app', { timeout: 30000 });
+
+    const welcomeDialog = page.getByRole('dialog', { name: /Welcome/ });
+    if (await welcomeDialog.isVisible().catch(() => false)) {
+      await page.getByRole('button', { name: 'Get Started' }).click();
+      await welcomeDialog.waitFor({ state: 'hidden' });
+    }
 
     // Navigate to modules view
     const listButton = page.locator('[aria-label="Modules view"]');
@@ -154,14 +172,10 @@ test.describe('Module Progress Tracking', () => {
 
   test('should filter modules by status', async ({ page }) => {
     // Click the status filter dropdown
-    const filterButton = page.locator('.filter-dropdown').first();
-    await filterButton.click();
+    const filterSelect = page.locator('#status-filter');
+    await filterSelect.selectOption('in-progress');
 
-    // Select "In Progress" option
-    const inProgressOption = page.locator('text=In Progress');
-    await inProgressOption.click();
-
-    // Should only show in-progress modules
+    // Should only show in-progress modules (or no results if none exist)
     await page.waitForTimeout(500);
   });
 

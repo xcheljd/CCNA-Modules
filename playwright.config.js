@@ -9,6 +9,14 @@ export default defineConfig({
   reporter: 'html',
   use: {
     trace: 'on-first-retry',
+    baseURL: 'http://localhost:9000',
+  },
+
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:9000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120000,
   },
 
   projects: [
