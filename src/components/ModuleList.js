@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, memo } from 'react';
 import SearchBar from './SearchBar';
 import ConfidenceRating from './ConfidenceRating';
 import ProgressTracker from '../utils/progressTracker';
@@ -13,7 +13,6 @@ function ModuleList({ modules, onModuleSelect }) {
   const [isSwitchingView, setIsSwitchingView] = useState(false);
 
   useEffect(() => {
-    // Calculate progress for all modules
     const progress = {};
     modules.forEach(module => {
       progress[module.id] = ProgressTracker.getModuleProgress(module);
@@ -21,53 +20,54 @@ function ModuleList({ modules, onModuleSelect }) {
     setModuleProgress(progress);
   }, [modules]);
 
+  const progressMap = useMemo(() => moduleProgress, [moduleProgress]);
+
   const getModuleStatus = progress => {
     if (progress === 0) return 'not-started';
     if (progress === 100) return 'completed';
     return 'in-progress';
   };
 
-  const filteredModules = modules.filter(module => {
-    const progress = moduleProgress[module.id] || 0;
-    const confidence = ProgressTracker.getModuleConfidence(module.id);
+  const filteredModules = useMemo(() => {
+    return modules.filter(module => {
+      const progress = progressMap[module.id] || 0;
+      const confidence = ProgressTracker.getModuleConfidence(module.id);
 
-    // Filter by completion status
-    if (filterStatus !== 'all') {
-      const status = getModuleStatus(progress);
-      if (status !== filterStatus) return false;
-    }
-
-    // Filter by confidence rating
-    if (filterConfidence !== 'all') {
-      if (filterConfidence === 'not-rated' && confidence !== 0) return false;
-      if (filterConfidence === 'needs-review' && (confidence === 0 || confidence > 2)) return false;
-      if (filterConfidence === 'okay' && confidence !== 3) return false;
-      if (filterConfidence === 'confident' && (confidence < 4 || confidence === 0)) return false;
-    }
-
-    // Filter by search query (searches title, description, and video names)
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      const matchesTitle = module.title.toLowerCase().includes(query);
-      const matchesDay = module.day.toString().includes(query);
-
-      // Search through video titles
-      const matchesVideo = module.videos.some(video => video.title.toLowerCase().includes(query));
-
-      // If module doesn't match any criteria, filter it out
-      if (!matchesTitle && !matchesDay && !matchesVideo) {
-        return false;
+      if (filterStatus !== 'all') {
+        const status = getModuleStatus(progress);
+        if (status !== filterStatus) return false;
       }
-    }
 
-    return true;
-  });
+      if (filterConfidence !== 'all') {
+        if (filterConfidence === 'not-rated' && confidence !== 0) return false;
+        if (filterConfidence === 'needs-review' && (confidence === 0 || confidence > 2))
+          return false;
+        if (filterConfidence === 'okay' && confidence !== 3) return false;
+        if (filterConfidence === 'confident' && (confidence < 4 || confidence === 0)) return false;
+      }
 
-  const getProgressColor = progress => {
-    if (progress === 0) return 'hsl(var(--muted))';
-    if (progress === 100) return 'var(--color-progress-complete)';
-    return 'hsl(var(--ring))';
-  };
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesTitle = module.title.toLowerCase().includes(query);
+        const matchesDay = module.day.toString().includes(query);
+        const matchesVideo = module.videos.some(video => video.title.toLowerCase().includes(query));
+
+        if (!matchesTitle && !matchesDay && !matchesVideo) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [modules, progressMap, filterStatus, filterConfidence, searchQuery]);
+
+  const getProgressColor = useMemo(() => {
+    return progress => {
+      if (progress === 0) return 'hsl(var(--muted))';
+      if (progress === 100) return 'var(--color-progress-complete)';
+      return 'hsl(var(--ring))';
+    };
+  }, []);
 
   const handleViewModeChange = newMode => {
     if (newMode === viewMode) return;
@@ -145,7 +145,7 @@ function ModuleList({ modules, onModuleSelect }) {
 
       <div className={`modules-container ${viewMode}-view ${isSwitchingView ? 'switching' : ''}`}>
         {filteredModules.map(module => {
-          const progress = moduleProgress[module.id] || 0;
+          const progress = progressMap[module.id] || 0;
           const progressColor = getProgressColor(progress);
           const confidence = ProgressTracker.getModuleConfidence(module.id);
 
@@ -243,4 +243,4 @@ function ModuleList({ modules, onModuleSelect }) {
   );
 }
 
-export default ModuleList;
+export default memo(ModuleList);
