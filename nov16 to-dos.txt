@@ -1,0 +1,23 @@
+PENDING - Task 6, deferred task, RELEVANT FILES:
+find-duplicate-classes.jscss-class-audit.txtTASK_6_CSS_CONSOLIDATION_PLAN.mdREFACTORING_SUMMARY.mdREFACTORING_TRACKER.csv
+
+
+
+
+1. Remove continue watching card from dashboard
+
+4. Dashboard Section "Overall Progress" progress stats are not showing the number of items properly. It shows how many items are completed but now number of total items to be completed - WEEKLY LIMIT REACHED - CONTINUE NOV 20 @ 2PM
+
+5. Checkmarks within resources container can not be unchecked. Make sure they also have appropriate gaps between other elements. Also make sure unchecking removes the item from completed progress.
+
+
+6. For day 14 the "no resources available for this module" have more of a gap under this text. Or a card with this text inside of it
+
+
+
+10. Are the resources, flashcards & packet tracer files, getting built in to the app?
+
+11. For the course header, what is it's current behavior when user is viewing the dashboard, modules list, or within a module.
+
+
+12. Update loading screen based on last chosen theme
