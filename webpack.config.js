@@ -69,6 +69,7 @@ module.exports = {
       'process.env': JSON.stringify({ NODE_ENV: isProduction ? 'production' : 'development' }),
     }),
   ],
+  performance: { hints: false },
   devServer: {
     static: {
       directory: path.join(__dirname, 'dist'),
