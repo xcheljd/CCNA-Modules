@@ -20,7 +20,7 @@
 @tailwind utilities;
 
 @layer base {
- :root {
+  :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -67,6 +67,34 @@
     --transition-base: 0.25s;
     --transition-slow: 0.35s;
     --transition-slower: 0.5s;
+  }
+
+  /* Enhanced sequential theme color transitions */
+  :root {
+    transition: 
+      /* Phase 1: Foundation colors (0s delay) */
+      --background var(--transition-slower) ease 0s,
+      --card var(--transition-slower) ease 0s,
+      /* Phase 2: Primary colors (0.1s delay) */ --primary var(--transition-slow) ease 0.1s,
+      --primary-foreground var(--transition-slow) ease 0.1s,
+      /* Phase 3: Secondary colors (0.2s delay) */ --secondary var(--transition-base) ease 0.2s,
+      --secondary-foreground var(--transition-base) ease 0.2s,
+      --accent var(--transition-base) ease 0.2s,
+      --accent-foreground var(--transition-base) ease 0.2s,
+      --muted var(--transition-base) ease 0.2s,
+      --muted-foreground var(--transition-base) ease 0.2s,
+      /* Phase 4: Detail colors (0.3s delay) */ --foreground var(--transition-fast) ease 0.3s,
+      --border var(--transition-fast) ease 0.3s,
+      --input var(--transition-fast) ease 0.3s,
+      --ring var(--transition-fast) ease 0.3s,
+      --card-foreground var(--transition-fast) ease 0.3s;
+  }
+
+  /* Reduced motion fallback for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      transition: all var(--transition-fast) ease 0s;
+    }
   }
 
   /* Theme-specific overrides - variables are set via JavaScript */
@@ -628,6 +656,16 @@ a {
   border-top: 4px solid white;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+  position: relative;
+}
+
+.spinner::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 .loading-content p {
@@ -635,6 +673,54 @@ a {
   opacity: 0.9;
   font-weight: 400;
   letter-spacing: 0.5px;
+}
+
+.loading-status {
+  font-size: 16px;
+  opacity: 0.9;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  margin-bottom: 20px;
+}
+
+.loading-progress {
+  width: 200px;
+  margin: 0 auto;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.8), white, rgba(255, 255, 255, 0.8));
+  background-size: 200% 100%;
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: shimmer 2s infinite;
+}
+
+.progress-text {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.8;
+  font-weight: 400;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* Fade out animation when loading is done */
@@ -715,6 +801,18 @@ a {
   50% {
     opacity: 1;
     transform: scaleX(1);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.05);
   }
 }
 

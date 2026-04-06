@@ -13,7 +13,7 @@ import themes from './utils/themes';
 const { electronAPI } = window;
 
 function App() {
-  const [currentView, setCurrentView] = useState('list');
+  const [currentView, setCurrentView] = useState('dashboard');
   const [selectedModule, setSelectedModule] = useState(null);
   const [resourcesAvailable, setResourcesAvailable] = useState(true);
   const [overallProgress, setOverallProgress] = useState(0);
@@ -21,28 +21,62 @@ function App() {
   const [currentTheme, setCurrentTheme] = useState(() => {
     // Load theme preference from localStorage
     const saved = localStorage.getItem('app-theme');
-    return saved || 'light';
+    return saved || 'spacegrayLight';
   });
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [loadingStatus, setLoadingStatus] = useState('Initializing...');
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
   useEffect(() => {
     // Force width on mount before anything else
     document.documentElement.style.width = '100%';
     document.body.style.width = '100%';
 
-    // Simulate loading time and initialize app
+    // Smart loading with progress tracking
     const initializeApp = async () => {
-      await checkResources();
-      calculateOverallProgress();
+      const startTime = Date.now();
 
-      // Initialize all tracking systems (streak, performance snapshots)
-      ActivityTracker.initializeTracking(modules);
+      // Define loading phases
+      const phases = [
+        {
+          name: 'Checking course resources...',
+          action: async () => {
+            setLoadingStatus('Checking course resources...');
+            await checkResources();
+          },
+        },
+        {
+          name: 'Calculating your progress...',
+          action: async () => {
+            setLoadingStatus('Calculating your progress...');
+            calculateOverallProgress();
+          },
+        },
+        {
+          name: 'Setting up activity tracking...',
+          action: async () => {
+            setLoadingStatus('Setting up activity tracking...');
+            ActivityTracker.initializeTracking(modules);
+          },
+        },
+      ];
 
-      // Minimum loading time to show the screen
+      // Execute phases with progress updates
+      for (let i = 0; i < phases.length; i++) {
+        setLoadingProgress(((i + 1) / phases.length) * 100);
+        await phases[i].action();
+      }
+
+      // Smart timing: minimum 800ms for professional feel, but no artificial delay
+      const elapsed = Date.now() - startTime;
+      const remainingTime = Math.max(0, 800 - elapsed);
+
+      setLoadingStatus('Almost ready...');
+
       setTimeout(() => {
         setIsLoading(false);
-      }, 1000);
+      }, remainingTime);
     };
 
     initializeApp();
@@ -75,7 +109,6 @@ function App() {
           'theme-gruvbox-light',
           'theme-spacegray',
           'theme-spacegray-light',
-          'theme-spacegray-eighties',
           'theme-spacegray-oceanic'
         );
         // Convert camelCase theme ID to kebab-case for CSS class
@@ -167,7 +200,7 @@ function App() {
 
   // Show loading screen while app initializes
   if (isLoading) {
-    return <LoadingScreen />;
+    return <LoadingScreen status={loadingStatus} progress={loadingProgress} />;
   }
 
   return (
@@ -179,7 +212,7 @@ function App() {
             <span></span>
             <span></span>
           </button>
-          
+
           <div className="header-title-group">
             <h1>CCNA 200-301 Course</h1>
             <div className="view-toggle">
@@ -208,7 +241,8 @@ function App() {
                   className="progress-fill-small"
                   style={{
                     width: `${overallProgress}%`,
-                    background: overallProgress === 100 ? 'var(--color-progress-complete)' : undefined
+                    background:
+                      overallProgress === 100 ? 'var(--color-progress-complete)' : undefined,
                   }}
                 />
               </div>

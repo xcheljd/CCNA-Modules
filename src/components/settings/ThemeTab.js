@@ -6,7 +6,32 @@ import { Check } from 'lucide-react';
 import themes from '../../utils/themes';
 
 function ThemeTab() {
-  const [currentTheme, setCurrentTheme] = useState(localStorage.getItem('app-theme') || 'light');
+  const [currentTheme, setCurrentTheme] = useState(
+    localStorage.getItem('app-theme') || 'spacegrayLight'
+  );
+
+  // Define the desired theme order
+  const themeOrder = [
+    'spacegrayLight',
+    'spacegray',
+    'spacegrayOceanic',
+    'gruvboxLight',
+    'gruvboxDark',
+    'light',
+    'dark',
+    'nord',
+    'rosePine',
+    'mocha',
+    'dracula',
+  ];
+
+  // Filter and map themes according to the desired order
+  const orderedThemes = themeOrder
+    .filter(themeId => themes[themeId]) // Ensure theme exists
+    .map(themeId => ({
+      id: themeId,
+      ...themes[themeId],
+    }));
 
   // Listen for theme changes to update the display
   useEffect(() => {
@@ -30,42 +55,44 @@ function ThemeTab() {
         Choose a color theme that suits your preference and study environment.
       </p>
 
-      <div className="theme-grid">
-        {Object.entries(themes).map(([themeId, theme]) => (
+      <div className="theme-list">
+        {orderedThemes.map(theme => (
           <div
-            key={themeId}
-            className={`theme-card ${currentTheme === themeId ? 'active' : ''}`}
-            onClick={() => handleThemeChange(themeId)}
+            key={theme.id}
+            className={`theme-list-item ${currentTheme === theme.id ? 'active' : ''}`}
+            onClick={() => handleThemeChange(theme.id)}
           >
-            <div className="theme-preview">
-              <div className="theme-colors">
-                <div
-                  className="color-swatch primary"
-                  style={{ backgroundColor: `hsl(${theme.colors.primary})` }}
-                />
-                <div
-                  className="color-swatch secondary"
-                  style={{ backgroundColor: `hsl(${theme.colors.secondary})` }}
-                />
-                <div
-                  className="color-swatch accent"
-                  style={{ backgroundColor: `hsl(${theme.colors.accent})` }}
-                />
+            <div className="theme-content">
+              <div className="theme-name-section">
+                <span className="theme-name">{theme.name}</span>
               </div>
-              <div className="theme-icon">{theme.icon}</div>
+
+              <div className="theme-preview-compact">
+                <span className="theme-icon">{theme.icon}</span>
+                <div className="color-swatches-compact">
+                  <div
+                    className="color-swatch-compact"
+                    style={{ backgroundColor: `hsl(${theme.colors.primary})` }}
+                  />
+                  <div
+                    className="color-swatch-compact"
+                    style={{ backgroundColor: `hsl(${theme.colors.secondary})` }}
+                  />
+                  <div
+                    className="color-swatch-compact"
+                    style={{ backgroundColor: `hsl(${theme.colors.accent})` }}
+                  />
+                </div>
+
+                {currentTheme === theme.id && (
+                  <div className="theme-active-indicator">
+                    <Check size={14} />
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="theme-info">
-              <h4>{theme.name}</h4>
-              <p>{theme.description}</p>
-            </div>
-
-            {currentTheme === themeId && (
-              <div className="theme-selected">
-                <Check size={16} />
-                <span>Active</span>
-              </div>
-            )}
+            <div className="theme-description">{theme.description}</div>
           </div>
         ))}
       </div>

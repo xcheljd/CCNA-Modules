@@ -220,6 +220,16 @@ ipcMain.handle('reset-resources-path', async () => {
   }
 });
 
+// Open external URL in default browser
+ipcMain.handle('open-external-url', async (event, url) => {
+  try {
+    await shell.openExternal(url);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
 // Export progress backup to a user-selected file
 ipcMain.handle('export-progress-backup', async (event, exportData) => {
   try {
