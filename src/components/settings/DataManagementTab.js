@@ -145,6 +145,10 @@ function DataManagementTab() {
         }
       };
 
+      reader.onerror = () => {
+        error('Failed to read the backup file. Please try again.');
+      };
+
       reader.readAsText(file);
     };
 

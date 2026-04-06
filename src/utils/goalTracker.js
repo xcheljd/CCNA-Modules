@@ -13,16 +13,26 @@ export const GoalTracker = {
         streakGoals: 0,
       };
     }
-    return JSON.parse(data);
+    try {
+      return JSON.parse(data);
+    } catch {
+      console.error('Corrupted learning-goals data, resetting to defaults');
+      localStorage.removeItem('learning-goals');
+      return { current: null, history: [], streakGoals: 0 };
+    }
   },
 
   // Save goals data
   saveGoalsData(data) {
-    localStorage.setItem('learning-goals', JSON.stringify(data));
+    try {
+      localStorage.setItem('learning-goals', JSON.stringify(data));
+    } catch (error) {
+      console.error('Error saving goals data:', error);
+    }
   },
 
   // Create a new goal
-  createGoal(type, targets) {
+  createGoal(type, targets, modules) {
     const data = this.getGoalsData();
 
     // Complete current goal if exists
@@ -42,6 +52,9 @@ export const GoalTracker = {
       endDate = addDays(today, targets.customDays || 7);
     }
 
+    // Snapshot current lifetime totals as baseline for delta tracking
+    const currentStats = ProgressTracker.getModuleStatistics(modules || []);
+
     const newGoal = {
       id: `goal-${Date.now()}`,
       type,
@@ -50,6 +63,12 @@ export const GoalTracker = {
         videosWatched: targets.videosWatched || 0,
         labsCompleted: targets.labsCompleted || 0,
         flashcardsAdded: targets.flashcardsAdded || 0,
+      },
+      baseline: {
+        modulesCompleted: currentStats.completedModules,
+        videosWatched: currentStats.completedVideos,
+        labsCompleted: currentStats.completedLabs,
+        flashcardsAdded: currentStats.addedFlashcards,
       },
       progress: {
         modulesCompleted: 0,
@@ -87,15 +106,22 @@ export const GoalTracker = {
       return null;
     }
 
-    // Calculate current progress using consolidated utility
+    // Calculate current lifetime totals
     const stats = ProgressTracker.getModuleStatistics(modules);
 
-    // Update progress
+    // Compute deltas from baseline (progress made since goal was created)
+    const baseline = goal.baseline || {
+      modulesCompleted: 0,
+      videosWatched: 0,
+      labsCompleted: 0,
+      flashcardsAdded: 0,
+    };
+
     goal.progress = {
-      modulesCompleted: stats.completedModules,
-      videosWatched: stats.completedVideos,
-      labsCompleted: stats.completedLabs,
-      flashcardsAdded: stats.addedFlashcards,
+      modulesCompleted: Math.max(0, stats.completedModules - baseline.modulesCompleted),
+      videosWatched: Math.max(0, stats.completedVideos - baseline.videosWatched),
+      labsCompleted: Math.max(0, stats.completedLabs - baseline.labsCompleted),
+      flashcardsAdded: Math.max(0, stats.addedFlashcards - baseline.flashcardsAdded),
     };
 
     data.current = goal;
@@ -175,11 +201,8 @@ export const GoalTracker = {
   },
 
   // Get goal history
-  getGoalHistory(limit) {
+  getGoalHistory(limit = 20) {
     const data = this.getGoalsData();
-    if (limit === undefined || limit === null) {
-      throw new Error('getGoalHistory() requires a limit parameter');
-    }
     return data.history.slice(-limit).reverse();
   },
 
@@ -211,6 +234,12 @@ export const GoalTracker = {
           labsCompleted: 1,
           flashcardsAdded: 2,
         },
+        monthly: {
+          modulesCompleted: 8,
+          videosWatched: 40,
+          labsCompleted: 4,
+          flashcardsAdded: 8,
+        },
       },
       moderate: {
         name: 'Moderate',
@@ -221,6 +250,12 @@ export const GoalTracker = {
           labsCompleted: 3,
           flashcardsAdded: 4,
         },
+        monthly: {
+          modulesCompleted: 16,
+          videosWatched: 80,
+          labsCompleted: 12,
+          flashcardsAdded: 16,
+        },
       },
       intense: {
         name: 'Intense',
@@ -230,6 +265,12 @@ export const GoalTracker = {
           videosWatched: 35,
           labsCompleted: 5,
           flashcardsAdded: 7,
+        },
+        monthly: {
+          modulesCompleted: 28,
+          videosWatched: 140,
+          labsCompleted: 20,
+          flashcardsAdded: 28,
         },
       },
     };

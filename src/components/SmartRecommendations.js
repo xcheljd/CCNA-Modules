@@ -1,6 +1,7 @@
 import React from 'react';
 import { format } from 'date-fns';
 import ProgressTracker from '../utils/progressTracker';
+import StreakTracker from '../utils/streakTracker';
 import '../styles/dashboard.css';
 
 function SmartRecommendations({ modules, onModuleSelect }) {
@@ -83,7 +84,7 @@ function SmartRecommendations({ modules, onModuleSelect }) {
     // string matching logic. Would need proper topic tagging for accurate results.
 
     // 6. Study streak motivation
-    const streakInfo = JSON.parse(localStorage.getItem('study-streak') || '{}');
+    const streakInfo = StreakTracker.getStreakInfo();
     const currentStreak = streakInfo.currentStreak || 0;
     if (currentStreak > 0 && nextIncomplete) {
       const today = format(new Date(), 'yyyy-MM-dd');
@@ -146,7 +147,12 @@ function SmartRecommendations({ modules, onModuleSelect }) {
     }
 
     // Goal insights
-    const goalsData = JSON.parse(localStorage.getItem('learning-goals') || '{}');
+    let goalsData = {};
+    try {
+      goalsData = JSON.parse(localStorage.getItem('learning-goals') || '{}');
+    } catch {
+      goalsData = {};
+    }
     if (goalsData.current) {
       const goal = goalsData.current;
       const today = format(new Date(), 'yyyy-MM-dd');

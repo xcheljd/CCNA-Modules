@@ -6,17 +6,25 @@ import ProgressTracker from '../utils/progressTracker';
 import ActivityTracker from '../utils/activityTracker';
 import '../styles/modules.css';
 
-function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect }) {
+function ModuleDetail({
+  module,
+  modules,
+  onBack,
+  onOpenResource,
+  onModuleSelect,
+  onProgressChange,
+}) {
   const { info } = useToast();
-  const [labCompleted, setLabCompleted] = useState(false);
+  const [labCompletions, setLabCompletions] = useState({});
   const [flashcardsAdded, setFlashcardsAdded] = useState(false);
   const [videoCompletions, setVideoCompletions] = useState({});
   const [confidence, setConfidence] = useState(0);
   const [animationClass, setAnimationClass] = useState('');
 
-  // Find the next and previous modules in the sequence
-  const nextModule = modules.find(m => m.id === module.id + 1);
-  const prevModule = modules.find(m => m.id === module.id - 1);
+  // Find the next and previous modules by array position
+  const moduleIndex = modules.findIndex(m => m.id === module.id);
+  const nextModule = moduleIndex >= 0 ? modules[moduleIndex + 1] : undefined;
+  const prevModule = moduleIndex > 0 ? modules[moduleIndex - 1] : undefined;
 
   const handleNextModule = () => {
     if (nextModule) {
@@ -41,7 +49,9 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
     setAnimationClass('');
 
     // Load completion status
-    setLabCompleted(ProgressTracker.isLabComplete(module.id));
+    const asArray = val => (Array.isArray(val) ? val : val ? [val] : []);
+    const moduleLabs = asArray(module.resources?.lab);
+    setLabCompletions(ProgressTracker.getLabCompletions(module.id, moduleLabs.length));
     setFlashcardsAdded(ProgressTracker.areFlashcardsAdded(module.id));
     setConfidence(ProgressTracker.getModuleConfidence(module.id));
 
@@ -57,13 +67,15 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
     // Use ActivityTracker to coordinate all tracking systems
     ActivityTracker.recordVideoCompletion(moduleId, videoId, isComplete, modules);
     setVideoCompletions(prev => ({ ...prev, [videoId]: isComplete }));
+    onProgressChange?.();
   };
 
-  const handleLabToggle = () => {
-    const newState = !labCompleted;
+  const handleLabToggle = labIndex => {
+    const newState = !labCompletions[labIndex];
     // Use ActivityTracker to coordinate all tracking systems
-    ActivityTracker.recordLabCompletion(module.id, newState, modules);
-    setLabCompleted(newState);
+    ActivityTracker.recordLabCompletion(module.id, labIndex, newState, modules);
+    setLabCompletions(prev => ({ ...prev, [labIndex]: newState }));
+    onProgressChange?.();
   };
 
   const handleFlashcardsToggle = () => {
@@ -71,12 +83,17 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
     // Use ActivityTracker to coordinate all tracking systems
     ActivityTracker.recordFlashcardsAdded(module.id, newState, modules);
     setFlashcardsAdded(newState);
+    onProgressChange?.();
   };
 
-  const handleOpenLab = () => {
-    if (module.resources && module.resources.lab) {
-      onOpenResource('lab', module.resources.lab);
-    }
+  const asArray = val => (Array.isArray(val) ? val : val ? [val] : []);
+
+  const labs = asArray(module.resources?.lab);
+  const flashcards = asArray(module.resources?.flashcards);
+  const hasResources = labs.length > 0 || flashcards.length > 0 || module.resources?.spreadsheet;
+
+  const handleOpenLab = labFile => {
+    onOpenResource('lab', labFile);
   };
 
   const handleOpenAnki = () => {
@@ -87,10 +104,8 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
     }
   };
 
-  const handleOpenFlashcards = () => {
-    if (module.resources && module.resources.flashcards) {
-      onOpenResource('flashcards', module.resources.flashcards);
-    }
+  const handleOpenFlashcards = flashcardFile => {
+    onOpenResource('flashcards', flashcardFile);
   };
 
   const handleOpenSpreadsheet = () => {
@@ -103,6 +118,7 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
     // Use ActivityTracker to coordinate all tracking systems
     ActivityTracker.recordConfidenceRating(module.id, newConfidence, modules);
     setConfidence(newConfidence);
+    onProgressChange?.();
   };
 
   return (
@@ -150,40 +166,53 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
         <div className="resources-section">
           <h3>Resources</h3>
 
-          {module.resources.lab && (
-            <div className="resource-item">
+          {labs.map((labFile, index) => (
+            <div className="resource-item" key={`lab-${index}`}>
               <div className="resource-info">
-                <h4>Packet Tracer Lab</h4>
-                <p>{module.resources.lab}</p>
+                <h4>Packet Tracer Lab{labs.length > 1 ? ` ${index + 1}` : ''}</h4>
+                <p>{labFile}</p>
               </div>
               <div className="resource-button-single">
-                <button onClick={handleOpenLab} className="open-button">
+                <button onClick={() => handleOpenLab(labFile)} className="open-button">
                   Open Lab
                 </button>
               </div>
               <label className="checkbox-label">
-                <input type="checkbox" checked={labCompleted} onChange={handleLabToggle} />
-                <span>Mark as completed</span>
+                <input
+                  type="checkbox"
+                  checked={labCompletions[index] || false}
+                  onChange={() => handleLabToggle(index)}
+                />
+                <span>
+                  {labs.length > 1 ? `Mark lab ${index + 1} as completed` : 'Mark lab as completed'}
+                </span>
               </label>
             </div>
-          )}
+          ))}
 
-          {module.resources.flashcards && (
+          {flashcards.length > 0 && (
             <div className="resource-item">
               <div className="resource-info">
                 <h4>Anki Flashcards</h4>
-                <p>{module.resources.flashcards}</p>
+                {flashcards.map((fc, index) => (
+                  <p key={`fc-label-${index}`}>{fc}</p>
+                ))}
               </div>
               <div className="resource-buttons">
                 <button onClick={handleOpenAnki} className="open-button">
                   Open Anki
                 </button>
-                <button
-                  onClick={handleOpenFlashcards}
-                  className={`open-button add-flashcards-btn ${flashcardsAdded ? 'added' : ''}`}
-                >
-                  {flashcardsAdded ? '✓ Added to Deck' : 'Add Flashcards'}
-                </button>
+                {flashcards.map((fc, index) => (
+                  <button
+                    key={`fc-btn-${index}`}
+                    onClick={() => handleOpenFlashcards(fc)}
+                    className={`open-button add-flashcards-btn ${flashcardsAdded ? 'added' : ''}`}
+                  >
+                    {flashcardsAdded
+                      ? '✓ Added to Deck'
+                      : `Add${flashcards.length > 1 ? ` ${index + 1}` : ''}`}
+                  </button>
+                ))}
               </div>
               <label className="checkbox-label">
                 <input
@@ -196,7 +225,7 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
             </div>
           )}
 
-          {module.resources.spreadsheet && (
+          {module.resources?.spreadsheet && (
             <div className="resource-item">
               <div className="resource-info">
                 <h4>Excel Spreadsheet</h4>
@@ -210,17 +239,9 @@ function ModuleDetail({ module, modules, onBack, onOpenResource, onModuleSelect 
             </div>
           )}
 
-          {!module.resources.lab &&
-            !module.resources.flashcards &&
-            !module.resources.spreadsheet && (
-              <p className="no-resources">No resources available for this module.</p>
-            )}
+          {!hasResources && <p className="no-resources">No resources available for this module.</p>}
 
-          <ConfidenceRating
-            moduleId={module.id}
-            confidence={confidence}
-            onRate={handleConfidenceChange}
-          />
+          <ConfidenceRating confidence={confidence} onRate={handleConfidenceChange} />
         </div>
       </div>
     </div>

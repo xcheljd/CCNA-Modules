@@ -198,10 +198,15 @@ describe('GoalTracker', () => {
       expect(history.length).toBe(20);
     });
 
-    it('should throw error when called without limit', () => {
-      expect(() => {
-        GoalTracker.getGoalHistory();
-      }).toThrow('requires a limit parameter');
+    it('should return default limit when called without limit', () => {
+      const targets = { modulesCompleted: 5 };
+      GoalTracker.createGoal('weekly', targets);
+      GoalTracker.completeCurrentGoal();
+
+      const history = GoalTracker.getGoalHistory();
+
+      expect(history.length).toBe(1);
+      expect(history[0]).toHaveProperty('id');
     });
   });
 

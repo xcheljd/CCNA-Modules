@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, memo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import SearchBar from './SearchBar';
 import ConfidenceRating from './ConfidenceRating';
 import ProgressTracker from '../utils/progressTracker';
@@ -11,8 +11,9 @@ function ModuleList({ modules, onModuleSelect }) {
   const [filterConfidence, setFilterConfidence] = useState('all');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [isSwitchingView, setIsSwitchingView] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  useEffect(() => {
+  const refreshProgress = useCallback(() => {
     const progress = {};
     modules.forEach(module => {
       progress[module.id] = ProgressTracker.getModuleProgress(module);
@@ -20,7 +21,16 @@ function ModuleList({ modules, onModuleSelect }) {
     setModuleProgress(progress);
   }, [modules]);
 
-  const progressMap = useMemo(() => moduleProgress, [moduleProgress]);
+  useEffect(() => {
+    refreshProgress();
+  }, [refreshProgress, refreshKey]);
+
+  // Re-read progress when the component gains visibility (user navigates back)
+  useEffect(() => {
+    const onFocus = () => setRefreshKey(k => k + 1);
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, []);
 
   const getModuleStatus = progress => {
     if (progress === 0) return 'not-started';
@@ -30,7 +40,7 @@ function ModuleList({ modules, onModuleSelect }) {
 
   const filteredModules = useMemo(() => {
     return modules.filter(module => {
-      const progress = progressMap[module.id] || 0;
+      const progress = moduleProgress[module.id] || 0;
       const confidence = ProgressTracker.getModuleConfidence(module.id);
 
       if (filterStatus !== 'all') {
@@ -59,15 +69,13 @@ function ModuleList({ modules, onModuleSelect }) {
 
       return true;
     });
-  }, [modules, progressMap, filterStatus, filterConfidence, searchQuery]);
+  }, [modules, moduleProgress, filterStatus, filterConfidence, searchQuery]);
 
-  const getProgressColor = useMemo(() => {
-    return progress => {
-      if (progress === 0) return 'hsl(var(--muted))';
-      if (progress === 100) return 'var(--color-progress-complete)';
-      return 'hsl(var(--ring))';
-    };
-  }, []);
+  const getProgressColor = progress => {
+    if (progress === 0) return 'hsl(var(--muted))';
+    if (progress === 100) return 'var(--color-progress-complete)';
+    return 'hsl(var(--ring))';
+  };
 
   const handleViewModeChange = newMode => {
     if (newMode === viewMode) return;
@@ -145,7 +153,7 @@ function ModuleList({ modules, onModuleSelect }) {
 
       <div className={`modules-container ${viewMode}-view ${isSwitchingView ? 'switching' : ''}`}>
         {filteredModules.map(module => {
-          const progress = progressMap[module.id] || 0;
+          const progress = moduleProgress[module.id] || 0;
           const progressColor = getProgressColor(progress);
           const confidence = ProgressTracker.getModuleConfidence(module.id);
 
@@ -175,55 +183,73 @@ function ModuleList({ modules, onModuleSelect }) {
                   </svg>
                   <span>{module.videos.length}</span>
                 </div>
-                {module.resources.lab && (
-                  <div className="info-item">
-                    <svg
-                      className="info-icon"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <circle cx="12" cy="12" r="1" fill="currentColor" />
-                      <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-45 12 12)" />
-                      <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(45 12 12)" />
-                      <ellipse cx="12" cy="12" rx="10" ry="4" />
-                    </svg>
-                    <span>Lab</span>
-                  </div>
-                )}
-                {module.resources.flashcards && (
-                  <div className="info-item">
-                    <svg
-                      className="info-icon"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <rect
-                        x="2"
-                        y="4"
-                        width="12"
-                        height="16"
-                        rx="2"
-                        transform="rotate(-15 8 12)"
+                {(() => {
+                  const labs = Array.isArray(module.resources.lab)
+                    ? module.resources.lab
+                    : module.resources.lab
+                      ? [module.resources.lab]
+                      : [];
+                  return labs.length > 0 ? (
+                    <div className="info-item">
+                      <svg
+                        className="info-icon"
+                        viewBox="0 0 24 24"
                         fill="none"
-                      />
-                      <rect x="6" y="3" width="12" height="16" rx="2" fill="hsl(var(--card))" />
-                      <rect
-                        x="10"
-                        y="4"
-                        width="12"
-                        height="16"
-                        rx="2"
-                        transform="rotate(15 16 12)"
-                        fill="hsl(var(--card))"
-                      />
-                    </svg>
-                    <span>Cards</span>
-                  </div>
-                )}
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <circle cx="12" cy="12" r="1" fill="currentColor" />
+                        <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-45 12 12)" />
+                        <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(45 12 12)" />
+                        <ellipse cx="12" cy="12" rx="10" ry="4" />
+                      </svg>
+                      <span>
+                        {labs.length} Lab{labs.length > 1 ? 's' : ''}
+                      </span>
+                    </div>
+                  ) : null;
+                })()}
+                {(() => {
+                  const fcs = Array.isArray(module.resources.flashcards)
+                    ? module.resources.flashcards
+                    : module.resources.flashcards
+                      ? [module.resources.flashcards]
+                      : [];
+                  return fcs.length > 0 ? (
+                    <div className="info-item">
+                      <svg
+                        className="info-icon"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <rect
+                          x="2"
+                          y="4"
+                          width="12"
+                          height="16"
+                          rx="2"
+                          transform="rotate(-15 8 12)"
+                          fill="none"
+                        />
+                        <rect x="6" y="3" width="12" height="16" rx="2" fill="hsl(var(--card))" />
+                        <rect
+                          x="10"
+                          y="4"
+                          width="12"
+                          height="16"
+                          rx="2"
+                          transform="rotate(15 16 12)"
+                          fill="hsl(var(--card))"
+                        />
+                      </svg>
+                      <span>
+                        {fcs.length} Card{fcs.length > 1 ? 's' : ''}
+                      </span>
+                    </div>
+                  ) : null;
+                })()}
               </div>
 
               <div className="progress-bar">

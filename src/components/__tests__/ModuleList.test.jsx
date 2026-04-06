@@ -31,7 +31,7 @@ describe('ModuleList', () => {
 
   it('should show module progress', () => {
     ProgressTracker.markVideoComplete(1, 'H8W9oMNSuwo');
-    ProgressTracker.markLabComplete(1);
+    ProgressTracker.markLabComplete(1, 0);
     ProgressTracker.markFlashcardsAdded(1);
 
     render(<ModuleListWrapper modules={mockModules} onModuleSelect={mockOnModuleSelect} />);
@@ -104,8 +104,8 @@ describe('ModuleList', () => {
 
     expect(screen.getByText('Day 1')).toBeInTheDocument();
     expect(screen.getAllByText('1').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Lab').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Cards').length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Lab/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Card/).length).toBeGreaterThan(0);
   });
 
   it('should handle empty modules list', () => {

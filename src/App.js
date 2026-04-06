@@ -177,7 +177,8 @@ function AppContent() {
         }
 
         localStorage.setItem('app-theme', currentTheme);
-      } catch {
+      } catch (err) {
+        console.error('Error applying theme:', err);
         document.body.classList.remove(
           'theme-light',
           'theme-dark',
@@ -246,12 +247,16 @@ function AppContent() {
       return;
     }
 
-    const result = await electronAPI.openResource(filename);
+    try {
+      const result = await electronAPI.openResource(filename);
 
-    if (!result.success) {
-      error(
-        `Failed to open ${type}: ${result.error}. Make sure the file exists in the /resources folder and you have the appropriate application installed (Packet Tracer for .pkt files, Anki for .apkg files).`
-      );
+      if (!result.success) {
+        error(
+          `Failed to open ${type}: ${result.error}. Make sure the file exists in the /resources folder and you have the appropriate application installed (Packet Tracer for .pkt files, Anki for .apkg files).`
+        );
+      }
+    } catch (err) {
+      error(`Failed to open ${type}: ${err.message || 'Unknown error'}`);
     }
   };
 
@@ -429,6 +434,7 @@ function AppContent() {
               onBack={handleBackToList}
               onOpenResource={handleOpenResource}
               onModuleSelect={handleModuleSelect}
+              onProgressChange={calculateOverallProgress}
             />
           )}
 

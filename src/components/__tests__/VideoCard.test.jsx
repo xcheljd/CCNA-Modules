@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ToastProvider } from '@/components/ui/toast';
 import VideoCard from '../VideoCard';
@@ -142,7 +142,7 @@ describe('VideoCard', () => {
     );
 
     const thumbnail = screen.getByAltText('Test Video Title');
-    await fireEvent.click(thumbnail);
+    fireEvent.click(thumbnail);
 
     await waitFor(() => {
       const videoCard = screen.getByText('Test Video Title').closest('.video-card');

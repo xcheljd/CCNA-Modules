@@ -45,16 +45,44 @@ export const ProgressTracker = {
   },
 
   // Lab progress
-  markLabComplete(moduleId) {
-    localStorage.setItem(`lab_${moduleId}_completed`, 'true');
+  markLabComplete(moduleId, labIndex) {
+    localStorage.setItem(`lab_${moduleId}_${labIndex}_completed`, 'true');
   },
 
-  unmarkLabComplete(moduleId) {
-    localStorage.removeItem(`lab_${moduleId}_completed`);
+  unmarkLabComplete(moduleId, labIndex) {
+    localStorage.removeItem(`lab_${moduleId}_${labIndex}_completed`);
   },
 
-  isLabComplete(moduleId) {
-    return localStorage.getItem(`lab_${moduleId}_completed`) === 'true';
+  isLabComplete(moduleId, labIndex) {
+    return localStorage.getItem(`lab_${moduleId}_${labIndex}_completed`) === 'true';
+  },
+
+  // Check if all labs in a module are completed
+  areAllLabsComplete(moduleId, labCount) {
+    for (let i = 0; i < labCount; i++) {
+      if (!this.isLabComplete(moduleId, i)) return false;
+    }
+    return labCount > 0;
+  },
+
+  // Migrate legacy single-key lab data to per-lab keys
+  // Old format: lab_${moduleId}_completed -> New format: lab_${moduleId}_0_completed
+  _migrateLegacyLabData(moduleId) {
+    const legacyKey = `lab_${moduleId}_completed`;
+    if (localStorage.getItem(legacyKey) === 'true') {
+      localStorage.setItem(`lab_${moduleId}_0_completed`, 'true');
+      localStorage.removeItem(legacyKey);
+    }
+  },
+
+  // Get lab completion state map for a module
+  getLabCompletions(moduleId, labCount) {
+    this._migrateLegacyLabData(moduleId);
+    const completions = {};
+    for (let i = 0; i < labCount; i++) {
+      completions[i] = this.isLabComplete(moduleId, i);
+    }
+    return completions;
   },
 
   // Flashcard progress
@@ -85,12 +113,20 @@ export const ProgressTracker = {
       });
     }
 
-    // Count lab
+    // Count labs (each lab file counts individually)
     if (module.resources && module.resources.lab) {
-      totalItems += 1;
-      if (this.isLabComplete(module.id)) {
-        completedItems += 1;
-      }
+      const labFiles = Array.isArray(module.resources.lab)
+        ? module.resources.lab
+        : module.resources.lab
+          ? [module.resources.lab]
+          : [];
+      this._migrateLegacyLabData(module.id);
+      totalItems += labFiles.length;
+      labFiles.forEach((_, index) => {
+        if (this.isLabComplete(module.id, index)) {
+          completedItems += 1;
+        }
+      });
     }
 
     // Count flashcards
@@ -118,7 +154,14 @@ export const ProgressTracker = {
   // Get last watched video
   getLastWatchedVideo() {
     const lastWatched = localStorage.getItem('last_watched');
-    return lastWatched ? JSON.parse(lastWatched) : null;
+    if (!lastWatched) return null;
+    try {
+      return JSON.parse(lastWatched);
+    } catch {
+      console.error('Corrupted last_watched data, clearing');
+      localStorage.removeItem('last_watched');
+      return null;
+    }
   },
 
   setLastWatchedVideo(moduleId, videoId) {
@@ -217,12 +260,18 @@ export const ProgressTracker = {
         });
       }
 
-      // Count completed labs and total labs
+      // Count completed labs and total labs (each lab file counts individually)
       if (module.resources?.lab) {
-        totalLabs++;
-        if (this.isLabComplete(module.id)) {
-          completedLabs++;
-        }
+        const labFiles = Array.isArray(module.resources.lab)
+          ? module.resources.lab
+          : [module.resources.lab];
+        totalLabs += labFiles.length;
+        this._migrateLegacyLabData(module.id);
+        labFiles.forEach((_, index) => {
+          if (this.isLabComplete(module.id, index)) {
+            completedLabs++;
+          }
+        });
       }
 
       // Count added flashcards and total flashcards

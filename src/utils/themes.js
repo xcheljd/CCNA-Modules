@@ -15,6 +15,8 @@ export const themes = {
       // Card: Ayu panel bg (#F8F9FA) - HSL: 210, 17%, 98% - slightly lighter for contrast
       card: '210 17% 98%',
       cardForeground: '210 4% 38%',
+      popover: '210 17% 98%',
+      popoverForeground: '210 4% 38%',
       // Secondary: Ayu panel (#F3F4F5) - HSL: 210, 11%, 96%
       secondary: '210 11% 96%',
       secondaryForeground: '210 4% 38%',
@@ -79,6 +81,8 @@ export const themes = {
       // Card: Ayu panel bg (#1F2430) - HSL: 220, 19%, 14%
       card: '220 19% 14%',
       cardForeground: '40 11% 78%',
+      popover: '220 19% 14%',
+      popoverForeground: '40 11% 78%',
       // Secondary: Ayu line (#1A1F29) - HSL: 218, 20%, 12%
       secondary: '218 20% 12%',
       secondaryForeground: '40 11% 78%',
@@ -139,6 +143,8 @@ export const themes = {
       foreground: '0 0% 85%',
       card: '220 25% 12%',
       cardForeground: '0 0% 80%',
+      popover: '220 25% 12%',
+      popoverForeground: '0 0% 80%',
       secondary: '220 20% 18%',
       secondaryForeground: '0 0% 70%',
       muted: '220 15% 22%',
@@ -190,6 +196,8 @@ export const themes = {
       foreground: '189 70% 80%',
       card: '256 40% 4%',
       cardForeground: '189 60% 75%',
+      popover: '256 40% 4%',
+      popoverForeground: '189 60% 75%',
       secondary: '256 40% 8%',
       secondaryForeground: '189 70% 75%',
       muted: '256 40% 10%',
@@ -246,6 +254,8 @@ export const themes = {
       // Card: Nord1 (Polar Night) (#3B4252) - HSL: 222, 16%, 28%
       card: '222 16% 28%',
       cardForeground: '219 28% 88%', // nord4
+      popover: '222 16% 28%',
+      popoverForeground: '219 28% 88%', // nord4
       // Secondary: Nord2 (Polar Night) (#434C5E) - HSL: 220, 17%, 32%
       secondary: '220 17% 32%',
       secondaryForeground: '219 28% 88%', // nord4
@@ -310,6 +320,8 @@ export const themes = {
       // Card: Surface (#1F1D2E) - HSL: 246, 24%, 15%
       card: '246 24% 15%',
       cardForeground: '245 50% 91%', // text
+      popover: '246 24% 15%',
+      popoverForeground: '245 50% 91%', // text
       // Secondary: Overlay (#26233A) - HSL: 248, 25%, 18%
       secondary: '248 25% 18%',
       secondaryForeground: '245 50% 91%', // text
@@ -373,6 +385,8 @@ export const themes = {
       // Card: Surface 0 (#313244) - HSL: 237, 16%, 23%
       card: '237 16% 23%',
       cardForeground: '227 68% 88%',
+      popover: '237 16% 23%',
+      popoverForeground: '227 68% 88%',
       // Secondary: Surface 1 (#45475A) - HSL: 235, 12%, 32%
       secondary: '235 12% 32%',
       secondaryForeground: '227 68% 88%',
@@ -437,6 +451,8 @@ export const themes = {
       // Card: dark1 (#3C3836) - HSL: 20, 4%, 22%
       card: '20 4% 22%',
       cardForeground: '39 43% 80%',
+      popover: '20 4% 22%',
+      popoverForeground: '39 43% 80%',
       // Secondary: dark2 (#504945) - HSL: 15, 6%, 29%
       secondary: '15 6% 29%',
       secondaryForeground: '39 43% 80%',
@@ -501,6 +517,8 @@ export const themes = {
       // Card: light0_hard (#F9F5D7) - HSL: 49, 56%, 91%
       card: '49 56% 91%',
       cardForeground: '20 4% 22%',
+      popover: '49 56% 91%',
+      popoverForeground: '20 4% 22%',
       // Secondary: light1 (#EBDBB2) - HSL: 39, 43%, 80%
       secondary: '39 43% 80%',
       secondaryForeground: '20 4% 22%',
@@ -565,6 +583,8 @@ export const themes = {
       // Card: base01 (#343D46) - HSL: 209, 15%, 25%
       card: '209 15% 25%',
       cardForeground: '214 16% 78%',
+      popover: '209 15% 25%',
+      popoverForeground: '214 16% 78%',
       // Secondary: base02 (#4F5B66) - HSL: 207, 13%, 36%
       secondary: '207 13% 36%',
       secondaryForeground: '214 16% 78%',
@@ -629,6 +649,8 @@ export const themes = {
       // Card: base06 (#DFE1E8) - HSL: 225, 18%, 90%
       card: '225 18% 90%',
       cardForeground: '207 13% 36%',
+      popover: '225 18% 90%',
+      popoverForeground: '207 13% 36%',
       // Secondary: base05 (#C0C5CE) - HSL: 214, 16%, 78%
       secondary: '214 16% 78%',
       secondaryForeground: '207 13% 36%',
@@ -694,6 +716,8 @@ export const themes = {
       // Card: base01 (#343D46) - HSL: 209, 15%, 25%
       card: '209 15% 25%',
       cardForeground: '214 16% 78%',
+      popover: '209 15% 25%',
+      popoverForeground: '214 16% 78%',
       // Secondary: base02 (#4F5B66) - HSL: 207, 13%, 36%
       secondary: '207 13% 36%',
       secondaryForeground: '214 16% 78%',
@@ -758,6 +782,8 @@ export const themes = {
       // Card: GitHub canvas overlay (#161b22) - HSL: 213, 17%, 12%
       card: '213 17% 12%',
       cardForeground: '213 31% 91%',
+      popover: '213 17% 12%',
+      popoverForeground: '213 31% 91%',
       // Secondary: GitHub gray-7 (#30363d) - HSL: 213, 12%, 21%
       secondary: '213 12% 21%',
       secondaryForeground: '213 31% 91%',
@@ -822,6 +848,8 @@ export const themes = {
       // Card: GitHub canvas subtle (#f6f8fa) - HSL: 210, 22%, 97%
       card: '210 22% 97%',
       cardForeground: '210 11% 17%',
+      popover: '210 22% 97%',
+      popoverForeground: '210 11% 17%',
       // Secondary: GitHub gray-2 (#eaeef2) - HSL: 213, 23%, 94%
       secondary: '213 23% 94%',
       secondaryForeground: '210 11% 17%',

@@ -47,16 +47,17 @@ function DashboardTab() {
 
   const saveDashboardConfig = () => {
     const config = {
-      sections: sections.map(s => ({
+      sections: sections.map((s, idx) => ({
         id: s.id,
         enabled: s.enabled,
-        order: s.order,
+        order: idx,
       })),
     };
 
     const result = SettingsManager.saveDashboardConfig(config);
     if (result.success) {
       success('Dashboard configuration saved! Refresh to see changes');
+      loadDashboardConfig();
     }
   };
 

@@ -40,9 +40,9 @@ export const resetLocalStorage = () => {
 export const setupProgressState = moduleData => {
   resetLocalStorage();
   moduleData.forEach(module => {
-    const videoKey = `video_${module.id}_${module.videos[0].id}`;
-    const labKey = `lab_${module.id}`;
-    const flashcardKey = `flashcards_${module.id}`;
+    const videoKey = `video_${module.id}_${module.videos[0].id}_completed`;
+    const labKey = `lab_${module.id}_0_completed`;
+    const flashcardKey = `flashcards_${module.id}_added`;
     const confidenceKey = `confidence_${module.id}`;
 
     localStorage.setItem(videoKey, 'true');

@@ -17,6 +17,7 @@ function VideoCard({ video, moduleId, isCompleted, onMarkComplete }) {
     setHasError(false);
 
     try {
+      // preload.js bridges positional args (videoId, moduleId) to IPC object { videoId, moduleId }
       const result = await window.electronAPI.openVideoWindow(video.id, moduleId);
       if (!result.success) {
         setHasError(true);

@@ -15,9 +15,8 @@
    (from global.css)
    ============================================================================ */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@config "../../tailwind.config.js";
 
 @layer base {
   :root {
@@ -123,16 +122,19 @@
   .theme-neon {
     /* Neon theme variables applied via JS */
   }
-}
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  transition:
-    background-color var(--transition-slower) ease-in-out,
-    border-color var(--transition-slower) ease-in-out,
-    color var(--transition-slower) ease-in-out;
+  /* Global reset — placed in @layer base so Tailwind utilities (@layer utilities)
+     correctly override padding/margin/border when needed. Previously this was
+     unlayered, which beat layered Tailwind classes in the cascade. */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition:
+      background-color var(--transition-slower) ease-in-out,
+      border-color var(--transition-slower) ease-in-out,
+      color var(--transition-slower) ease-in-out;
+  }
 }
 
 html {

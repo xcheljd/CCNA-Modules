@@ -21,12 +21,20 @@ function ResourcesPathTab() {
   }, []);
 
   const loadResourcesInfo = async () => {
-    if (!electronAPI) return;
+    if (!electronAPI) {
+      setLoading(false);
+      return;
+    }
 
     setLoading(true);
-    const info = await electronAPI.getResourcesInfo();
-    setResourcesInfo(info);
-    setLoading(false);
+    try {
+      const info = await electronAPI.getResourcesInfo();
+      setResourcesInfo(info);
+    } catch (err) {
+      console.error('Failed to load resources info:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSelectFolder = async () => {

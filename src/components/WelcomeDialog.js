@@ -8,6 +8,14 @@ function WelcomeDialog({ open, onOpenChange }) {
     onOpenChange(false);
   };
 
+  const openExternal = url => {
+    if (window.electronAPI?.openExternalUrl) {
+      window.electronAPI.openExternalUrl(url);
+    } else {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="welcome-dialog">
@@ -58,54 +66,42 @@ function WelcomeDialog({ open, onOpenChange }) {
             </p>
             <div className="support-links">
               <button
-                onClick={() =>
-                  window.electronAPI.openExternalUrl('https://www.youtube.com/c/JeremysITLab')
-                }
+                onClick={() => openExternal('https://www.youtube.com/c/JeremysITLab')}
                 className="support-link"
               >
                 <ExternalLink size={16} />
                 YouTube Channel
               </button>
               <button
-                onClick={() => window.electronAPI.openExternalUrl('https://www.jeremysitlab.com')}
+                onClick={() => openExternal('https://www.jeremysitlab.com')}
                 className="support-link"
               >
                 <ExternalLink size={16} />
                 Website
               </button>
               <button
-                onClick={() =>
-                  window.electronAPI.openExternalUrl('https://courses.jeremysitlab.com')
-                }
+                onClick={() => openExternal('https://courses.jeremysitlab.com')}
                 className="support-link"
               >
                 <ExternalLink size={16} />
                 Premium Courses
               </button>
               <button
-                onClick={() =>
-                  window.electronAPI.openExternalUrl('https://www.jeremysitlab.com/discord')
-                }
+                onClick={() => openExternal('https://www.jeremysitlab.com/discord')}
                 className="support-link"
               >
                 <ExternalLink size={16} />
                 Discord Community
               </button>
               <button
-                onClick={() =>
-                  window.electronAPI.openExternalUrl('https://twitter.com/jeremysitlab')
-                }
+                onClick={() => openExternal('https://twitter.com/jeremysitlab')}
                 className="support-link"
               >
                 <ExternalLink size={16} />
                 Twitter
               </button>
               <button
-                onClick={() =>
-                  window.electronAPI.openExternalUrl(
-                    'https://www.linkedin.com/company/jeremysitlab'
-                  )
-                }
+                onClick={() => openExternal('https://www.linkedin.com/company/jeremysitlab')}
                 className="support-link"
               >
                 <ExternalLink size={16} />
@@ -125,13 +121,13 @@ function WelcomeDialog({ open, onOpenChange }) {
             </p>
             <div className="donation-links">
               <button
-                onClick={() => window.electronAPI.openExternalUrl('https://www.paypal.me/xchel')}
+                onClick={() => openExternal('https://www.paypal.me/xchel')}
                 className="donation-link"
               >
                 PayPal
               </button>
               <button
-                onClick={() => window.electronAPI.openExternalUrl('https://venmo.com/xcheljd')}
+                onClick={() => openExternal('https://venmo.com/xcheljd')}
                 className="donation-link"
               >
                 Venmo

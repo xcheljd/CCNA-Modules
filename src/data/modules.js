@@ -7,9 +7,9 @@ export const modules = [
     day: 1,
     title: 'Network Devices',
     videos: [
-      { id: 'H8W9oMNSuwo', title: 'Network Devices', duration: '30:25' },
-      { id: '6Atw8oMtVTA', title: 'Extra - Using Anki Flashcards', duration: '14:55' },
-      { id: 'a1Im6GYaSno', title: 'Lab - Packet Tracer Introduction', duration: '15:17' },
+      { id: 'H8W9oMNSuwo', title: 'Network Devices', duration: '30:26' },
+      { id: '6Atw8oMtVTA', title: 'Extra - Using Anki Flashcards', duration: '14:56' },
+      { id: 'a1Im6GYaSno', title: 'Lab - Packet Tracer Introduction', duration: '15:18' },
     ],
     resources: {
       lab: 'Day 01 Lab - Packet Tracer Introduction.pkt',
@@ -21,8 +21,8 @@ export const modules = [
     day: 2,
     title: 'Interfaces and Cables',
     videos: [
-      { id: 'ieTH5lVhNaY', title: 'Interfaces and Cables', duration: '35:51' },
-      { id: 'K6Qt23sY68Y', title: 'Lab - Connecting Devices', duration: '5:32' },
+      { id: 'ieTH5lVhNaY', title: 'Interfaces and Cables', duration: '35:52' },
+      { id: 'K6Qt23sY68Y', title: 'Lab - Connecting Devices', duration: '5:33' },
     ],
     resources: {
       lab: 'Day 02 Lab - Connecting Devices.pkt',
@@ -34,12 +34,12 @@ export const modules = [
     day: 3,
     title: 'OSI Model & TCP/IP Suite',
     videos: [
-      { id: 't-ai8JzhHuY', title: 'OSI Model & TCP/IP Suite', duration: '32:53' },
-      { id: '7nmYoL0t2tU', title: 'Lab - OSI Model', duration: '8:04' },
+      { id: 'yM-XNq9ADlI', title: 'OSI Model & TCP/IP Suite', duration: '42:42' },
+      { id: '7nmYoL0t2tU', title: 'Lab - OSI Model', duration: '8:05' },
     ],
     resources: {
       lab: 'Day 03 Lab - OSI Model.pkt',
-      flashcards: 'Day 03 Flashcards - OSI Model, TCP-IP Suite.apkg',
+      flashcards: 'Day 03 Flashcards - TCP-IP.apkg',
     },
   },
   {
@@ -47,8 +47,8 @@ export const modules = [
     day: 4,
     title: 'Introduction to the CLI',
     videos: [
-      { id: 'IYbtai7Nu2g', title: 'Intro to the CLI', duration: '31:05' },
-      { id: 'SDocmq1c05s', title: 'Lab - Basic Device Security', duration: '10:05' },
+      { id: 'IYbtai7Nu2g', title: 'Intro to the CLI', duration: '31:06' },
+      { id: 'SDocmq1c05s', title: 'Lab - Basic Device Security', duration: '10:26' },
     ],
     resources: {
       lab: 'Day 04 Lab - Basic Device Security.pkt',
@@ -59,7 +59,7 @@ export const modules = [
     id: 5,
     day: 5,
     title: 'Ethernet LAN Switching (Part 1)',
-    videos: [{ id: 'u2n762WG0Vo', title: 'Ethernet LAN Switching (Part 1)', duration: '38:12' }],
+    videos: [{ id: 'u2n762WG0Vo', title: 'Ethernet LAN Switching (Part 1)', duration: '38:13' }],
     resources: {
       lab: null,
       flashcards: 'Day 05 Flashcards - Ethernet LAN Switching (Part 1).apkg',
@@ -70,8 +70,8 @@ export const modules = [
     day: 6,
     title: 'Ethernet LAN Switching (Part 2)',
     videos: [
-      { id: '5q1pqdmdPjo', title: 'Ethernet LAN Switching (Part 2)', duration: '19:30' },
-      { id: 'Ig0dSaOQDI8', title: 'Lab - Analyzing Ethernet Switching', duration: '14:34' },
+      { id: '5q1pqdmdPjo', title: 'Ethernet LAN Switching (Part 2)', duration: '33:41' },
+      { id: 'Ig0dSaOQDI8', title: 'Lab - Analyzing Ethernet Switching', duration: '10:29' },
     ],
     resources: {
       lab: 'Day 06 Lab - Ethernet LAN Switching.pkt',
@@ -82,7 +82,7 @@ export const modules = [
     id: 7,
     day: 7,
     title: 'IPv4 Addressing (Part 1)',
-    videos: [{ id: '3ROdsfEUuhs', title: 'IPv4 Addressing (Part 1)', duration: '24:18' }],
+    videos: [{ id: '3ROdsfEUuhs', title: 'IPv4 Addressing (Part 1)', duration: '40:21' }],
     resources: {
       lab: null,
       flashcards: 'Day 07 Flashcards - IPv4 Addresses (Part 1).apkg',
@@ -93,8 +93,8 @@ export const modules = [
     day: 8,
     title: 'IPv4 Addressing (Part 2)',
     videos: [
-      { id: 'FiAatRd84XI', title: 'IPv4 Addressing (Part 2)', duration: '23:42' },
-      { id: 'e1jbvyMeS5I', title: 'Lab - Configuring IP Addresses', duration: '09:45' },
+      { id: 'FiAatRd84XI', title: 'IPv4 Addressing (Part 2)', duration: '30:42' },
+      { id: 'e1jbvyMeS5I', title: 'Lab - Configuring IP Addresses', duration: '10:06' },
     ],
     resources: {
       lab: 'Day 08 Lab - IPv4 Addresses.pkt',
@@ -106,8 +106,8 @@ export const modules = [
     day: 9,
     title: 'Switch Interfaces',
     videos: [
-      { id: 'cCqluocfQe0', title: 'Switch Interfaces', duration: '18:24' },
-      { id: 'rzDb5DoBKRk', title: 'Lab - Configuring Interfaces', duration: '11:32' },
+      { id: 'cCqluocfQe0', title: 'Switch Interfaces', duration: '32:28' },
+      { id: 'rzDb5DoBKRk', title: 'Lab - Configuring Interfaces', duration: '11:54' },
     ],
     resources: {
       lab: 'Day 09 Lab - Interface Configuration.pkt',
@@ -118,7 +118,7 @@ export const modules = [
     id: 10,
     day: 10,
     title: 'IPv4 Header',
-    videos: [{ id: 'aQB22y4liXA', title: 'IPv4 Header', duration: '25:36' }],
+    videos: [{ id: 'aQB22y4liXA', title: 'IPv4 Header', duration: '30:11' }],
     resources: {
       lab: null,
       flashcards: 'Day 10 Flashcards - IPv4 Header.apkg',
@@ -129,14 +129,20 @@ export const modules = [
     day: 11,
     title: 'Routing Fundamentals & Static Routing',
     videos: [
-      { id: 'aHwAm8GYbn8', title: 'Routing Fundamentals (Part 1)', duration: '25:33' },
-      { id: 'YCv4-_sMvYE', title: 'Static Routing (Part 2)', duration: '31:57' },
-      { id: 'XHxOtIav2k8', title: 'Lab 1 - Configuring Static Routes', duration: '14:23' },
-      { id: '3z8YGEVFTiA', title: 'Lab 2 - Troubleshooting Static Routes', duration: '10:41' },
+      { id: 'aHwAm8GYbn8', title: 'Routing Fundamentals (Part 1)', duration: '31:00' },
+      { id: 'YCv4-_sMvYE', title: 'Static Routing (Part 2)', duration: '37:44' },
+      { id: 'XHxOtIav2k8', title: 'Lab 1 - Configuring Static Routes', duration: '12:29' },
+      { id: '3z8YGEVFTiA', title: 'Lab 2 - Troubleshooting Static Routes', duration: '9:45' },
     ],
     resources: {
-      lab: 'Day 11 Lab - Configuring Static Routes.pkt',
-      flashcards: 'Day 11 (part 1) Flashcards - Routing Fundamentals.apkg',
+      lab: [
+        'Day 11 Lab - Configuring Static Routes.pkt',
+        'Day 11 Lab - Troubleshooting Static Routes.pkt',
+      ],
+      flashcards: [
+        'Day 11 (part 1) Flashcards - Routing Fundamentals.apkg',
+        'Day 11 (part 2) Flashcards - Static Routing.apkg',
+      ],
     },
   },
   {
@@ -144,8 +150,8 @@ export const modules = [
     day: 12,
     title: 'The Life of a Packet',
     videos: [
-      { id: '4YrYV2io3as', title: 'The Life of a Packet', duration: '20:58' },
-      { id: 'bfsEqDeHbpI', title: 'Lab - Life of a Packet', duration: '14:09' },
+      { id: '4YrYV2io3as', title: 'The Life of a Packet', duration: '20:13' },
+      { id: 'bfsEqDeHbpI', title: 'Lab - Life of a Packet', duration: '15:36' },
     ],
     resources: {
       lab: 'Day 12 Lab - Life of a Packet.pkt',
@@ -156,7 +162,7 @@ export const modules = [
     id: 13,
     day: 13,
     title: 'Subnetting (Part 1)',
-    videos: [{ id: 'bQ8sdpGQu8c', title: 'Subnetting (Part 1)', duration: '26:07' }],
+    videos: [{ id: 'bQ8sdpGQu8c', title: 'Subnetting (Part 1)', duration: '28:54' }],
     resources: {
       lab: null,
       flashcards: 'Day 13 Flashcards - Subnetting.apkg',
@@ -166,7 +172,7 @@ export const modules = [
     id: 14,
     day: 14,
     title: 'Subnetting (Part 2)',
-    videos: [{ id: 'IGhd-0di0Qo', title: 'Subnetting (Part 2)', duration: '27:25' }],
+    videos: [{ id: 'IGhd-0di0Qo', title: 'Subnetting (Part 2)', duration: '24:47' }],
     resources: {
       lab: null,
       flashcards: null,
@@ -177,7 +183,7 @@ export const modules = [
     day: 15,
     title: 'Subnetting (Part 3 - VLSM)',
     videos: [
-      { id: 'z-JqCedc9EI', title: 'Subnetting (Part 3 - VLSM)', duration: '23:52' },
+      { id: 'z-JqCedc9EI', title: 'Subnetting (Part 3 - VLSM)', duration: '23:53' },
       { id: 'Rn_E1Qv8--I', title: 'Lab - Subnetting (VLSM)', duration: '14:59' },
     ],
     resources: {
@@ -190,8 +196,8 @@ export const modules = [
     day: 16,
     title: 'VLANs (Part 1)',
     videos: [
-      { id: 'cjFzOnm6u1g', title: 'VLANs (Part 1)', duration: '23:44' },
-      { id: '-tq7f3xtyLQ', title: 'Lab - VLANs (Part 1)', duration: '11:01' },
+      { id: 'cjFzOnm6u1g', title: 'VLANs (Part 1)', duration: '23:45' },
+      { id: '-tq7f3xtyLQ', title: 'Lab - VLANs (Part 1)', duration: '11:02' },
     ],
     resources: {
       lab: 'Day 16 Lab - VLANs (Part 1).pkt',
@@ -217,7 +223,7 @@ export const modules = [
     title: 'VLANs (Part 3)',
     videos: [
       { id: 'OkPB028l2eE', title: 'VLANs (Part 3)', duration: '32:32' },
-      { id: 'MQcCr3QW1vE', title: 'Lab - VLANs (Part 3)', duration: '25:18' },
+      { id: 'MQcCr3QW1vE', title: 'Lab - VLANs (Part 3)', duration: '25:19' },
     ],
     resources: {
       lab: 'Day 18 Lab - Multilayer Switching.pkt',
@@ -256,15 +262,21 @@ export const modules = [
     title: 'Spanning Tree Protocol (Part 2)',
     videos: [
       { id: 'nWpldCc8msY', title: 'Spanning Tree Protocol (Part 2)', duration: '42:18' },
-      { id: 'zqzppl4LOwk', title: 'PortFast (STP Toolkit)', duration: '17:33' },
-      { id: 'jfC_AeJnuhY', title: 'BPDU Guard & BPDU Filter (STP Toolkit)', duration: '24:23' },
+      { id: 'zqzppl4LOwk', title: 'PortFast (STP Toolkit)', duration: '17:34' },
+      { id: 'jfC_AeJnuhY', title: 'BPDU Guard & BPDU Filter (STP Toolkit)', duration: '24:24' },
       { id: '2XE_PgkvSic', title: 'Root Guard (STP Toolkit)', duration: '19:44' },
-      { id: 'uJ5_Klha0ig', title: 'Loop Guard (STP Toolkit)', duration: '18:48' },
-      { id: '5rpaeJNig2o', title: 'Lab - Configuring STP (PVST+)', duration: '17:08' },
+      { id: 'uJ5_Klha0ig', title: 'Loop Guard (STP Toolkit)', duration: '18:49' },
+      { id: '5rpaeJNig2o', title: 'Lab - Configuring STP (PVST+)', duration: '17:09' },
     ],
     resources: {
       lab: 'Day 21 Lab - Configuring Spanning Tree.pkt',
-      flashcards: 'Day 21 Flashcards - STP (Part 2).apkg',
+      flashcards: [
+        'Day 21 Flashcards - STP (Part 2).apkg',
+        'Day 21-1 Flashcards - PortFast.apkg',
+        'Day 21-2 Flashcards - BPDU Guard & BPDU Filter.apkg',
+        'Day 21-3 Flashcards - Root Guard.apkg',
+        'Day 21-4 Flashcards - Loop Guard.apkg',
+      ],
     },
   },
   {
@@ -273,7 +285,7 @@ export const modules = [
     title: 'Rapid Spanning Tree Protocol',
     videos: [
       { id: 'EpazNsLlPps', title: 'Rapid Spanning Tree Protocol', duration: '43:01' },
-      { id: 'YG7r4XHy2JU', title: 'Lab - Rapid STP', duration: '19:49' },
+      { id: 'YG7r4XHy2JU', title: 'Lab - Rapid STP', duration: '19:50' },
     ],
     resources: {
       lab: 'Day 22 Lab - Rapid STP.pkt',
@@ -286,7 +298,7 @@ export const modules = [
     title: 'EtherChannel',
     videos: [
       { id: 'xuo69Joy_Nc', title: 'EtherChannel', duration: '41:33' },
-      { id: '8gKF2fMMjA8', title: 'Lab - Configuring EtherChannel', duration: '25:02' },
+      { id: '8gKF2fMMjA8', title: 'Lab - Configuring EtherChannel', duration: '25:03' },
     ],
     resources: {
       lab: 'Day 23 Lab - EtherChannel.pkt',
@@ -311,12 +323,15 @@ export const modules = [
     day: 25,
     title: 'RIP & EIGRP',
     videos: [
-      { id: 'N8PiZDld6Zc', title: 'RIP & EIGRP', duration: '43:41' },
+      { id: 'N8PiZDld6Zc', title: 'RIP & EIGRP', duration: '43:42' },
       { id: 'ffnJ5oBIObY', title: 'Lab - Configuring EIGRP', duration: '26:14' },
     ],
     resources: {
       lab: 'Day 25 Lab - EIGRP Configuration.pkt',
-      flashcards: 'Day 25 Flashcards (1) - RIP & EIGRP.apkg',
+      flashcards: [
+        'Day 25 Flashcards (1) - RIP & EIGRP.apkg',
+        'Day 25 Flashcards (2 - Lab Video) - EIGRP Terms.apkg',
+      ],
     },
   },
   {
@@ -324,8 +339,8 @@ export const modules = [
     day: 26,
     title: 'OSPF Part 1',
     videos: [
-      { id: 'H8W9oMNSuwo', title: 'OSPF Part 1', duration: '30:25' },
-      { id: 'ieTH5lVhNaY', title: 'Lab - Configuring OSPF (1)', duration: '35:51' },
+      { id: 'pvuaoJ9YzoI', title: 'OSPF Part 1', duration: '39:40' },
+      { id: 'LeLRWjfylcs', title: 'Lab - Configuring OSPF (1)', duration: '22:07' },
     ],
     resources: {
       lab: 'Day 26 Lab - OSPF (Part 1).pkt',
@@ -337,8 +352,8 @@ export const modules = [
     day: 27,
     title: 'OSPF Part 2',
     videos: [
-      { id: 'K6Qt23sY68Y', title: 'OSPF Part 2', duration: '05:32' },
-      { id: 't-ai8JzhHuY', title: 'Lab - Configuring OSPF (2)', duration: '32:54' },
+      { id: 'VtzfTA21ht0', title: 'OSPF Part 2', duration: '36:55' },
+      { id: 'UEyQW-EcnY8', title: 'Lab - Configuring OSPF (2)', duration: '22:10' },
     ],
     resources: {
       lab: 'Day 27 Lab - OSPF (Part 2).pkt',
@@ -350,8 +365,8 @@ export const modules = [
     day: 28,
     title: 'OSPF Part 3',
     videos: [
-      { id: '7nmYoL0t2tU', title: 'OSPF Part 3', duration: '08:04' },
-      { id: 'IYbtai7Nu2g', title: 'Lab - Configuring OSPF (3)', duration: '31:06' },
+      { id: '3ew26ujkiDI', title: 'OSPF Part 3', duration: '47:53' },
+      { id: 'Goekjm3bK5o', title: 'Lab - Configuring OSPF (3)', duration: '21:25' },
     ],
     resources: {
       lab: 'Day 28 Lab - OSPF (Part 3).pkt',
@@ -363,8 +378,8 @@ export const modules = [
     day: 29,
     title: 'First Hop Redundancy Protocols',
     videos: [
-      { id: 'SDocmq1c05s', title: 'First Hop Redundancy Protocols', duration: '10:26' },
-      { id: 'u2n762WG0Vo', title: 'Lab - Configuring HSRP', duration: '38:13' },
+      { id: '43WnpwQMolo', title: 'First Hop Redundancy Protocols', duration: '40:25' },
+      { id: 'uho5Z2nFhb8', title: 'Lab - Configuring HSRP', duration: '22:01' },
     ],
     resources: {
       lab: 'Day 29 Lab - HSRP Configuration.pkt',
@@ -376,8 +391,8 @@ export const modules = [
     day: 30,
     title: 'TCP & UDP',
     videos: [
-      { id: '5q1pqdmdPjo', title: 'TCP & UDP', duration: '33:41' },
-      { id: 'Ig0dSaOQDI8', title: 'Lab - Wireshark Demo (TCP/UDP)', duration: '10:29' },
+      { id: 'LIEACBqlntY', title: 'TCP & UDP', duration: '33:59' },
+      { id: 'pJKFahkqMU8', title: 'Lab - Wireshark Demo (TCP/UDP)', duration: '11:15' },
     ],
     resources: {
       lab: null,
@@ -389,8 +404,8 @@ export const modules = [
     day: 31,
     title: 'IPv6 Part 1',
     videos: [
-      { id: '3ROdsfEUuhs', title: 'IPv6 Part 1', duration: '40:20' },
-      { id: 'FiAatRd84XI', title: 'Lab - Configuring IPv6 (Part 1)', duration: '30:42' },
+      { id: 'ZNuXyOXae5U', title: 'IPv6 Part 1', duration: '39:26' },
+      { id: 'BdsIahtrWIA', title: 'Lab - Configuring IPv6 (Part 1)', duration: '18:02' },
     ],
     resources: {
       lab: 'Day 31 Lab - IPv6 Configuration (Part 1).pkt',
@@ -402,8 +417,8 @@ export const modules = [
     day: 32,
     title: 'IPv6 Part 2',
     videos: [
-      { id: 'cCqluocfQe0', title: 'IPv6 Part 2', duration: '32:27' },
-      { id: 'aQB22y4liXA', title: 'Lab - Configuring IPv6 (Part 2)', duration: '30:11' },
+      { id: 'BrTMMOXFhDU', title: 'IPv6 Part 2', duration: '39:33' },
+      { id: 'Zfhpd7dl6QI', title: 'Lab - Configuring IPv6 (Part 2)', duration: '21:02' },
     ],
     resources: {
       lab: 'Day 32 Lab - IPv6 Configuration (Part 2).pkt',
@@ -415,8 +430,8 @@ export const modules = [
     day: 33,
     title: 'IPv6 Part 3',
     videos: [
-      { id: 'aHwAm8GYbn8', title: 'IPv6 Part 3', duration: '31:00' },
-      { id: '4YrYV2io3as', title: 'Lab - Configuring IPv6 (Part 3)', duration: '20:13' },
+      { id: 'rwkHfsWQwy8', title: 'IPv6 Part 3', duration: '43:51' },
+      { id: 'WSBEVFANMmc', title: 'Lab - Configuring IPv6 (Part 3)', duration: '19:17' },
     ],
     resources: {
       lab: 'Day 33 Lab - IPv6 Static Routes.pkt',
@@ -428,8 +443,8 @@ export const modules = [
     day: 34,
     title: 'Standard ACLs',
     videos: [
-      { id: 'bQ8sdpGQu8c', title: 'Standard ACLs', duration: '28:54' },
-      { id: 'IGhd-0di0Qo', title: 'Lab - Standard ACLs', duration: '24:46' },
+      { id: 'z023_eRUtSo', title: 'Standard ACLs', duration: '46:51' },
+      { id: 'sJ8PXmiAkvs', title: 'Lab - Standard ACLs', duration: '27:01' },
     ],
     resources: {
       lab: 'Day 34 Lab - Standard ACLs.pkt',
@@ -441,8 +456,8 @@ export const modules = [
     day: 35,
     title: 'Extended ACLs',
     videos: [
-      { id: 'z-JqCedc9EI', title: 'Extended ACLs', duration: '23:52' },
-      { id: 'cjFzOnm6u1g', title: 'Lab - Extended ACLs', duration: '23:44' },
+      { id: 'dUttKY_CNXE', title: 'Extended ACLs', duration: '40:55' },
+      { id: '1cuMzWBrEYs', title: 'Lab - Extended ACLs', duration: '22:08' },
     ],
     resources: {
       lab: 'Day 35 Lab - Extended ACLs.pkt',
@@ -454,8 +469,8 @@ export const modules = [
     day: 36,
     title: 'CDP & LLDP',
     videos: [
-      { id: 'Jl9OOzNaBDU', title: 'CDP & LLDP', duration: '40:01' },
-      { id: 'OkPB028l2eE', title: 'Lab - CDP & LLDP', duration: '32:32' },
+      { id: '_hnMZBzXRRk', title: 'CDP & LLDP', duration: '39:23' },
+      { id: '4s8qqL7R9W8', title: 'Lab - CDP & LLDP', duration: '24:37' },
     ],
     resources: {
       lab: 'Day 36 Lab - CDP & LLDP.pkt',
@@ -467,8 +482,8 @@ export const modules = [
     day: 37,
     title: 'NTP',
     videos: [
-      { id: 'JtQV_0Sjszg', title: 'NTP', duration: '37:34' },
-      { id: 'j-bK-EFt9cY', title: 'Lab - NTP', duration: '38:39' },
+      { id: 'qGJaJx7OfUo', title: 'NTP', duration: '42:46' },
+      { id: 'Miys7Ft9wWI', title: 'Lab - NTP', duration: '19:08' },
     ],
     resources: {
       lab: 'Day 37 Lab - NTP.pkt',
@@ -480,8 +495,8 @@ export const modules = [
     day: 38,
     title: 'DNS',
     videos: [
-      { id: 'nWpldCc8msY', title: 'DNS', duration: '42:18' },
-      { id: 'EpazNsLlPps', title: 'Lab - DNS', duration: '43:01' },
+      { id: '4C6eeQes4cs', title: 'DNS', duration: '30:11' },
+      { id: '7D_FapNrRUM', title: 'Lab - DNS', duration: '17:31' },
     ],
     resources: {
       lab: 'Day 38 Lab - DNS.pkt',
@@ -493,8 +508,8 @@ export const modules = [
     day: 39,
     title: 'DHCP',
     videos: [
-      { id: 'xuo69Joy_Nc', title: 'DHCP', duration: '41:33' },
-      { id: 'xSTgb8JLkvs', title: 'Lab - DHCP', duration: '44:38' },
+      { id: 'hzkleGAC2_Y', title: 'DHCP', duration: '37:02' },
+      { id: 'cgMsoIQB9Wk', title: 'Lab - DHCP', duration: '17:49' },
     ],
     resources: {
       lab: 'Day 39 Lab - DHCP.pkt',
@@ -506,8 +521,8 @@ export const modules = [
     day: 40,
     title: 'SNMP',
     videos: [
-      { id: 'N8PiZDld6Zc', title: 'SNMP', duration: '43:41' },
-      { id: 'pvuaoJ9YzoI', title: 'Lab - SNMP', duration: '39:40' },
+      { id: 'HXu0Ifj0oWU', title: 'SNMP', duration: '29:21' },
+      { id: 'v8WxIytUdS4', title: 'Lab - SNMP', duration: '13:37' },
     ],
     resources: {
       lab: 'Day 40 Lab - SNMP.pkt',
@@ -519,8 +534,8 @@ export const modules = [
     day: 41,
     title: 'Syslog',
     videos: [
-      { id: 'VtzfTA21ht0', title: 'Syslog', duration: '36:55' },
-      { id: '3ew26ujkiDI', title: 'Lab - Syslog', duration: '47:53' },
+      { id: 'RaQPSKQ4J5A', title: 'Syslog', duration: '27:58' },
+      { id: '-R_CYM6Wm-Y', title: 'Lab - Syslog', duration: '14:03' },
     ],
     resources: {
       lab: 'Day 41 Lab - Syslog.pkt',
@@ -532,8 +547,8 @@ export const modules = [
     day: 42,
     title: 'SSH',
     videos: [
-      { id: '43WnpwQMolo', title: 'SSH', duration: '40:24' },
-      { id: 'LIEACBqlntY', title: 'Lab - SSH', duration: '33:59' },
+      { id: 'AvgYqI2qSD4', title: 'SSH', duration: '31:07' },
+      { id: 'QnHq7iCOtTc', title: 'Lab - SSH', duration: '15:50' },
     ],
     resources: {
       lab: 'Day 42 Lab - SSH.pkt',
@@ -545,8 +560,8 @@ export const modules = [
     day: 43,
     title: 'FTP & TFTP',
     videos: [
-      { id: 'ZNuXyOXae5U', title: 'FTP & TFTP', duration: '39:26' },
-      { id: 'BrTMMOXFhDU', title: 'Lab - FTP & TFTP', duration: '39:33' },
+      { id: '50hcfsoBf4Q', title: 'FTP & TFTP', duration: '30:55' },
+      { id: 'W9PLvA2wZ28', title: 'Lab - FTP & TFTP', duration: '15:36' },
     ],
     resources: {
       lab: 'Day 43 Lab - FTP & TFTP.pkt',
@@ -558,8 +573,8 @@ export const modules = [
     day: 44,
     title: 'NAT (Part 1)',
     videos: [
-      { id: 'rwkHfsWQwy8', title: 'NAT (Part 1)', duration: '43:50' },
-      { id: 'z023_eRUtSo', title: 'Lab - Static NAT', duration: '46:50' },
+      { id: '2TZCfTgopeg', title: 'NAT (Part 1)', duration: '32:10' },
+      { id: 'vir6n_NVZFw', title: 'Lab - Static NAT', duration: '14:12' },
     ],
     resources: {
       lab: 'Day 44 Lab - Static NAT.pkt',
@@ -571,8 +586,8 @@ export const modules = [
     day: 45,
     title: 'NAT (part 2)',
     videos: [
-      { id: 'dUttKY_CNXE', title: 'NAT (part 2)', duration: '40:54' },
-      { id: '_hnMZBzXRRk', title: 'Lab - Dynamic NAT', duration: '39:23' },
+      { id: 'kILDNs4KjYE', title: 'NAT (part 2)', duration: '29:40' },
+      { id: 'vNs1xxiwGJs', title: 'Lab - Dynamic NAT', duration: '15:01' },
     ],
     resources: {
       lab: 'Day 45 Lab - Dynamic NAT.pkt',
@@ -584,8 +599,8 @@ export const modules = [
     day: 46,
     title: 'QoS (Part 1)',
     videos: [
-      { id: 'qGJaJx7OfUo', title: 'QoS (Part 1)', duration: '42:46' },
-      { id: '4C6eeQes4cs', title: 'Lab - Voice VLANs', duration: '30:11' },
+      { id: 'H6FKJMiiL6E', title: 'QoS (Part 1)', duration: '32:33' },
+      { id: 'kGX76QNIjsE', title: 'Lab - Voice VLANs', duration: '20:18' },
     ],
     resources: {
       lab: 'Day 46 Lab - Voice VLANs.pkt',
@@ -597,8 +612,8 @@ export const modules = [
     day: 47,
     title: 'QoS (Part 2)',
     videos: [
-      { id: 'hzkleGAC2_Y', title: 'QoS (Part 2)', duration: '37:02' },
-      { id: 'HXu0Ifj0oWU', title: 'Lab - QoS', duration: '29:21' },
+      { id: '4vurfhVjcMM', title: 'QoS (Part 2)', duration: '41:46' },
+      { id: '63tD4t8189k', title: 'Lab - QoS', duration: '15:41' },
     ],
     resources: {
       lab: 'Day 47 Lab - QoS.pkt',
@@ -610,8 +625,8 @@ export const modules = [
     day: 48,
     title: 'Security Fundamentals',
     videos: [
-      { id: 'RaQPSKQ4J5A', title: 'Security Fundamentals', duration: '27:58' },
-      { id: 'AvgYqI2qSD4', title: 'Lab - Kali Linux Demo', duration: '31:07' },
+      { id: 'VvFuieyTTSw', title: 'Security Fundamentals', duration: '38:40' },
+      { id: 'EBs47-0ZD-A', title: 'Lab - Kali Linux Demo', duration: '10:25' },
     ],
     resources: {
       lab: null,
@@ -623,8 +638,8 @@ export const modules = [
     day: 49,
     title: 'Port Security',
     videos: [
-      { id: '50hcfsoBf4Q', title: 'Port Security', duration: '30:54' },
-      { id: '2TZCfTgopeg', title: 'Lab - Port Security', duration: '32:10' },
+      { id: 'sHN3jOJIido', title: 'Port Security', duration: '34:28' },
+      { id: 'zZwhrxKeGj8', title: 'Lab - Port Security', duration: '17:03' },
     ],
     resources: {
       lab: 'Day 49 Lab - Port Security.pkt',
@@ -636,8 +651,8 @@ export const modules = [
     day: 50,
     title: 'DHCP Snooping',
     videos: [
-      { id: 'kILDNs4KjYE', title: 'DHCP Snooping', duration: '29:39' },
-      { id: 'H6FKJMiiL6E', title: 'Lab - DHCP Snooping', duration: '32:33' },
+      { id: 'qYYeg2kz1yE', title: 'DHCP Snooping', duration: '28:23' },
+      { id: 'YMom_e545H4', title: 'Lab - DHCP Snooping', duration: '15:41' },
     ],
     resources: {
       lab: 'Day 50 Lab - DHCP Snooping.pkt',
@@ -649,8 +664,8 @@ export const modules = [
     day: 51,
     title: 'Dynamic ARP Inspection',
     videos: [
-      { id: '4vurfhVjcMM', title: 'Dynamic ARP Inspection', duration: '41:46' },
-      { id: 'VvFuieyTTSw', title: 'Lab - Dynamic ARP Inspection', duration: '38:40' },
+      { id: 'HwbTKaIvL6s', title: 'Dynamic ARP Inspection', duration: '32:50' },
+      { id: 'oLF2mbmYMAk', title: 'Lab - Dynamic ARP Inspection', duration: '20:53' },
     ],
     resources: {
       lab: 'Day 51 Lab - Dynamic ARP Inspection.pkt',
@@ -662,12 +677,12 @@ export const modules = [
     day: 52,
     title: 'LAN Architectures',
     videos: [
-      { id: 'sHN3jOJIido', title: 'LAN Architectures', duration: '34:28' },
-      { id: 'qYYeg2kz1yE', title: 'Lab - STP & FHRP Synchronization', duration: '28:23' },
+      { id: 'PvyEcLhmNBk', title: 'LAN Architectures', duration: '28:06' },
+      { id: 'BgIEhyoETgU', title: 'Lab - STP & FHRP Synchronization', duration: '19:11' },
     ],
     resources: {
       lab: 'Day 52 Lab - STP & HSRP Synchronization.pkt',
-      flashcards: 'Day 52  Flashcards - LAN Architectures.apkg',
+      flashcards: 'Day 52 Flashcards - LAN Architectures.apkg',
     },
   },
   {
@@ -675,8 +690,8 @@ export const modules = [
     day: 53,
     title: 'WAN Architectures',
     videos: [
-      { id: 'HwbTKaIvL6s', title: 'WAN Architectures', duration: '32:49' },
-      { id: 'PvyEcLhmNBk', title: 'Lab - GRE Tunnels', duration: '28:05' },
+      { id: 'BW3fQgdf4-w', title: 'WAN Architectures', duration: '37:34' },
+      { id: '_MMuU5viinM', title: 'Lab - GRE Tunnels', duration: '22:04' },
     ],
     resources: {
       lab: 'Day 53 Lab - GRE Tunnels.pkt',
@@ -688,21 +703,25 @@ export const modules = [
     day: 54,
     title: 'Virtualization & Cloud',
     videos: [
-      { id: 'BW3fQgdf4-w', title: 'Virtualization & Cloud (part 1)', duration: '37:34' },
-      { id: '_S3greGajJA', title: 'Containers (part 2)', duration: '38:40' },
-      { id: 'zuYiktLqNYQ', title: 'VRF (part 3)', duration: '35:57' },
-      { id: 'uX1h0F6wpBY', title: 'Lab - Oracle VirtualBox', duration: '38:20' },
+      { id: '_S3greGajJA', title: 'Virtualization & Cloud (part 1)', duration: '38:41' },
+      { id: 'K731pAS22Aw', title: 'Containers (part 2)', duration: '13:33' },
+      { id: 'Ge4644KUvh4', title: 'VRF (part 3)', duration: '18:03' },
+      { id: 'swqADfQk2jM', title: 'Lab - Oracle VirtualBox', duration: '8:43' },
     ],
     resources: {
       lab: null,
-      flashcards: 'Day 54 (Part 1) Flashcards - Virtualization & Cloud.apkg',
+      flashcards: [
+        'Day 54 (Part 1) Flashcards - Virtualization & Cloud.apkg',
+        'Day 54 (Part 2) Flashcards - Containers.apkg',
+        'Day 54 (Part 3) Flashcards - VRF.apkg',
+      ],
     },
   },
   {
     id: 55,
     day: 55,
     title: 'Wireless Fundamentals',
-    videos: [{ id: 'wHXKo9So5y8', title: 'Wireless Fundamentals', duration: '33:52' }],
+    videos: [{ id: 'zuYiktLqNYQ', title: 'Wireless Fundamentals', duration: '35:57' }],
     resources: {
       lab: null,
       flashcards: 'Day 55 Flashcards - Wireless Fundamentals.apkg',
@@ -712,7 +731,7 @@ export const modules = [
     id: 56,
     day: 56,
     title: 'Wireless Architectures',
-    videos: [{ id: 'r9o6GFI87go', title: 'Wireless Architectures', duration: '46:38' }],
+    videos: [{ id: 'uX1h0F6wpBY', title: 'Wireless Architectures', duration: '38:21' }],
     resources: {
       lab: null,
       flashcards: 'Day 56 Flashcards - Wireless Architectures.apkg',
@@ -722,7 +741,7 @@ export const modules = [
     id: 57,
     day: 57,
     title: 'Wireless Security',
-    videos: [{ id: '4tsBgMCPVuc', title: 'Wireless Security', duration: '33:26' }],
+    videos: [{ id: 'wHXKo9So5y8', title: 'Wireless Security', duration: '33:53' }],
     resources: {
       lab: null,
       flashcards: 'Day 57 Flashcards - Wireless Security.apkg',
@@ -733,8 +752,8 @@ export const modules = [
     day: 58,
     title: 'Wireless Configuration',
     videos: [
-      { id: 'nohde2-QNJ4', title: 'Wireless Configuration', duration: '28:56' },
-      { id: 'Luei0p-2h10', title: 'Lab - Wireless LANs', duration: '31:45' },
+      { id: 'r9o6GFI87go', title: 'Wireless Configuration', duration: '46:38' },
+      { id: 'Il8ev78fcqw', title: 'Lab - Wireless LANs', duration: '17:28' },
     ],
     resources: {
       lab: 'Day 58 Lab - Wireless LANs.pkt',
@@ -746,12 +765,15 @@ export const modules = [
     day: 59,
     title: 'Intro to Network Automation',
     videos: [
-      { id: '7HhWCeXDTpA', title: 'Intro to Network Automation (part 1)', duration: '28:19' },
-      { id: 'Kog9gHTjALI', title: 'AI & Machine Learning (part 2)', duration: '21:32' },
+      { id: '4tsBgMCPVuc', title: 'Intro to Network Automation (part 1)', duration: '33:27' },
+      { id: 'Fn_kAv35W5A', title: 'AI & Machine Learning (part 2)', duration: '41:49' },
     ],
     resources: {
       lab: null,
-      flashcards: 'Day 59 (Part 1) Flashcards - Network Automation.apkg',
+      flashcards: [
+        'Day 59 (Part 1) Flashcards - Network Automation.apkg',
+        'Day 59 (Part 2) Flashcards - AI & Machine Learning.apkg',
+      ],
     },
   },
   {
@@ -770,11 +792,14 @@ export const modules = [
     title: 'REST APIs',
     videos: [
       { id: 'Luei0p-2h10', title: 'REST APIs (part 1)', duration: '31:45' },
-      { id: 'bmqr_xpt6sc', title: 'REST API Authentication (part 2)', duration: '29:14' },
+      { id: 'bmqr_xpt6sc', title: 'REST API Authentication (part 2)', duration: '29:15' },
     ],
     resources: {
       lab: null,
-      flashcards: 'Day 61 (Part 1) Flashcards - REST APIs.apkg',
+      flashcards: [
+        'Day 61 (Part 1) Flashcards - REST APIs.apkg',
+        'Day 61 (Part 2) Flashcards - REST Authentication.apkg',
+      ],
     },
   },
   {
@@ -792,12 +817,15 @@ export const modules = [
     day: 63,
     title: 'Ansible, Puppet, & Chef',
     videos: [
-      { id: 'Kog9gHTjALI', title: 'Ansible, Puppet, & Chef (part 1)', duration: '21:32' },
+      { id: 'Kog9gHTjALI', title: 'Ansible, Puppet, & Chef (part 1)', duration: '21:33' },
       { id: 'VAwUaffejWU', title: 'Terraform (part 2)', duration: '22:29' },
     ],
     resources: {
       lab: null,
-      flashcards: 'Day 63 (part 1) Flashcards - Ansible, Puppet, Chef.apkg',
+      flashcards: [
+        'Day 63 (part 1) Flashcards - Ansible, Puppet, Chef.apkg',
+        'Day 63 (part 2) Flashcards - Terraform.apkg',
+      ],
     },
   },
   {
@@ -809,7 +837,7 @@ export const modules = [
         id: '2p7-MluKAgE',
         title:
           'Complete Network Configuration // CCNA Mega Lab! – OSPF, VLANs, STP, DHCP, Security, Wireless + more',
-        duration: '02:15:42',
+        duration: '02:38:50',
       },
     ],
     resources: {

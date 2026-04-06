@@ -17,6 +17,8 @@ function GoalCard({ modules }) {
       if (updated) {
         const completionPercent = GoalTracker.getGoalCompletion(updated);
         setCompletion(completionPercent);
+      } else {
+        setCompletion(0);
       }
     } else {
       setGoal(null);
@@ -32,7 +34,7 @@ function GoalCard({ modules }) {
   }, [modules, loadGoalData]);
 
   const handleCreateGoal = goalData => {
-    GoalTracker.createGoal(goalData.type, goalData.targets);
+    GoalTracker.createGoal(goalData.type, goalData.targets, modules);
     setShowModal(false);
     loadGoalData();
   };

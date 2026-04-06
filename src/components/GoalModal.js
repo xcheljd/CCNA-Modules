@@ -8,9 +8,10 @@ function GoalModal({ onClose, onCreate }) {
 
   const handleCreate = () => {
     const preset = presets[selectedPreset];
+    const targets = type === 'monthly' ? preset.monthly : preset.weekly;
     onCreate({
       type,
-      targets: preset.weekly,
+      targets,
     });
   };
 
@@ -37,8 +38,8 @@ function GoalModal({ onClose, onCreate }) {
               <h4>{preset.name}</h4>
               <p>{preset.description}</p>
               <div className="preset-targets">
-                <span>{preset.weekly.modulesCompleted} modules</span>
-                <span>{preset.weekly.videosWatched} videos</span>
+                <span>{preset[type].modulesCompleted} modules</span>
+                <span>{preset[type].videosWatched} videos</span>
               </div>
             </div>
           ))}

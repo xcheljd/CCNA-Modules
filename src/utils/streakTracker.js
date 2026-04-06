@@ -13,12 +13,22 @@ export const StreakTracker = {
         streakHistory: [],
       };
     }
-    return JSON.parse(data);
+    try {
+      return JSON.parse(data);
+    } catch {
+      console.error('Corrupted study-streak data, resetting to defaults');
+      localStorage.removeItem('study-streak');
+      return { currentStreak: 0, longestStreak: 0, lastStudyDate: null, streakHistory: [] };
+    }
   },
 
   // Save streak data
   saveStreakData(data) {
-    localStorage.setItem('study-streak', JSON.stringify(data));
+    try {
+      localStorage.setItem('study-streak', JSON.stringify(data));
+    } catch (error) {
+      console.error('Error saving streak data:', error);
+    }
   },
 
   // Get today's date in ISO format (YYYY-MM-DD)

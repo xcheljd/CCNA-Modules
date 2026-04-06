@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import StreakTracker from '../utils/streakTracker';
 import '../styles/dashboard.css';
 
-function StudyStreak() {
+function StudyStreak({ refreshKey }) {
   const [streakInfo, setStreakInfo] = useState({
     currentStreak: 0,
     longestStreak: 0,
@@ -13,22 +13,18 @@ function StudyStreak() {
   const [atRisk, setAtRisk] = useState(false);
 
   useEffect(() => {
-    // Load streak data
     const info = StreakTracker.getStreakInfo();
     setStreakInfo(info);
 
-    // Get last 7 days of activity
     const activity = StreakTracker.getRecentActivity(7);
     setRecentActivity(activity);
 
-    // Get milestone progress
     const milestoneData = StreakTracker.getStreakMilestones();
     setMilestones(milestoneData);
 
-    // Check if streak is at risk
     const risk = StreakTracker.isStreakAtRisk();
     setAtRisk(risk);
-  }, []);
+  }, [refreshKey]);
 
   const getStreakEmoji = streak => {
     if (streak === 0) return '📚';

@@ -20,9 +20,9 @@ export const ActivityTracker = {
   },
 
   // Record lab completion with full tracking integration
-  recordLabCompletion(moduleId, isComplete, modules) {
+  recordLabCompletion(moduleId, labIndex, isComplete, modules) {
     if (isComplete) {
-      ProgressTracker.markLabComplete(moduleId);
+      ProgressTracker.markLabComplete(moduleId, labIndex);
       // Record streak activity
       StreakTracker.recordStudyActivity('lab');
       // Update performance snapshot
@@ -30,7 +30,7 @@ export const ActivityTracker = {
         PerformanceTracker.recordDailySnapshot(modules);
       }
     } else {
-      ProgressTracker.unmarkLabComplete(moduleId);
+      ProgressTracker.unmarkLabComplete(moduleId, labIndex);
     }
   },
 

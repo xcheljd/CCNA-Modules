@@ -94,7 +94,7 @@ function Dashboard({ modules, onModuleSelect }) {
 
   // Section renderer using component map
   const sectionComponents = {
-    'study-streak': () => <StudyStreakSection key="study-streak" />,
+    'study-streak': () => <StudyStreakSection key="study-streak" refreshKey={refreshKey} />,
     'learning-goals': () => <LearningGoalsSection key="learning-goals" modules={modules} />,
     'overall-progress': () => (
       <OverallProgressSection

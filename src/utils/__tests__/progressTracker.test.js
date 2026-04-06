@@ -68,28 +68,62 @@ describe('ProgressTracker', () => {
   describe('lab completion', () => {
     it('should mark lab as completed', () => {
       const moduleId = 1;
+      const labIndex = 0;
 
-      ProgressTracker.markLabComplete(moduleId);
+      ProgressTracker.markLabComplete(moduleId, labIndex);
 
-      expect(localStorage.getItem(`lab_${moduleId}_completed`)).toBe('true');
+      expect(localStorage.getItem(`lab_${moduleId}_${labIndex}_completed`)).toBe('true');
     });
 
     it('should check if lab is completed', () => {
       const moduleId = 1;
-      localStorage.setItem(`lab_${moduleId}_completed`, 'true');
+      const labIndex = 0;
+      localStorage.setItem(`lab_${moduleId}_${labIndex}_completed`, 'true');
 
-      const result = ProgressTracker.isLabComplete(moduleId);
+      const result = ProgressTracker.isLabComplete(moduleId, labIndex);
 
       expect(result).toBe(true);
     });
 
     it('should unmark lab as completed', () => {
       const moduleId = 1;
+      const labIndex = 0;
+      localStorage.setItem(`lab_${moduleId}_${labIndex}_completed`, 'true');
+
+      ProgressTracker.unmarkLabComplete(moduleId, labIndex);
+
+      expect(localStorage.getItem(`lab_${moduleId}_${labIndex}_completed`)).toBeNull();
+    });
+
+    it('should migrate legacy single-key lab data', () => {
+      const moduleId = 1;
       localStorage.setItem(`lab_${moduleId}_completed`, 'true');
 
-      ProgressTracker.unmarkLabComplete(moduleId);
+      const completions = ProgressTracker.getLabCompletions(moduleId, 1);
 
+      expect(completions[0]).toBe(true);
       expect(localStorage.getItem(`lab_${moduleId}_completed`)).toBeNull();
+      expect(localStorage.getItem(`lab_${moduleId}_0_completed`)).toBe('true');
+    });
+
+    it('should get lab completions for multi-lab module', () => {
+      const moduleId = 11;
+      ProgressTracker.markLabComplete(moduleId, 0);
+      ProgressTracker.markLabComplete(moduleId, 1);
+
+      const completions = ProgressTracker.getLabCompletions(moduleId, 2);
+
+      expect(completions[0]).toBe(true);
+      expect(completions[1]).toBe(true);
+    });
+
+    it('should check if all labs are complete', () => {
+      const moduleId = 11;
+      ProgressTracker.markLabComplete(moduleId, 0);
+      ProgressTracker.markLabComplete(moduleId, 1);
+
+      expect(ProgressTracker.areAllLabsComplete(moduleId, 2)).toBe(true);
+      expect(ProgressTracker.areAllLabsComplete(moduleId, 3)).toBe(false);
     });
   });
 
@@ -131,7 +165,7 @@ describe('ProgressTracker', () => {
 
       ProgressTracker.markVideoComplete(1, 'video1');
       ProgressTracker.markVideoComplete(1, 'video2');
-      ProgressTracker.markLabComplete(1);
+      ProgressTracker.markLabComplete(1, 0);
       ProgressTracker.markFlashcardsAdded(1);
 
       const progress = ProgressTracker.getModuleProgress(module);
@@ -175,7 +209,7 @@ describe('ProgressTracker', () => {
       ];
 
       ProgressTracker.markVideoComplete(1, 'v1');
-      ProgressTracker.markLabComplete(1);
+      ProgressTracker.markLabComplete(1, 0);
       ProgressTracker.markFlashcardsAdded(1);
 
       const progress = ProgressTracker.getOverallProgress(modules);
@@ -314,7 +348,7 @@ describe('ProgressTracker', () => {
 
       ProgressTracker.markVideoComplete(1, 'v1');
       ProgressTracker.markVideoComplete(2, 'v2');
-      ProgressTracker.markLabComplete(1);
+      ProgressTracker.markLabComplete(1, 0);
       ProgressTracker.markFlashcardsAdded(1);
       ProgressTracker.setModuleConfidence(1, 4);
       ProgressTracker.setModuleConfidence(2, 3);
@@ -333,28 +367,28 @@ describe('ProgressTracker', () => {
   describe('data import/export', () => {
     it('should export all progress data', () => {
       ProgressTracker.markVideoComplete(1, 'v1');
-      ProgressTracker.markLabComplete(1);
+      ProgressTracker.markLabComplete(1, 0);
       ProgressTracker.setModuleConfidence(1, 4);
 
       const exported = ProgressTracker.exportProgress();
 
       expect(Object.keys(exported).length).toBeGreaterThanOrEqual(3);
       expect(exported['video_1_v1_completed']).toBe('true');
-      expect(exported['lab_1_completed']).toBe('true');
+      expect(exported['lab_1_0_completed']).toBe('true');
       expect(exported['confidence_1']).toBe('4');
     });
 
     it('should import progress data', () => {
       const data = {
         video_1_v1_completed: 'true',
-        lab_1_completed: 'true',
+        lab_1_0_completed: 'true',
         confidence_1: '4',
       };
 
       ProgressTracker.importProgress(data);
 
       expect(localStorage.getItem('video_1_v1_completed')).toBe('true');
-      expect(localStorage.getItem('lab_1_completed')).toBe('true');
+      expect(localStorage.getItem('lab_1_0_completed')).toBe('true');
       expect(localStorage.getItem('confidence_1')).toBe('4');
     });
   });
@@ -366,14 +400,14 @@ describe('ProgressTracker', () => {
       ];
 
       ProgressTracker.markVideoComplete(1, 'v1');
-      ProgressTracker.markLabComplete(1);
+      ProgressTracker.markLabComplete(1, 0);
       ProgressTracker.markFlashcardsAdded(1);
       ProgressTracker.setModuleConfidence(1, 4);
 
       ProgressTracker.clearAllProgress();
 
       expect(localStorage.getItem('video_1_v1_completed')).toBeNull();
-      expect(localStorage.getItem('lab_1_completed')).toBeNull();
+      expect(localStorage.getItem('lab_1_0_completed')).toBeNull();
       expect(localStorage.getItem('flashcards_1_added')).toBeNull();
       expect(localStorage.getItem('confidence_1')).toBeNull();
     });

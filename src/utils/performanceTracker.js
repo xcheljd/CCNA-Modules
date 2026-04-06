@@ -13,12 +13,22 @@ export const PerformanceTracker = {
         lastSnapshotDate: null,
       };
     }
-    return JSON.parse(data);
+    try {
+      return JSON.parse(data);
+    } catch {
+      console.error('Corrupted performance-history data, resetting to defaults');
+      localStorage.removeItem('performance-history');
+      return { daily: [], weekly: [], lastSnapshotDate: null };
+    }
   },
 
   // Save performance data
   savePerformanceData(data) {
-    localStorage.setItem('performance-history', JSON.stringify(data));
+    try {
+      localStorage.setItem('performance-history', JSON.stringify(data));
+    } catch (error) {
+      console.error('Error saving performance data:', error);
+    }
   },
 
   // Get today's date in ISO format

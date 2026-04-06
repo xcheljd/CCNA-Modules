@@ -179,10 +179,10 @@ export const ModulesNeedingReviewSection = ({ modules, onModuleSelect }) => {
 };
 
 // Wrapper components for existing components
-export const StudyStreakSection = () => (
+export const StudyStreakSection = ({ refreshKey }) => (
   <div className="dashboard-section">
     <h2>Study Streak</h2>
-    <StudyStreak />
+    <StudyStreak refreshKey={refreshKey} />
   </div>
 );
 
