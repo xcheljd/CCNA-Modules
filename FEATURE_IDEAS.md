@@ -2,40 +2,35 @@
 
 This document contains brainstormed features and design elements for future development iterations. Items are organized by category with implementation complexity estimates.
 
----
-
-## 🔍 Search & Filter System
-**Complexity:** Medium | **Priority:** High
-
-- Global search across all modules (by title, description, video names)
-- Filter modules by completion status (completed, in progress, not started)
-- Filter by resource availability (has labs, has flashcards)
-- Quick jump-to-module feature with keyboard shortcut
-- Search results highlighting
-
-**Benefits:** Dramatically improves navigation in large course catalog, especially as users progress through the course.
+**Last Updated:** 2026-01-31
 
 ---
 
-## 📊 Enhanced Progress Analytics
-**Complexity:** Medium-High | **Priority:** Medium
+## ✅ Already Implemented
 
-- Statistics dashboard showing:
-  - Total hours of video watched
-  - Completion rate by week/month
-  - Average time per module
-  - Estimated time remaining to complete course
-- Visual charts (progress over time, module breakdown)
-- Study streak counter with visual indicators
-- Heatmap calendar showing study activity
+The following features have been completed and are available in the current version:
 
-**Benefits:** Provides motivation through data visualization, helps users understand their learning pace and plan accordingly.
+- **Search & Filter System** - Global search across modules with filters for status and confidence
+- **Study Streak Tracking** - Visual streak counter with calendar and milestone badges
+- **Performance Analytics** - Charts showing confidence distribution, activity heatmap, progress trends
+- **Smart Recommendations** - AI-powered study suggestions based on progress and weak areas
+- **Theme System** - 14 themes including Nord, Catppuccin, Ayu, Rose Pine, Gruvbox
+- **Confidence Rating** - 5-star rating system per module with filtering capabilities
+- **Export/Backup** - JSON export/import for progress backup and migration
+- **Learning Goals** - Set and track custom study goals with deadlines
+- **Upcoming Milestones** - Visual progress toward completion milestones
+- **Activity Tracking** - Coordinated tracking across all user activities
 
-**Dependencies:** Requires time tracking implementation (see Study Timer feature)
+### 🚫 Cannot Implement
+
+- **Video Resume/Playback Progress** - Requires YouTube API access and user authentication, which is not available in the current Electron wrapper approach
 
 ---
+
+## 📝 Pending Features
 
 ## ⏱️ Study Timer & Time Tracking
+
 **Complexity:** Medium | **Priority:** High
 
 - Built-in timer that tracks study sessions
@@ -53,6 +48,7 @@ This document contains brainstormed features and design elements for future deve
 ---
 
 ## 📝 Notes & Annotations Feature
+
 **Complexity:** High | **Priority:** Medium
 
 - Per-module note-taking area
@@ -70,12 +66,12 @@ This document contains brainstormed features and design elements for future deve
 ---
 
 ## ❓ Quiz Mode & Self-Assessment
+
 **Complexity:** High | **Priority:** Medium
 
 - Practice quizzes generated from module content
 - Flashcard review mode with spaced repetition algorithm (SM-2 or similar)
 - Mock exam simulator
-- Confidence rating for each module (track what needs review)
 - "Test yourself" mode that randomly selects incomplete modules
 - Wrong answer tracking for focused review
 - Quiz history and performance metrics
@@ -87,6 +83,7 @@ This document contains brainstormed features and design elements for future deve
 ---
 
 ## ⌨️ Keyboard Shortcuts
+
 **Complexity:** Low | **Priority:** High (Quick Win!)
 
 - `Space`: Play/pause video
@@ -106,6 +103,7 @@ This document contains brainstormed features and design elements for future deve
 ---
 
 ## 📅 Study Planner & Calendar Integration
+
 **Complexity:** High | **Priority:** Low
 
 - Set study schedule (e.g., "Complete 2 modules per week")
@@ -122,6 +120,7 @@ This document contains brainstormed features and design elements for future deve
 ---
 
 ## ⭐ Bookmarks & Favorites
+
 **Complexity:** Low-Medium | **Priority:** Medium
 
 - Mark specific videos or modules as favorites
@@ -136,63 +135,36 @@ This document contains brainstormed features and design elements for future deve
 
 ---
 
-## 📤 Export & Sharing Options
-**Complexity:** Medium | **Priority:** Low
-
-- Export progress report to PDF (with charts and statistics)
-- Generate study summary/transcript
-- Printable module checklists
-- Share progress with study partners or instructors
-- Certificate of completion when 100% done (customizable with name/date)
-- Export notes in markdown or PDF format
-
-**Benefits:** Creates tangible artifacts of learning, useful for resumes/portfolios, enables accountability partnerships.
-
-**Technical Considerations:** Use jsPDF or similar for PDF generation
-
----
-
-## 🏆 Achievement System
-**Complexity:** Medium | **Priority:** Low (Gamification)
-
-- Badges for milestones (25%, 50%, 75%, 100% complete)
-- Streak achievements (7 days, 30 days, 100 days)
-- Module-specific achievements ("Networking Novice", "Routing Expert")
-- Visual trophy case or achievement wall
-- Motivational messages on achievement unlock
-- Share achievements on social media (optional)
-
-**Benefits:** Increases motivation through gamification, provides dopamine hits for progress milestones.
-
-**Technical Notes:** Store achievement data in localStorage, use CSS animations for unlock effects
-
----
-
 ## 🎥 Video Enhancements
+
 **Complexity:** Medium | **Priority:** High
 
 ### Playback Controls
-- Playback speed control (0.5x, 0.75x, 1x, 1.25x, 1.5x, 2x)
-- Auto-advance to next video when current ends
-- Resume playback from last position (per video)
-- Skip forward/backward buttons (10s/30s)
+
+- Playback speed control (0.5x, 0.75x, 1x, 1.25x, 1.5x, 2x) ⚠️ _Requires YouTube API + login_
+- Auto-advance to next video when current ends ⚠️ _Requires YouTube API + login_
+- Skip forward/backward buttons (10s/30s) ⚠️ _Requires YouTube API + login_
+- **Resume from last position** ⚠️ _Cannot implement - videos open in external YouTube window without API access_
 
 ### Display Options
-- Picture-in-picture mode for videos
-- Theater mode (wider player)
-- Video quality selection
+
+- Picture-in-picture mode for videos ⚠️ _Requires YouTube API + login_
+- Theater mode (wider player) ⚠️ _Requires YouTube API + login_
+- Video quality selection ⚠️ _Requires YouTube API + login_
 
 ### Navigation
+
 - Video chapters/bookmarks within longer videos
 - Progress bar with hover preview
 
 **Benefits:** Accommodates different learning styles and speeds, improves UX significantly.
 
-**Technical Notes:** Use YouTube Player API for advanced controls, store playback position in localStorage
+**Technical Limitations:** All playback controls require YouTube API access and user authentication. Current implementation opens YouTube directly in a BrowserWindow without API integration, so these features are blocked unless we change the video approach (e.g., use YouTube IFrame API with authentication flow).
 
 ---
 
 ## 📱 Responsive Design Improvements
+
 **Complexity:** Medium | **Priority:** Medium
 
 - Tablet-optimized layout (iPad, Android tablets)
@@ -208,6 +180,7 @@ This document contains brainstormed features and design elements for future deve
 ---
 
 ## 👥 Collaboration Features
+
 **Complexity:** High | **Priority:** Low
 
 - Study group mode (sync progress with peers)
@@ -223,6 +196,7 @@ This document contains brainstormed features and design elements for future deve
 ---
 
 ## 💾 Resource Management
+
 **Complexity:** Medium | **Priority:** Low
 
 - Download progress indicator for resources
@@ -239,6 +213,7 @@ This document contains brainstormed features and design elements for future deve
 ---
 
 ## ♿ Accessibility Enhancements
+
 **Complexity:** Medium | **Priority:** Medium
 
 - Video closed captions toggle (YouTube CC)
@@ -255,11 +230,11 @@ This document contains brainstormed features and design elements for future deve
 
 ---
 
-## 🤖 Smart Recommendations
+## 🤖 Smart Recommendations (Advanced)
+
 **Complexity:** Medium-High | **Priority:** Low
 
-- "What to study next" suggestions based on progress
-- "Related modules" recommendations
+- "Related modules" recommendations based on content similarity
 - "You might want to review" for older completed modules (spaced repetition)
 - Difficulty estimation for each module
 - Adaptive learning path based on quiz performance
@@ -271,6 +246,7 @@ This document contains brainstormed features and design elements for future deve
 ---
 
 ## 🎨 UI/UX Polish
+
 **Complexity:** Low-Medium | **Priority:** Medium
 
 - Module thumbnails/preview images (custom artwork for each module)
@@ -288,6 +264,7 @@ This document contains brainstormed features and design elements for future deve
 ---
 
 ## ☁️ Backup & Sync
+
 **Complexity:** High | **Priority:** Medium
 
 - Cloud backup of progress (Google Drive, Dropbox, or custom backend)
@@ -304,6 +281,7 @@ This document contains brainstormed features and design elements for future deve
 ---
 
 ## 🎮 Gamification Elements
+
 **Complexity:** Medium | **Priority:** Low
 
 - Points system for completing modules (XP)
@@ -320,6 +298,7 @@ This document contains brainstormed features and design elements for future deve
 ---
 
 ## ⚡ Performance Optimizations
+
 **Complexity:** Medium | **Priority:** Low (unless issues arise)
 
 - Lazy loading for video thumbnails
@@ -338,6 +317,7 @@ This document contains brainstormed features and design elements for future deve
 ---
 
 ## 🔔 Notification System
+
 **Complexity:** Medium | **Priority:** Low
 
 - Study reminders (Electron system notifications)
@@ -354,6 +334,7 @@ This document contains brainstormed features and design elements for future deve
 ---
 
 ## 🔐 Security & Privacy Features
+
 **Complexity:** Low-Medium | **Priority:** Low
 
 - Option to password-protect the app
@@ -372,59 +353,61 @@ This document contains brainstormed features and design elements for future deve
 These features offer the best value-to-effort ratio and should be prioritized:
 
 ### Priority 1 (Immediate Value, Low-Medium Effort)
+
 1. **Keyboard Shortcuts** ⌨️
    - Effort: Low
    - Impact: High
    - Why: Dramatically improves power user experience, easy to implement
 
-2. **Video Resume Playback** 🎥
-   - Effort: Low
-   - Impact: High
-   - Why: Prevents frustration of finding position in long videos
-
-3. **Playback Speed Control** 🎥
-   - Effort: Low
-   - Impact: High
-   - Why: Different learning speeds, review faster, focus on difficult parts
-
-### Priority 2 (High Value, Medium Effort)
-4. **Search & Filter System** 🔍
+2. **Notes Feature** 📝
    - Effort: Medium
    - Impact: High
-   - Why: Essential for navigation as course grows, users frequently reference old modules
+   - Why: Differentiator from YouTube, creates integrated study environment
 
-5. **Study Timer** ⏱️
+**⚠️ Video-related features** (playback speed, resume, theater mode, etc.) are blocked because they require YouTube API access and user authentication. The current implementation opens YouTube videos in a BrowserWindow without API integration.
+
+### Priority 2 (High Value, Medium Effort)
+
+4. **Study Timer** ⏱️
    - Effort: Medium
    - Impact: High
    - Why: Enables analytics, increases accountability, unique feature
 
-6. **Bookmarks & Favorites** ⭐
+5. **Bookmarks & Favorites** ⭐
    - Effort: Low-Medium
    - Impact: Medium-High
    - Why: Quick access to frequently referenced content
 
-### Priority 3 (Nice to Have)
-7. **Notes Feature** 📝
+6. **Quiz Mode** ❓
    - Effort: High
-   - Impact: Medium-High
-   - Why: Differentiator from YouTube, creates integrated study environment
+   - Impact: High
+   - Why: Active recall learning, exam preparation
 
-8. **Enhanced Progress Analytics** 📊
-   - Effort: Medium-High
+### Priority 3 (Nice to Have)
+
+7. **Accessibility Enhancements** ♿
+   - Effort: Medium
    - Impact: Medium
-   - Why: Motivational, helps users understand their pace (depends on timer)
+   - Why: Professional quality, legal compliance
+
+8. **UI/UX Polish** 🎨
+   - Effort: Low-Medium
+   - Impact: Medium
+   - Why: Professional feel, better first impressions
 
 ---
 
 ## Implementation Considerations
 
 ### Technical Debt Prevention
+
 - Write tests for new features
 - Document APIs and component props
 - Follow existing code style and patterns
 - Consider mobile/responsive from the start
 
 ### User Experience Principles
+
 - Don't break existing workflows
 - Make features discoverable but not intrusive
 - Provide keyboard alternatives for mouse actions
@@ -432,6 +415,7 @@ These features offer the best value-to-effort ratio and should be prioritized:
 - Always provide a way to disable new features
 
 ### Performance Budget
+
 - Keep bundle size under control
 - Lazy load heavy features
 - Monitor memory usage (especially with video players)
@@ -446,15 +430,15 @@ Study Timer
     ↓
 Enhanced Progress Analytics
     ↓
-Smart Recommendations
+Smart Recommendations (Advanced)
 
 Notes Feature
     ↓
 Export & Sharing (Notes)
 
-Search & Filter
+Keyboard Shortcuts
     ↓
-Keyboard Shortcuts (Search activation)
+Quick Navigation
 
 Video Enhancements
     ↓
@@ -465,15 +449,14 @@ Notes (Timestamp-based)
 
 ## Community Feature Requests
 
-*This section can be updated as users request specific features*
+_This section can be updated as users request specific features_
 
 ---
 
 ## Rejected Ideas
 
-*Ideas considered but decided against, with rationale*
+_Ideas considered but decided against, with rationale_
 
 ---
 
-**Last Updated:** 2025-01-13
 **Next Review:** When starting a new development sprint

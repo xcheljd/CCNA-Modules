@@ -30,3 +30,12 @@ Thumbs.db
 # Test results
 playwright-report/
 test-results/
+
+# Project planning (not needed in repo)
+FEATURE_IDEAS.md
+
+# Distribution guide (internal use)
+DISTRIBUTION_GUIDE.md
+
+# Resources (copyrighted materials - download from Jeremy's IT Lab)
+resources/

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="64" fill="#1a1a2e"/>
+  
+  <!-- Outer circle - network representation -->
+  <circle cx="256" cy="256" r="180" fill="none" stroke="#4a90e2" stroke-width="12"/>
+  
+  <!-- Inner circle -->
+  <circle cx="256" cy="256" r="120" fill="none" stroke="#4a90e2" stroke-width="8"/>
+  
+  <!-- Center node -->
+  <circle cx="256" cy="256" r="40" fill="#4a90e2"/>
+  
+  <!-- Connection lines to outer ring -->
+  <line x1="256" y1="76" x2="256" y2="136" stroke="#4a90e2" stroke-width="8" stroke-linecap="round"/>
+  <line x1="436" y1="256" x2="376" y2="256" stroke="#4a90e2" stroke-width="8" stroke-linecap="round"/>
+  <line x1="256" y1="436" x2="256" y2="376" stroke="#4a90e2" stroke-width="8" stroke-linecap="round"/>
+  <line x1="76" y1="256" x2="136" y2="256" stroke="#4a90e2" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Diagonal connections -->
+  <line x1="383" y1="129" x2="340" y2="172" stroke="#4a90e2" stroke-width="8" stroke-linecap="round"/>
+  <line x1="383" y1="383" x2="340" y2="340" stroke="#4a90e2" stroke-width="8" stroke-linecap="round"/>
+  <line x1="129" y1="383" x2="172" y2="340" stroke="#4a90e2" stroke-width="8" stroke-linecap="round"/>
+  <line x1="129" y1="129" x2="172" y2="172" stroke="#4a90e2" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Outer nodes -->
+  <circle cx="256" cy="76" r="20" fill="#6ab04c"/>
+  <circle cx="436" cy="256" r="20" fill="#6ab04c"/>
+  <circle cx="256" cy="436" r="20" fill="#6ab04c"/>
+  <circle cx="76" cy="256" r="20" fill="#6ab04c"/>
+  
+  <!-- Corner nodes -->
+  <circle cx="383" cy="129" r="16" fill="#e74c3c"/>
+  <circle cx="383" cy="383" r="16" fill="#e74c3c"/>
+  <circle cx="129" cy="383" r="16" fill="#e74c3c"/>
+  <circle cx="129" cy="129" r="16" fill="#e74c3c"/>
+</svg>
