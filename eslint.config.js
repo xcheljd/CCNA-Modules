@@ -88,6 +88,7 @@ module.exports = [
       },
       globals: {
         // Jest globals
+        jest: 'readonly',
         describe: 'readonly',
         it: 'readonly',
         test: 'readonly',
