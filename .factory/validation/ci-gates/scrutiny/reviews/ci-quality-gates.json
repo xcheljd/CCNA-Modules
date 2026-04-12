@@ -1,0 +1,40 @@
+{
+  "featureId": "ci-quality-gates",
+  "milestone": "ci-gates",
+  "reviewStatus": "pass",
+  "summary": "The ci-quality-gates feature is correctly implemented. Three quality gate steps (Lint, Check formatting, Run tests) were added to .github/workflows/build.yml between npm ci and npm run build. All gates run on all 3 OS targets in the matrix with no conditional skipping. YAML is valid and parseable. No bugs, edge cases, or deviations from spec found.",
+  "issues": [],
+  "assertionsChecked": {
+    "VAL-CI-001": {
+      "status": "pass",
+      "evidence": "Lint step (line 33: '- name: Lint', run: npm run lint) is present at step index 4, before 'Build application' at step index 7. No continue-on-error or if: conditions on the step. In GitHub Actions, a non-zero exit code from npm run lint will fail the job immediately, preventing build from executing."
+    },
+    "VAL-CI-002": {
+      "status": "pass",
+      "evidence": "Check formatting step (line 36: '- name: Check formatting', run: npm run format:check) is present at step index 5, before 'Build application' at step index 7. No continue-on-error or if: conditions. A formatting violation will cause the job to fail before build."
+    },
+    "VAL-CI-003": {
+      "status": "pass",
+      "evidence": "Run tests step (line 39: '- name: Run tests', run: npm test) is present at step index 6, before 'Build application' at step index 7. No continue-on-error or if: conditions. Test failures will prevent build from executing."
+    },
+    "VAL-CI-004": {
+      "status": "pass",
+      "evidence": "All three gate steps are defined inside the 'build' job which uses matrix strategy with os: [macos-latest, ubuntu-latest, windows-latest]. No if: conditions on gate steps, so they execute on all platforms. Verified by reading build.yml lines 15-16 (matrix strategy) and lines 33-39 (gate steps with no conditional)."
+    },
+    "VAL-CI-005": {
+      "status": "pass",
+      "evidence": "Step ordering in build.yml: checkout (line 19) → setup-node (line 22) → npm ci (line 28) → Lint (line 33) → Check formatting (line 36) → Run tests (line 39) → Build application (line 42). All gate steps have indices strictly less than the build step index."
+    },
+    "VAL-CI-006": {
+      "status": "pass",
+      "evidence": "None of the three gate steps have 'continue-on-error: true' or any 'if:' conditions that could skip them. In GitHub Actions, a failed step (non-zero exit) stops subsequent steps in the job by default. Therefore, if any gate fails, 'Build application' and all subsequent steps (Create empty resources folder, platform builds, artifact uploads) will be skipped. The release job also depends on the build job ('needs: build'), so it will be blocked entirely."
+    }
+  },
+  "sharedStateObservations": [
+    {
+      "area": "services",
+      "observation": "The ci-worker skill and AGENTS.md both reference running 'npm run lint', 'npm run format:check', and 'npm test' as quality gate commands. These commands are already documented in .factory/services.yaml, so no gap exists here.",
+      "evidence": ".factory/services.yaml already contains lint, format:check, and test commands matching what the CI workflow uses."
+    }
+  ]
+}
