@@ -1,0 +1,40 @@
+{
+  "groupId": "ci-gates",
+  "description": "CI quality gates validation for ci-gates milestone",
+  "tool": "shell + yaml-structure",
+  "assertions": [
+    {
+      "id": "VAL-CI-001",
+      "status": "pass",
+      "evidence": "npm run lint exits 0 (0 errors, 4 warnings). Lint step at index 3, before build step at index 6 in build.yml."
+    },
+    {
+      "id": "VAL-CI-002",
+      "status": "pass",
+      "evidence": "npm run format:check exits 0. 'All matched files use Prettier code style!'. Format check step at index 4, before build step at index 6."
+    },
+    {
+      "id": "VAL-CI-003",
+      "status": "pass",
+      "evidence": "npm test exits 0. 7 suites, 98 tests all passing. Test step at index 5, before build step at index 6."
+    },
+    {
+      "id": "VAL-CI-004",
+      "status": "pass",
+      "evidence": "Matrix strategy includes all 3 OS targets: macos-latest, ubuntu-latest, windows-latest. All gate steps run inside the same matrix job."
+    },
+    {
+      "id": "VAL-CI-005",
+      "status": "pass",
+      "evidence": "Step ordering confirmed: checkout(0) → setup-node(1) → npm ci(2) → lint(3) → format-check(4) → test(5) → build(6). All gate indices < build index."
+    },
+    {
+      "id": "VAL-CI-006",
+      "status": "pass",
+      "evidence": "No gate steps have 'if' conditions or 'continue-on-error'. release job has 'needs: build', so it's blocked when build job fails. Non-zero gate exit prevents build step execution by default GitHub Actions behavior."
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "toolsUsed": ["shell", "yaml-structure"]
+}
