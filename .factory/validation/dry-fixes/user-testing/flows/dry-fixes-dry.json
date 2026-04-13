@@ -1,0 +1,89 @@
+{
+  "assertionGroup": "dry-fixes-dry",
+  "testedAt": "2026-04-13T12:00:00.000Z",
+  "isolation": {
+    "type": "shell-only",
+    "workingDirectory": "/home/x/labs/CCNA-Modules"
+  },
+  "toolsUsed": ["shell"],
+  "assertions": [
+    {
+      "id": "VAL-DRY-001",
+      "title": "asArray utility extracted to helpers.js",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Check src/utils/helpers.js exists",
+          "expected": "File exists",
+          "observed": "File exists (306 bytes)"
+        },
+        {
+          "action": "grep -n 'asArray' src/components/ModuleDetail.js",
+          "expected": "Only import line, no inline definition",
+          "observed": "Line 7: import { asArray } from '@/utils/helpers'; Lines 53,89,90: usage calls only — no inline definition"
+        },
+        {
+          "action": "grep -c 'asArray' src/utils/helpers.js",
+          "expected": "1 export",
+          "observed": "1"
+        }
+      ],
+      "evidence": {
+        "helpersFileExists": true,
+        "moduleDetailGrep": "7:import { asArray } from '@/utils/helpers';\n53:    const moduleLabs = asArray(module.resources?.lab);\n89:  const labs = asArray(module.resources?.lab);\n90:  const flashcards = asArray(module.resources?.flashcards);",
+        "helpersExportCount": 1,
+        "functionSignature": "export const asArray = val => (Array.isArray(val) ? val : val ? [val] : []);"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DRY-002",
+      "title": "Hardcoded URLs extracted to constants.js",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Check src/utils/constants.js exists",
+          "expected": "File exists",
+          "observed": "File exists (1897 bytes)"
+        },
+        {
+          "action": "grep -rn 'https://' src/App.js src/components/WelcomeDialog.js src/components/settings/AboutTab.js src/components/VideoCard.js",
+          "expected": "No raw URL strings found (exit code 1 = no matches)",
+          "observed": "Exit code 1, no matches — no raw https:// URLs in any of the four files"
+        }
+      ],
+      "evidence": {
+        "constantsFileExists": true,
+        "constantsFileSize": "1897 bytes",
+        "rawUrlGrepResult": "No matches found (exit code 1)"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DRY-003",
+      "title": "Inline spinner styles moved to CSS",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "grep -c 'style={{' src/App.js",
+          "expected": "At most 1 (the dynamic progress bar width)",
+          "observed": "1"
+        },
+        {
+          "action": "Verify the remaining inline style is the dynamic progress bar",
+          "expected": "Line 291 contains width/background for progress bar",
+          "observed": "Line 291: style={{ width: `${overallProgress}%`, background: ... }} — this is the dynamic progress bar, which is acceptable inline"
+        }
+      ],
+      "evidence": {
+        "inlineStyleCount": 1,
+        "inlineStyleLocation": "Line 291 in src/App.js",
+        "inlineStyleContext": "Dynamic progress bar width (overallProgress%) — acceptable per assertion spec"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 3 assertions: all 3 passed. VAL-DRY-001 confirmed asArray extracted to helpers.js with correct import in ModuleDetail.js. VAL-DRY-002 confirmed no raw URLs remain in the four target files. VAL-DRY-003 confirmed only 1 inline style={{ remains (the dynamic progress bar)."
+}
