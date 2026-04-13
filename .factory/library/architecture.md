@@ -74,6 +74,10 @@ App.js (root)
 - YouTube window user-agent is dynamically constructed from Electron's Chromium (not hardcoded)
 - No `eval()`, `new Function()`, or `innerHTML` in source code
 
+## Webpack Quirks
+
+- `process.env.NODE_ENV` is NOT set during `webpack.config.js` evaluation, even when `--mode production` is passed via CLI. To detect the build mode in config, export `webpack.config.js` as a function `(env, argv) => { ... }` and use `argv.mode` instead of `process.env.NODE_ENV`.
+
 ## Key Invariants
 
 - All tracking data lives in localStorage with prefixed keys

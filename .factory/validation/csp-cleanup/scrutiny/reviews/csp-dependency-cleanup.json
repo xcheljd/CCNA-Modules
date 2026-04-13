@@ -1,0 +1,50 @@
+{
+  "featureId": "csp-dependency-cleanup",
+  "reviewedAt": "2026-04-13T05:30:00.000Z",
+  "commitId": "fff38b7",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "All five parts of the feature were implemented correctly: (1) CSP made environment-conditional via HtmlWebpackPlugin templateParameters with EJS syntax in public/index.html, (2) 5MB size limit added to export-progress-backup IPC handler with descriptive error, (3) three unused vite packages removed from devDependencies, (4) package-lock.json updated, (5) build verified successful. The webpack.config.js was converted from a static object export to a function export using (env, argv) to correctly detect build mode, since process.env.NODE_ENV was not set during config evaluation. All 426 tests pass, lint passes, and the production dist/index.html correctly omits unsafe-eval while retaining it for dev builds.",
+    "issues": [
+      {
+        "file": "main.js",
+        "line": 285,
+        "severity": "non_blocking",
+        "description": "The export size validation serializes exportData to JSON twice: once for size check (Buffer.byteLength(JSON.stringify(exportData))) and once later for writing (JSON.stringify(exportData, null, 2)). For very large payloads near the 5MB limit, this double serialization is wasteful. Could cache the first serialization result. However, this is a minor performance concern that only triggers for large exports and does not affect correctness."
+      },
+      {
+        "file": "main.js",
+        "line": 282,
+        "severity": "suggestion",
+        "description": "No unit test was added for the new 5MB export size validation. While the existing 426 tests provide regression safety, a targeted test for this new validation logic would improve confidence and prevent future regressions."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The security-worker skill documents IPC validation patterns (URL validation, path traversal, hostname checking) but does not document a size validation pattern. The worker had to implement the 5MB size check from scratch. Adding a size validation example to the skill would help future workers.",
+      "evidence": "main.js:282-290 — size validation pattern used. Compare to SKILL.md which has URL, path, hostname, and UA patterns but no size validation pattern."
+    },
+    {
+      "area": "knowledge",
+      "observation": "The worker discovered that process.env.NODE_ENV is not set during webpack.config.js evaluation time, even when --mode production is passed via CLI. This is a Webpack quirk that caused the worker to convert webpack.config.js from object export to function export using (env, argv). This knowledge could be valuable in .factory/library/architecture.md.",
+      "evidence": "Handoff states: 'Had to convert webpack.config.js from object export to function export (env, argv) => {...} because process.env.NODE_ENV was not set during config evaluation even with --mode production.'"
+    }
+  ],
+  "addressesFailureFrom": null,
+  "assertionsChecked": [
+    "VAL-CSP-001",
+    "VAL-CSP-002",
+    "VAL-CSP-003",
+    "VAL-CROSS-001",
+    "VAL-CROSS-002",
+    "VAL-CROSS-003",
+    "VAL-CROSS-004",
+    "VAL-CROSS-005",
+    "VAL-CROSS-006"
+  ],
+  "summary": "PASS — Feature csp-dependency-cleanup is fully implemented and meets all requirements. The CSP is correctly environment-conditional (no unsafe-eval in production, retained for dev HMR), the 5MB export size limit is properly implemented with a descriptive error response, and all three unused vite dependencies were removed. The webpack.config.js refactoring to function export was a correct and necessary adaptation. All 9 assertions are satisfied: production CSP has no unsafe-eval (VAL-CSP-001), export size validation works (VAL-CSP-002), vite deps removed (VAL-CSP-003), all 426 tests pass (VAL-CROSS-001), build succeeds (VAL-CROSS-002), lint passes (VAL-CROSS-003), npm install works without removed deps (VAL-CROSS-004), CSP structure is valid with all 5 directives (VAL-CROSS-005), and all 12 IPC channels remain functional (VAL-CROSS-006). Two non-blocking observations: double JSON serialization in export handler and no dedicated unit test for the new size validation."
+}
