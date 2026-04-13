@@ -279,6 +279,16 @@ ipcMain.handle('open-external-url', async (event, url) => {
 // Export progress backup to a user-selected file
 ipcMain.handle('export-progress-backup', async (event, exportData) => {
   try {
+    // Validate data size: reject payloads exceeding 5MB
+    const MAX_EXPORT_SIZE = 5 * 1024 * 1024; // 5MB
+    const dataSize = Buffer.byteLength(JSON.stringify(exportData), 'utf8');
+    if (dataSize > MAX_EXPORT_SIZE) {
+      return {
+        success: false,
+        error: `Export data too large: ${(dataSize / (1024 * 1024)).toFixed(2)}MB exceeds 5MB limit`,
+      };
+    }
+
     const dateStr = new Date().toISOString().split('T')[0];
     const defaultPath = path.join(app.getPath('documents'), `ccna-backup-${dateStr}.json`);
 
