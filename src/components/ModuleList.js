@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import SearchBar from './SearchBar';
 import ConfidenceRating from './ConfidenceRating';
 import ProgressTracker from '../utils/progressTracker';
-import { GridIcon } from './ui/Icons';
+import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon } from './ui/Icons';
 import '../styles/modules.css';
 
 function ModuleList({ modules, onModuleSelect }) {
@@ -167,16 +167,7 @@ function ModuleList({ modules, onModuleSelect }) {
 
               <div className="module-info">
                 <div className="info-item">
-                  <svg
-                    className="info-icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <rect x="2" y="4" width="20" height="16" rx="4" ry="4" />
-                    <polygon points="10 8 16 12 10 16" fill="currentColor" stroke="none" />
-                  </svg>
+                  <VideoIcon className="info-icon" />
                   <span>{module.videos.length}</span>
                 </div>
                 {(() => {
@@ -187,18 +178,7 @@ function ModuleList({ modules, onModuleSelect }) {
                       : [];
                   return labs.length > 0 ? (
                     <div className="info-item">
-                      <svg
-                        className="info-icon"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <circle cx="12" cy="12" r="1" fill="currentColor" />
-                        <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-45 12 12)" />
-                        <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(45 12 12)" />
-                        <ellipse cx="12" cy="12" rx="10" ry="4" />
-                      </svg>
+                      <LabIcon className="info-icon" />
                       <span>
                         {labs.length} Lab{labs.length > 1 ? 's' : ''}
                       </span>
@@ -213,33 +193,7 @@ function ModuleList({ modules, onModuleSelect }) {
                       : [];
                   return fcs.length > 0 ? (
                     <div className="info-item">
-                      <svg
-                        className="info-icon"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <rect
-                          x="2"
-                          y="4"
-                          width="12"
-                          height="16"
-                          rx="2"
-                          transform="rotate(-15 8 12)"
-                          fill="none"
-                        />
-                        <rect x="6" y="3" width="12" height="16" rx="2" fill="hsl(var(--card))" />
-                        <rect
-                          x="10"
-                          y="4"
-                          width="12"
-                          height="16"
-                          rx="2"
-                          transform="rotate(15 16 12)"
-                          fill="hsl(var(--card))"
-                        />
-                      </svg>
+                      <FlashcardsIcon className="info-icon" />
                       <span>
                         {fcs.length} Card{fcs.length > 1 ? 's' : ''}
                       </span>

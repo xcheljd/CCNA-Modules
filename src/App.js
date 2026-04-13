@@ -8,6 +8,7 @@ import ProgressTracker from './utils/progressTracker';
 import ActivityTracker from './utils/activityTracker';
 import themes from './utils/themes';
 import { RESOURCE_DOWNLOAD_URL } from '@/utils/constants';
+import { GridIcon } from '@/components/ui/Icons';
 
 // Lazy load heavy components for code splitting
 const Dashboard = lazy(() => import('./components/Dashboard'));
@@ -310,18 +311,7 @@ function AppContent() {
                 }}
                 className="menu-item"
               >
-                <svg
-                  className="menu-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <rect x="3" y="3" width="7" height="7" />
-                  <rect x="14" y="3" width="7" height="7" />
-                  <rect x="14" y="14" width="7" height="7" />
-                  <rect x="3" y="14" width="7" height="7" />
-                </svg>
+                <GridIcon className="menu-icon" />
                 Dashboard
               </button>
               <button
