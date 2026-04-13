@@ -56,21 +56,16 @@ function AppContent() {
   const [loadingProgress, setLoadingProgress] = useState(0);
 
   useEffect(() => {
-    console.log('🎬 App component mounting...');
-
     const initializeApp = async () => {
-      console.log('🚀 App initialization starting...');
       const startTime = Date.now();
 
       const phases = [
         {
           name: 'Checking course resources...',
           action: async () => {
-            console.log('Phase 1: Checking course resources...');
             setLoadingStatus('Checking course resources...');
             try {
               await checkResources();
-              console.log('Phase 1 complete');
             } catch (error) {
               console.error('Phase 1 error:', error);
             }
@@ -79,11 +74,9 @@ function AppContent() {
         {
           name: 'Calculating your progress...',
           action: async () => {
-            console.log('Phase 2: Calculating progress...');
             setLoadingStatus('Calculating your progress...');
             try {
               calculateOverallProgress();
-              console.log('Phase 2 complete');
             } catch (error) {
               console.error('Phase 2 error:', error);
             }
@@ -92,11 +85,9 @@ function AppContent() {
         {
           name: 'Setting up activity tracking...',
           action: async () => {
-            console.log('Phase 3: Setting up activity tracking...');
             setLoadingStatus('Setting up activity tracking...');
             try {
               ActivityTracker.initializeTracking(modules);
-              console.log('Phase 3 complete');
             } catch (error) {
               console.error('Phase 3 error:', error);
             }
@@ -106,7 +97,6 @@ function AppContent() {
 
       for (let i = 0; i < phases.length; i++) {
         setLoadingProgress(((i + 1) / phases.length) * 100);
-        console.log(`Starting phase ${i + 1}/${phases.length}: ${phases[i].name}`);
         try {
           await phases[i].action();
         } catch (error) {
@@ -118,13 +108,9 @@ function AppContent() {
       const remainingTime = Math.max(0, 800 - elapsed);
 
       setLoadingStatus('Almost ready...');
-      console.log('All phases complete in', elapsed, 'ms');
-      console.log('Setting loading to false in', remainingTime, 'ms');
 
       setTimeout(() => {
-        console.log('🔔 Calling setIsLoading(false)');
         setIsLoading(false);
-        console.log('✅ Main content should now be visible');
       }, remainingTime);
     };
 
@@ -213,14 +199,12 @@ function AppContent() {
     if (electronAPI) {
       try {
         const result = await electronAPI.checkResourcesFolder();
-        console.log('Resources check result:', result);
         setResourcesAvailable(result.exists);
       } catch (error) {
         console.error('Resources check failed:', error);
         setResourcesAvailable(true);
       }
     } else {
-      console.log('electronAPI not available, defaulting resources to available');
       setResourcesAvailable(true);
     }
   };
