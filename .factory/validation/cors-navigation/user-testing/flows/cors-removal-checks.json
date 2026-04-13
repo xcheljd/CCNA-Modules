@@ -1,0 +1,59 @@
+{
+  "groupId": "cors-removal-checks",
+  "testedAt": "2026-04-12T00:00:00.000Z",
+  "isolation": {
+    "type": "shell",
+    "workingDirectory": "/home/x/labs/CCNA-Modules",
+    "targetFile": "main.js"
+  },
+  "toolsUsed": ["shell", "grep"],
+  "assertions": [
+    {
+      "id": "VAL-CORS-001",
+      "title": "OutOfBlinkCors switch is removed",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "grep -rn 'OutOfBlinkCors' main.js",
+          "expected": "No matches found",
+          "observed": "No matches found"
+        },
+        {
+          "action": "grep -rn 'disable-features' main.js",
+          "expected": "No matches found",
+          "observed": "No matches found"
+        }
+      ],
+      "evidence": {
+        "grepOutOfBlinkCors": "No matches found",
+        "grepDisableFeatures": "No matches found"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CORS-004",
+      "title": "YouTube window uses dynamic user-agent",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "grep -rn 'Chrome/120' main.js",
+          "expected": "No matches found",
+          "observed": "No matches found"
+        },
+        {
+          "action": "Inspect UA construction code at lines 318-323 of main.js",
+          "expected": "UA is derived dynamically from session.getUserAgent() with Electron identifiers stripped",
+          "observed": "Lines 318-323 show: const originalUA = youtubeSession.getUserAgent(); const chromeUserAgent = originalUA.replace(/Electron\\/\\S+/g, '').replace(/\\s+/g, ' ').trim();"
+        }
+      ],
+      "evidence": {
+        "grepChrome120": "No matches found",
+        "uaConstructionCode": "main.js lines 318-323: UA built dynamically via youtubeSession.getUserAgent() with Electron identifiers stripped using regex .replace(/Electron\\/\\S+/g, ''), then applied via youtubeSession.setUserAgent(chromeUserAgent) and passed to loadURL({ userAgent: chromeUserAgent })"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 2 assertions: 2 passed. VAL-CORS-001 confirmed OutOfBlinkCors and disable-features are fully removed from main.js. VAL-CORS-004 confirmed hardcoded Chrome/120 UA string is removed and replaced with dynamic UA construction from Electron's bundled Chromium version."
+}

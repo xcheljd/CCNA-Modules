@@ -1,0 +1,71 @@
+{
+  "groupId": "hostname-checks",
+  "testedAt": "2026-04-12T00:00:00.000Z",
+  "isolation": {
+    "type": "shell/node",
+    "workingDirectory": "/home/x/labs/CCNA-Modules",
+    "targetFile": "main.js"
+  },
+  "toolsUsed": ["shell", "node", "grep"],
+  "assertions": [
+    {
+      "id": "VAL-CORS-002",
+      "title": "will-navigate uses proper hostname checking",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Read main.js isAllowedHostname function (line 10)",
+          "expected": "Uses new URL(urlString).hostname parsing",
+          "observed": "isAllowedHostname uses new URL(urlString).hostname with allowedDomains.some(domain => hostname === domain || hostname.endsWith('.' + domain))"
+        },
+        {
+          "action": "Verify will-navigate handler (line 438)",
+          "expected": "Calls isAllowedHostname with youtube.com and google.com",
+          "observed": "videoWindow.webContents.on('will-navigate', (event, url) => { const allowed = isAllowedHostname(url, ['youtube.com', 'google.com']); })"
+        },
+        {
+          "action": "Verify no url.includes() domain checks in main.js",
+          "expected": "Zero matches for includes with youtube.com or google.com",
+          "observed": "No url.includes() domain checks found"
+        },
+        {
+          "action": "Node.js test: 9 crafted URLs",
+          "expected": "Allows youtube.com/google.com domains, blocks includes-bypass attempts",
+          "observed": "9/9 tests passed: allows youtube.com, www.youtube.com, music.youtube.com, google.com, www.google.com; blocks evil.com?ref=youtube.com, youtube.com.evil.com, notgoogle.com, invalid URLs"
+        }
+      ],
+      "evidence": {
+        "functionUsesUrlParsing": "isAllowedHostname at line 10 uses new URL(urlString).hostname",
+        "handlerUsesIsAllowedHostname": "will-navigate at line 438 uses isAllowedHostname(url, ['youtube.com', 'google.com'])",
+        "noIncludesChecks": "No url.includes() domain checks found in main.js",
+        "nodeTests": "9/9 crafted URL tests passed"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CORS-003",
+      "title": "setWindowOpenHandler uses proper hostname checking",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Verify setWindowOpenHandler (line 446)",
+          "expected": "Calls isAllowedHostname with accounts.google.com and google.com",
+          "observed": "videoWindow.webContents.setWindowOpenHandler(({ url }) => { const allowed = isAllowedHostname(url, ['accounts.google.com', 'google.com']); })"
+        },
+        {
+          "action": "Node.js test: 8 crafted URLs",
+          "expected": "Allows accounts.google.com and *.google.com, blocks includes-bypass attempts",
+          "observed": "8/8 tests passed: allows accounts.google.com, google.com, www.google.com, sub.google.com; blocks evil.com?ref=accounts.google.com, accounts.google.com.evil.com, notgoogle.com, evil.com"
+        }
+      ],
+      "evidence": {
+        "handlerUsesIsAllowedHostname": "setWindowOpenHandler at line 446 uses isAllowedHostname(url, ['accounts.google.com', 'google.com'])",
+        "nodeTests": "8/8 crafted URL tests passed"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 2 assertions: 2 passed. VAL-CORS-002 confirmed will-navigate uses proper hostname-based URL parsing (isAllowedHostname with new URL().hostname) instead of url.includes(). VAL-CORS-003 confirmed setWindowOpenHandler uses the same hostname-based approach for accounts.google.com and google.com."
+}
