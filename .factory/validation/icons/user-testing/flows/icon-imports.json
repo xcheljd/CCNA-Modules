@@ -1,0 +1,116 @@
+{
+  "groupId": "icon-imports",
+  "testedAt": "2026-04-13T00:00:00.000Z",
+  "isolation": {
+    "workingDirectory": "/home/x/labs/CCNA-Modules",
+    "tool": "shell",
+    "access": "read-only"
+  },
+  "toolsUsed": ["shell"],
+  "assertions": [
+    {
+      "id": "VAL-ICON-003",
+      "title": "DashboardSections.js uses shared icons instead of inline SVGs",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Check import statement for shared icons",
+          "expected": "File imports GridIcon, VideoIcon, LabIcon, FlashcardsIcon, CircularProgress from Icons",
+          "observed": "Line 10: import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon, CircularProgress } from '../ui/Icons';"
+        },
+        {
+          "action": "grep -c '<svg' DashboardSections.js",
+          "expected": "0 (no inline SVG elements remain)",
+          "observed": "0 — no inline <svg> tags found"
+        },
+        {
+          "action": "Verify shared icons are used in stat cards",
+          "expected": "GridIcon, VideoIcon, LabIcon, FlashcardsIcon used as JSX components",
+          "observed": "All 4 icons used as <GridIcon className=\"stat-icon\" />, <VideoIcon className=\"stat-icon\" />, <LabIcon className=\"stat-icon\" />, <FlashcardsIcon className=\"stat-icon\" />"
+        },
+        {
+          "action": "Verify CircularProgress is used for progress ring",
+          "expected": "CircularProgress imported and used as JSX component",
+          "observed": "<CircularProgress percentage={overallProgress} strokeColor={...} />"
+        }
+      ],
+      "evidence": {
+        "grepSvgCount": "0",
+        "importLine": "import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon, CircularProgress } from '../ui/Icons';",
+        "consoleErrors": "N/A (shell validation)"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-ICON-004",
+      "title": "GoalCard.js uses shared icons instead of inline SVGs",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Check import statement for shared icons",
+          "expected": "File imports GridIcon, VideoIcon, LabIcon, FlashcardsIcon, CircularProgress from Icons",
+          "observed": "Line 4: import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon, CircularProgress } from './ui/Icons';"
+        },
+        {
+          "action": "grep -c '<svg' GoalCard.js",
+          "expected": "0 (no inline SVG elements remain)",
+          "observed": "0 — no inline <svg> tags found"
+        },
+        {
+          "action": "Verify shared icons are used in goal metric cards",
+          "expected": "GridIcon, VideoIcon, LabIcon, FlashcardsIcon used as JSX components",
+          "observed": "All 4 icons used as <GridIcon className=\"goal-metric-icon\" />, <VideoIcon className=\"goal-metric-icon\" />, <LabIcon className=\"goal-metric-icon\" />, <FlashcardsIcon className=\"goal-metric-icon\" />"
+        },
+        {
+          "action": "Verify CircularProgress is used for goal progress ring",
+          "expected": "CircularProgress imported and used as JSX component",
+          "observed": "<CircularProgress percentage={completion} strokeColor={...} />"
+        }
+      ],
+      "evidence": {
+        "grepSvgCount": "0",
+        "importLine": "import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon, CircularProgress } from './ui/Icons';",
+        "consoleErrors": "N/A (shell validation)"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-ICON-005",
+      "title": "ModuleList.js uses shared icon instead of inline SVG",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Check import statement for GridIcon",
+          "expected": "File imports GridIcon from Icons",
+          "observed": "Line 5: import { GridIcon } from './ui/Icons';"
+        },
+        {
+          "action": "Verify GridIcon is used for grid view toggle button",
+          "expected": "GridIcon used inside the grid view toggle button",
+          "observed": "Line 110: <GridIcon /> inside button with className 'view-toggle-btn active'"
+        },
+        {
+          "action": "grep for specific 4-square grid SVG pattern",
+          "expected": "0 matches (no inline grid SVG with rect x=\"3\" y=\"3\" width=\"7\" height=\"7\")",
+          "observed": "0 — the specific grid SVG pattern not found"
+        },
+        {
+          "action": "Note: ModuleList.js still has other inline SVGs (list view toggle, video, lab, flashcards)",
+          "expected": "Those are NOT part of this assertion",
+          "observed": "4 remaining <svg> tags confirmed (list toggle, video icon, lab icon, flashcards icon) — all outside assertion scope"
+        }
+      ],
+      "evidence": {
+        "grepSvgCount": "4 (all outside assertion scope — list toggle, video, lab, flashcards)",
+        "gridSvgPatternCount": "0",
+        "importLine": "import { GridIcon } from './ui/Icons';",
+        "gridIconUsageLine": "110: <GridIcon />",
+        "consoleErrors": "N/A (shell validation)"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 3 assertions: all 3 passed. DashboardSections.js and GoalCard.js fully replaced all inline SVGs with shared icon imports (0 inline <svg> tags each). ModuleList.js replaced the grid icon with GridIcon import (0 matches for the specific 4-square grid SVG pattern), while retaining other unrelated inline SVGs outside assertion scope."
+}
