@@ -3,11 +3,18 @@ const { app, BrowserWindow, ipcMain, shell, dialog, nativeImage } = require('ele
 const path = require('path');
 const fs = require('fs');
 
-// Add command line switches to help Google OAuth work
-app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
-
 let mainWindow;
 const videoWindows = new Map();
+
+// Check if a URL's hostname matches any allowed domains (exact or subdomain)
+function isAllowedHostname(urlString, allowedDomains) {
+  try {
+    const { hostname } = new URL(urlString);
+    return allowedDomains.some(domain => hostname === domain || hostname.endsWith('.' + domain));
+  } catch {
+    return false;
+  }
+}
 
 // Config file for storing custom resources path
 const configPath = path.join(app.getPath('userData'), 'config.json');
@@ -307,10 +314,12 @@ ipcMain.handle('open-video-window', async (event, { videoId, moduleId: _moduleId
     const { session } = require('electron');
     const youtubeSession = session.fromPartition('persist:youtube-session');
 
-    // Set user agent to standard Chrome to avoid Google blocks
-    // Google blocks Electron user agents even with identifiers removed
-    const chromeUserAgent =
-      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+    // Set user agent dynamically from Electron's Chromium, stripping Electron identifiers
+    const originalUA = youtubeSession.getUserAgent();
+    const chromeUserAgent = originalUA
+      .replace(/Electron\/\S+/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
     youtubeSession.setUserAgent(chromeUserAgent);
 
     const videoWindow = new BrowserWindow({
@@ -427,7 +436,8 @@ ipcMain.handle('open-video-window', async (event, { videoId, moduleId: _moduleId
 
     // Prevent navigation away from YouTube/Google
     videoWindow.webContents.on('will-navigate', (event, url) => {
-      if (!url.includes('youtube.com') && !url.includes('google.com')) {
+      const allowed = isAllowedHostname(url, ['youtube.com', 'google.com']);
+      if (!allowed) {
         event.preventDefault();
       }
     });
@@ -435,7 +445,8 @@ ipcMain.handle('open-video-window', async (event, { videoId, moduleId: _moduleId
     // Allow Google OAuth popups for login, block everything else
     videoWindow.webContents.setWindowOpenHandler(({ url }) => {
       // Allow Google authentication popups
-      if (url.includes('accounts.google.com') || url.includes('google.com/accounts')) {
+      const allowed = isAllowedHostname(url, ['accounts.google.com', 'google.com']);
+      if (allowed) {
         return {
           action: 'allow',
           overrideBrowserWindowOptions: {
