@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import SearchBar from './SearchBar';
 import ConfidenceRating from './ConfidenceRating';
 import ProgressTracker from '../utils/progressTracker';
+import { GridIcon } from './ui/Icons';
 import '../styles/modules.css';
 
 function ModuleList({ modules, onModuleSelect }) {
@@ -106,12 +107,7 @@ function ModuleList({ modules, onModuleSelect }) {
             onClick={() => handleViewModeChange('grid')}
             aria-label="Grid view"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="3" width="7" height="7" />
-              <rect x="14" y="3" width="7" height="7" />
-              <rect x="14" y="14" width="7" height="7" />
-              <rect x="3" y="14" width="7" height="7" />
-            </svg>
+            <GridIcon />
           </button>
           <button
             className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
