@@ -36,9 +36,7 @@ jest.mock('../charts/VelocityBarChart', () => {
 
 jest.mock('../charts/ConfidenceDistribution', () => {
   return function MockConfidenceDistribution({ distribution }) {
-    return (
-      <div data-testid="confidence-distribution">{JSON.stringify(distribution)}</div>
-    );
+    return <div data-testid="confidence-distribution">{JSON.stringify(distribution)}</div>;
   };
 });
 

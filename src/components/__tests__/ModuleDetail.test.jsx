@@ -399,9 +399,7 @@ describe('ModuleDetail', () => {
         <ModuleDetail {...defaultProps(module, [module])} />
       </Wrapper>
     );
-    expect(
-      screen.getByRole('checkbox', { name: /mark as added to anki/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: /mark as added to anki/i })).toBeInTheDocument();
   });
 
   // =========================================================================
@@ -543,9 +541,7 @@ describe('ModuleDetail', () => {
       </Wrapper>
     );
 
-    expect(
-      screen.getByText('No resources available for this module.')
-    ).toBeInTheDocument();
+    expect(screen.getByText('No resources available for this module.')).toBeInTheDocument();
   });
 
   // =========================================================================
@@ -751,9 +747,7 @@ describe('ModuleDetail', () => {
         <ModuleDetail {...defaultProps(module, [module])} />
       </Wrapper>
     );
-    expect(
-      screen.getByText(/Videos will open in a distraction-free window/)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Videos will open in a distraction-free window/)).toBeInTheDocument();
   });
 
   it('should call onOpenResource with correct lab file for multi-lab Open Lab buttons', () => {
@@ -870,9 +864,7 @@ describe('ModuleDetail', () => {
       </Wrapper>
     );
 
-    expect(
-      screen.getByText('No resources available for this module.')
-    ).toBeInTheDocument();
+    expect(screen.getByText('No resources available for this module.')).toBeInTheDocument();
   });
 
   it('should show Anki Flashcards heading', () => {

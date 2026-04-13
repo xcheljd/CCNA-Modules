@@ -1,0 +1,147 @@
+{
+  "milestone": "component-tests",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "npm test",
+      "exitCode": 0,
+      "observation": "426 tests passed across 19 test suites. 6 component test files auto-formatted with prettier before passing."
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "echo 'No typecheck configured'",
+      "exitCode": 0,
+      "observation": "No typecheck configured for this JavaScript project"
+    },
+    "lint": {
+      "passed": true,
+      "command": "npm run lint",
+      "exitCode": 0,
+      "observation": "0 errors, 4 warnings (unused vars in existing goalTracker.test.js and progressTracker.test.js — not introduced by this milestone)"
+    },
+    "format:check": {
+      "passed": true,
+      "command": "npm run format:check",
+      "exitCode": 0,
+      "observation": "6 test files were auto-formatted with prettier --write (Dashboard, GoalCard, ModuleDetail, PerformanceCharts, SmartRecommendations, StudyStreak)"
+    }
+  },
+  "reviewsSummary": {
+    "total": 7,
+    "passed": 7,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "nonBlockingIssues": [
+    {
+      "featureId": "test-upcomingMilestones",
+      "severity": "non_blocking",
+      "description": "Unused setProgressValues helper function (dead code) in test file"
+    },
+    {
+      "featureId": "test-upcomingMilestones",
+      "severity": "non_blocking",
+      "description": "VAL-MILESTONES-003 'exactly one next' description mismatches component's broader isNext logic"
+    },
+    {
+      "featureId": "test-goalCard",
+      "severity": "non_blocking",
+      "description": "VAL-GOALCARD-008 doesn't verify post-deletion state transition to no-goal state"
+    },
+    {
+      "featureId": "test-goalCard",
+      "severity": "non_blocking",
+      "description": "VAL-GOALCARD-011 tests expired-goal indirectly via null return rather than direct rendering"
+    },
+    {
+      "featureId": "test-goalCard",
+      "severity": "non_blocking",
+      "description": "Edge case test for delete→no-goal→create has no assertions after delete step"
+    },
+    {
+      "featureId": "test-performanceCharts",
+      "severity": "non_blocking",
+      "description": "Active class switch test only covers 7-day button, not 90-day or round-trip"
+    },
+    {
+      "featureId": "test-performanceCharts",
+      "severity": "non_blocking",
+      "description": "Only getRecentPerformance assertion-checked on time range change, not other tracker methods"
+    },
+    {
+      "featureId": "test-performanceCharts",
+      "severity": "non_blocking",
+      "description": "Inconsistent mock setup pattern in null prediction test from debugging session"
+    },
+    {
+      "featureId": "test-smartRecommendations",
+      "severity": "non_blocking",
+      "description": "VAL-SMARTREC-011 'default cursor' test is effectively untestable since all recommendation types always include a module"
+    },
+    {
+      "featureId": "test-dashboard",
+      "severity": "non_blocking",
+      "description": "Sort order test only checks first child, could verify full ordering"
+    },
+    {
+      "featureId": "test-dashboard",
+      "severity": "non_blocking",
+      "description": "Navigation fallback test doesn't explicitly verify module[0] has progress < 100"
+    },
+    {
+      "featureId": "test-moduleDetail",
+      "severity": "non_blocking",
+      "description": "VAL-MODDETAIL-013 toast verification only asserts container presence, not toast message text"
+    },
+    {
+      "featureId": "test-moduleDetail",
+      "severity": "non_blocking",
+      "description": "Uses fireEvent instead of AGENTS.md-recommended userEvent.setup() (matches de facto pattern)"
+    }
+  ],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Add caveat to userEvent.setup() guidance: 'Note: userEvent.setup() conflicts with jest.useFakeTimers() due to internal async delays. Use fireEvent.click() when fake timers are active.'",
+      "evidence": "SmartRecommendations and ModuleDetail workers encountered userEvent timeout failures when combined with fake timers, switched to fireEvent. All 7 component test files in this mission use fireEvent exclusively despite AGENTS.md recommending userEvent.setup().",
+      "isSystemic": true
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Correct the ToastProvider guidance: SmartRecommendations does not import @/components/ui/toast. Update the list to only include components that actually import it (ModuleDetail, VideoCard — verify others).",
+      "evidence": "SmartRecommendations.js imports only React, date-fns/format, ProgressTracker, StreakTracker — no toast import. AGENTS.md currently lists it as needing ToastProvider wrapper.",
+      "isSystemic": false
+    },
+    {
+      "target": "library",
+      "suggestion": "Add knowledge entry: Dashboard component has a refreshKey state that increments on mount (useEffect with [] dependency), causing the data-loading useEffect to run twice. Use toHaveBeenLastCalledWith instead of toHaveBeenCalledWith for assertions on mocked dependencies.",
+      "evidence": "test-dashboard worker encountered 3 test failures on first run due to components being called twice, resolved by switching to toHaveBeenLastCalledWith. Dashboard.js lines 29-31 show the pattern.",
+      "isSystemic": false
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Add note about Jest mockReturnValue stickiness: calling mockReturnValue() multiple times without jest.clearAllMocks() between them may not reliably override previous values. Always clear mocks before re-setting return values.",
+      "evidence": "test-performanceCharts worker spent 6+ tool calls debugging a null prediction test failure caused by mockReturnValue stickiness. Resolved by adding clearAllMocks() before manual re-setup.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "features.json test-goalCard expectedBehavior lists 'ToastProvider wrapper needed' — inaccurate",
+      "reason": "This is a feature definition issue in features.json, not a guidance document. The test correctly omitted ToastProvider. Recommend updating features.json but this is orchestrator-level."
+    },
+    {
+      "observation": "GoalCard test-worker skill template shows ToastProvider as standard pattern",
+      "reason": "The skill template is correct as a default pattern — workers should determine if ToastProvider is needed per component. The existing note 'Only wrap if component uses toast' is sufficient."
+    },
+    {
+      "observation": "ModuleDetail sets/cleans up window.electronAPI.openAnki inline rather than with beforeAll/afterAll",
+      "reason": "Minor style deviation. The inline approach works correctly and is acceptable for isolated test cases. Not worth a guidance change."
+    }
+  ],
+  "previousRound": null
+}

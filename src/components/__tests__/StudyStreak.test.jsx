@@ -41,7 +41,9 @@ function setupMocks(overrides = {}) {
   ];
 
   StreakTracker.getStreakInfo.mockReturnValue(overrides.streakInfo || defaultStreakInfo);
-  StreakTracker.getRecentActivity.mockReturnValue(overrides.recentActivity || defaultRecentActivity);
+  StreakTracker.getRecentActivity.mockReturnValue(
+    overrides.recentActivity || defaultRecentActivity
+  );
   StreakTracker.isStreakAtRisk.mockReturnValue(overrides.atRisk ?? false);
   StreakTracker.getStreakMilestones.mockReturnValue(overrides.milestones || defaultMilestones);
 }

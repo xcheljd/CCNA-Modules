@@ -64,9 +64,7 @@ jest.mock('../dashboard/DashboardSections', () => ({
   StudyStreakSection: jest.fn(({ refreshKey }) => (
     <div data-testid="section-study-streak" data-refresh-key={refreshKey} />
   )),
-  LearningGoalsSection: jest.fn(({ modules }) => (
-    <div data-testid="section-learning-goals" />
-  )),
+  LearningGoalsSection: jest.fn(({ modules }) => <div data-testid="section-learning-goals" />),
   SmartRecommendationsSection: jest.fn(({ modules, onModuleSelect }) => (
     <div data-testid="section-smart-recommendations" />
   )),
@@ -118,26 +116,14 @@ const defaultStats = {
 
 // Setup default mocks
 function setupMocks(overrides = {}) {
-  SettingsManager.getDashboardConfig.mockReturnValue(
-    overrides.config ?? defaultConfig
-  );
+  SettingsManager.getDashboardConfig.mockReturnValue(overrides.config ?? defaultConfig);
   SettingsManager.saveDashboardConfig.mockReturnValue({ success: true });
 
-  ProgressTracker.getOverallProgress.mockReturnValue(
-    overrides.overallProgress ?? 30
-  );
-  ProgressTracker.getLastWatchedModule.mockReturnValue(
-    overrides.lastWatched ?? null
-  );
-  ProgressTracker.getModulesNeedingReview.mockReturnValue(
-    overrides.needingReview ?? []
-  );
-  ProgressTracker.getModuleStatistics.mockReturnValue(
-    overrides.stats ?? defaultStats
-  );
-  ProgressTracker.getModuleProgress.mockReturnValue(
-    overrides.moduleProgress ?? 0
-  );
+  ProgressTracker.getOverallProgress.mockReturnValue(overrides.overallProgress ?? 30);
+  ProgressTracker.getLastWatchedModule.mockReturnValue(overrides.lastWatched ?? null);
+  ProgressTracker.getModulesNeedingReview.mockReturnValue(overrides.needingReview ?? []);
+  ProgressTracker.getModuleStatistics.mockReturnValue(overrides.stats ?? defaultStats);
+  ProgressTracker.getModuleProgress.mockReturnValue(overrides.moduleProgress ?? 0);
 }
 
 describe('Dashboard', () => {
@@ -150,9 +136,7 @@ describe('Dashboard', () => {
   // VAL-DASHBOARD-001: Renders dashboard container
   it('should render dashboard container with .dashboard class', () => {
     const modules = createModules(3);
-    const { container } = render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    const { container } = render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(container.querySelector('.dashboard')).toBeInTheDocument();
   });
@@ -160,9 +144,7 @@ describe('Dashboard', () => {
   // VAL-DASHBOARD-002: Loads config from SettingsManager, falls back to default
   it('should load config from SettingsManager and use it', () => {
     const modules = createModules(3);
-    render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(SettingsManager.getDashboardConfig).toHaveBeenCalled();
   });
@@ -171,9 +153,7 @@ describe('Dashboard', () => {
     const modules = createModules(3);
     SettingsManager.getDashboardConfig.mockReturnValue(null);
 
-    render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     // Should have called saveDashboardConfig with the default config
     expect(SettingsManager.saveDashboardConfig).toHaveBeenCalled();
@@ -200,9 +180,7 @@ describe('Dashboard', () => {
     };
     setupMocks({ config: configWithDisabled });
 
-    render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.queryByTestId('section-study-streak')).toBeInTheDocument();
     expect(screen.queryByTestId('section-overall-progress')).toBeInTheDocument();
@@ -227,9 +205,7 @@ describe('Dashboard', () => {
     };
     setupMocks({ config: configWithCustomOrder });
 
-    const { container } = render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    const { container } = render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     const dashboard = container.querySelector('.dashboard');
     const sections = dashboard.children;
@@ -250,9 +226,7 @@ describe('Dashboard', () => {
     };
     setupMocks({ config: configOnlyPaired });
 
-    const { container } = render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    const { container } = render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     const gridPair = container.querySelector('.dashboard-grid-pair');
     expect(gridPair).toBeInTheDocument();
@@ -270,14 +244,16 @@ describe('Dashboard', () => {
     };
     setupMocks({ config: configMilestonesRecs });
 
-    const { container } = render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    const { container } = render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     const gridPair = container.querySelector('.dashboard-grid-pair');
     expect(gridPair).toBeInTheDocument();
-    expect(gridPair.querySelector('[data-testid="section-upcoming-milestones"]')).toBeInTheDocument();
-    expect(gridPair.querySelector('[data-testid="section-smart-recommendations"]')).toBeInTheDocument();
+    expect(
+      gridPair.querySelector('[data-testid="section-upcoming-milestones"]')
+    ).toBeInTheDocument();
+    expect(
+      gridPair.querySelector('[data-testid="section-smart-recommendations"]')
+    ).toBeInTheDocument();
   });
 
   // VAL-DASHBOARD-006: Unpaired sections render individually (no grid-pair wrapper)
@@ -285,15 +261,11 @@ describe('Dashboard', () => {
     const modules = createModules(3);
     // Enable only overall-progress (not in any pair)
     const configSingle = {
-      sections: [
-        { id: 'overall-progress', enabled: true, order: 1 },
-      ],
+      sections: [{ id: 'overall-progress', enabled: true, order: 1 }],
     };
     setupMocks({ config: configSingle });
 
-    const { container } = render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    const { container } = render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(container.querySelector('.dashboard-grid-pair')).not.toBeInTheDocument();
     expect(screen.getByTestId('section-overall-progress')).toBeInTheDocument();
@@ -311,9 +283,7 @@ describe('Dashboard', () => {
     };
     setupMocks({ config: configPartiallyPaired });
 
-    const { container } = render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    const { container } = render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     // study-streak should render individually (no pair)
     expect(screen.getByTestId('section-study-streak')).toBeInTheDocument();
@@ -325,9 +295,7 @@ describe('Dashboard', () => {
   it('should initialize ActivityTracker and calculate progress on mount', () => {
     const modules = createModules(5);
 
-    render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(ActivityTracker.initializeTracking).toHaveBeenCalledWith(modules);
     expect(ProgressTracker.getOverallProgress).toHaveBeenCalledWith(modules);
@@ -346,11 +314,12 @@ describe('Dashboard', () => {
       totalFlashcards: 5,
       addedFlashcards: 0,
     };
-    setupMocks({ stats: customStats, config: { sections: [{ id: 'overall-progress', enabled: true, order: 1 }] } });
+    setupMocks({
+      stats: customStats,
+      config: { sections: [{ id: 'overall-progress', enabled: true, order: 1 }] },
+    });
 
-    render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(ProgressTracker.getModuleStatistics).toHaveBeenCalledWith(modules);
     expect(screen.getByTestId('stats-value').textContent).toBe(JSON.stringify(customStats));
@@ -362,9 +331,7 @@ describe('Dashboard', () => {
     const lastWatchedModule = modules[1];
     setupMocks({ lastWatched: { module: lastWatchedModule } });
 
-    render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(ProgressTracker.getLastWatchedModule).toHaveBeenCalledWith(modules);
   });
@@ -379,9 +346,7 @@ describe('Dashboard', () => {
       config: { sections: [{ id: 'overall-progress', enabled: true, order: 1 }] },
     });
 
-    render(
-      <Dashboard modules={modules} onModuleSelect={onModuleSelect} />
-    );
+    render(<Dashboard modules={modules} onModuleSelect={onModuleSelect} />);
 
     fireEvent.click(screen.getByTestId('action-btn'));
     expect(onModuleSelect).toHaveBeenCalledWith(lastWatchedModule);
@@ -396,15 +361,13 @@ describe('Dashboard', () => {
     });
 
     // Module 1 is incomplete (progress 0)
-    ProgressTracker.getModuleProgress.mockImplementation((mod) => {
+    ProgressTracker.getModuleProgress.mockImplementation(mod => {
       if (mod.id === 1) return 0;
       if (mod.id === 2) return 50;
       return 100;
     });
 
-    render(
-      <Dashboard modules={modules} onModuleSelect={onModuleSelect} />
-    );
+    render(<Dashboard modules={modules} onModuleSelect={onModuleSelect} />);
 
     fireEvent.click(screen.getByTestId('action-btn'));
     expect(onModuleSelect).toHaveBeenCalledWith(modules[0]);
@@ -421,9 +384,7 @@ describe('Dashboard', () => {
     // All modules complete
     ProgressTracker.getModuleProgress.mockReturnValue(100);
 
-    render(
-      <Dashboard modules={modules} onModuleSelect={onModuleSelect} />
-    );
+    render(<Dashboard modules={modules} onModuleSelect={onModuleSelect} />);
 
     fireEvent.click(screen.getByTestId('action-btn'));
     expect(onModuleSelect).toHaveBeenCalledWith(modules[0]);
@@ -438,9 +399,7 @@ describe('Dashboard', () => {
       config: { sections: [{ id: 'modules-needing-review', enabled: true, order: 1 }] },
     });
 
-    render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     // Only 5 review modules should be rendered
     const reviewSection = screen.getByTestId('section-modules-needing-review');
@@ -450,25 +409,19 @@ describe('Dashboard', () => {
 
   // VAL-DASHBOARD-012: Handles empty modules gracefully
   it('should render without crashing when modules is empty array', () => {
-    const { container } = render(
-      <Dashboard modules={[]} onModuleSelect={jest.fn()} />
-    );
+    const { container } = render(<Dashboard modules={[]} onModuleSelect={jest.fn()} />);
 
     expect(container.querySelector('.dashboard')).toBeInTheDocument();
   });
 
   it('should render without crashing when modules is null', () => {
-    const { container } = render(
-      <Dashboard modules={null} onModuleSelect={jest.fn()} />
-    );
+    const { container } = render(<Dashboard modules={null} onModuleSelect={jest.fn()} />);
 
     expect(container.querySelector('.dashboard')).toBeInTheDocument();
   });
 
   it('should render without crashing when modules is undefined', () => {
-    const { container } = render(
-      <Dashboard modules={undefined} onModuleSelect={jest.fn()} />
-    );
+    const { container } = render(<Dashboard modules={undefined} onModuleSelect={jest.fn()} />);
 
     expect(container.querySelector('.dashboard')).toBeInTheDocument();
   });
@@ -478,9 +431,7 @@ describe('Dashboard', () => {
     const modules = createModules(3);
     setupMocks({ config: defaultConfig });
 
-    const { container } = render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    const { container } = render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     // Verify each section testid appears only once in the rendered DOM
     const sectionIds = [
@@ -507,9 +458,7 @@ describe('Dashboard', () => {
       config: { sections: [{ id: 'modules-needing-review', enabled: true, order: 1 }] },
     });
 
-    render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     // ModulesNeedingReviewSection is rendered and receives empty array
     const section = screen.getByTestId('section-modules-needing-review');
@@ -533,15 +482,19 @@ describe('Dashboard', () => {
     };
     setupMocks({ config: configNeedsModules });
 
-    const { container } = render(
-      <Dashboard modules={modules} onModuleSelect={onModuleSelect} />
-    );
+    const { container } = render(<Dashboard modules={modules} onModuleSelect={onModuleSelect} />);
 
     // Verify each section is in the DOM with correct data
     expect(container.querySelector('[data-testid="section-learning-goals"]')).toBeInTheDocument();
-    expect(container.querySelector('[data-testid="section-smart-recommendations"]')).toBeInTheDocument();
-    expect(container.querySelector('[data-testid="section-upcoming-milestones"]')).toBeInTheDocument();
-    expect(container.querySelector('[data-testid="section-performance-charts"]')).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-testid="section-smart-recommendations"]')
+    ).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-testid="section-upcoming-milestones"]')
+    ).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-testid="section-performance-charts"]')
+    ).toBeInTheDocument();
 
     // Verify the mock functions were called with correct props
     // Use toHaveBeenLastCalledWith because components may be called twice due to re-render
@@ -571,9 +524,7 @@ describe('Dashboard', () => {
       config: { sections: [{ id: 'overall-progress', enabled: true, order: 1 }] },
     });
 
-    render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.getByTestId('overall-progress-value').textContent).toBe('42');
   });
@@ -584,9 +535,7 @@ describe('Dashboard', () => {
     // Custom config with all sections enabled
     setupMocks({ config: defaultConfig });
 
-    const { container } = render(
-      <Dashboard modules={modules} onModuleSelect={jest.fn()} />
-    );
+    const { container } = render(<Dashboard modules={modules} onModuleSelect={jest.fn()} />);
 
     // Collect all data-testid attributes from rendered sections
     const allSections = container.querySelectorAll('[data-testid^="section-"]');

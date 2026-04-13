@@ -42,19 +42,15 @@ function createModules(count, startId = 1, startDay = 1) {
 
 // Default mock setup: no recommendations, no insights
 function setupMocks(overrides = {}) {
-  ProgressTracker.getLastWatchedModule.mockReturnValue(
-    overrides.lastWatched ?? null
-  );
-  ProgressTracker.getModuleProgress.mockImplementation((module) => {
+  ProgressTracker.getLastWatchedModule.mockReturnValue(overrides.lastWatched ?? null);
+  ProgressTracker.getModuleProgress.mockImplementation(module => {
     if (overrides.progressMap && module) {
       return overrides.progressMap[module.id] ?? 0;
     }
     return overrides.defaultProgress ?? 0;
   });
-  ProgressTracker.getModulesNeedingReview.mockReturnValue(
-    overrides.needingReview ?? []
-  );
-  ProgressTracker.getModuleConfidence.mockImplementation((id) => {
+  ProgressTracker.getModulesNeedingReview.mockReturnValue(overrides.needingReview ?? []);
+  ProgressTracker.getModuleConfidence.mockImplementation(id => {
     if (overrides.confidenceMap) {
       return overrides.confidenceMap[id] ?? 0;
     }
@@ -83,9 +79,7 @@ describe('SmartRecommendations', () => {
     // no goals in localStorage => no goal insight
     setupMocks({ defaultProgress: 0 });
 
-    const { container } = render(
-      <SmartRecommendations modules={[]} onModuleSelect={jest.fn()} />
-    );
+    const { container } = render(<SmartRecommendations modules={[]} onModuleSelect={jest.fn()} />);
 
     expect(container.innerHTML).toBe('');
   });
@@ -99,9 +93,7 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.getByText('Continue Where You Left Off')).toBeInTheDocument();
     expect(screen.getByText('▶️')).toBeInTheDocument();
@@ -117,9 +109,7 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.getByText('Review Low Confidence Module')).toBeInTheDocument();
     expect(screen.getByText('🔄')).toBeInTheDocument();
@@ -135,9 +125,7 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.getByText('Continue Your Learning Path')).toBeInTheDocument();
     expect(screen.getByText('🎯')).toBeInTheDocument();
@@ -157,9 +145,7 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.getByText('Quick Win Opportunity')).toBeInTheDocument();
     expect(screen.getByText('⚡')).toBeInTheDocument();
@@ -177,9 +163,7 @@ describe('SmartRecommendations', () => {
       streakInfo: { currentStreak: 5, longestStreak: 10, lastStudyDate: '2025-01-14' },
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.getByText('Maintain Your Streak')).toBeInTheDocument();
     expect(screen.getByText('🔥')).toBeInTheDocument();
@@ -197,9 +181,7 @@ describe('SmartRecommendations', () => {
       streakInfo: { currentStreak: 5, longestStreak: 10, lastStudyDate: '2025-01-15' },
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.queryByText('Maintain Your Streak')).not.toBeInTheDocument();
   });
@@ -223,9 +205,7 @@ describe('SmartRecommendations', () => {
       streakInfo: { currentStreak: 3, longestStreak: 3, lastStudyDate: '2025-01-14' },
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     // Should show at most 4 recommendation cards
     const cards = screen.getAllByText(/(?:▶️|🔄|🎯|⚡|🔥)/);
@@ -252,9 +232,7 @@ describe('SmartRecommendations', () => {
       streakInfo: { currentStreak: 5, longestStreak: 5, lastStudyDate: '2025-01-14' },
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     const recCards = document.querySelectorAll('.recommendation-card');
     expect(recCards.length).toBeLessThanOrEqual(4);
@@ -276,9 +254,7 @@ describe('SmartRecommendations', () => {
       defaultConfidence: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     // Module 1 should only appear once (in "Continue" card)
     const module1Mentions = screen.getAllByText(/Day 1: Module 1/);
@@ -299,9 +275,7 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={onModuleSelect} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={onModuleSelect} />);
 
     const nextTitle = screen.getByText('Continue Your Learning Path');
     // Click the card (parent of the heading)
@@ -319,9 +293,7 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     const cards = document.querySelectorAll('.recommendation-card');
     cards.forEach(card => {
@@ -340,9 +312,7 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     // All recommendations in this scenario have modules
     const cards = document.querySelectorAll('.recommendation-card');
@@ -364,11 +334,11 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
-    expect(screen.getByText("You're almost there! Just a few more modules to complete the course.")).toBeInTheDocument();
+    expect(
+      screen.getByText("You're almost there! Just a few more modules to complete the course.")
+    ).toBeInTheDocument();
     expect(screen.getByText('🌟')).toBeInTheDocument();
   });
 
@@ -380,11 +350,11 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
-    expect(screen.getByText("Great progress! You've completed over half the course.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Great progress! You've completed over half the course.")
+    ).toBeInTheDocument();
     expect(screen.getByText('💪')).toBeInTheDocument();
   });
 
@@ -396,11 +366,11 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
-    expect(screen.getByText("You're building momentum! Keep up the steady progress.")).toBeInTheDocument();
+    expect(
+      screen.getByText("You're building momentum! Keep up the steady progress.")
+    ).toBeInTheDocument();
     expect(screen.getByText('📚')).toBeInTheDocument();
   });
 
@@ -412,9 +382,7 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.getByText('Good start! Consistency is key to success.')).toBeInTheDocument();
     expect(screen.getByText('🚀')).toBeInTheDocument();
@@ -425,14 +393,23 @@ describe('SmartRecommendations', () => {
     const modules = createModules(10);
     const reviewModules = modules.slice(0, 6);
     setupMocks({
-      progressMap: { 1: 100, 2: 100, 3: 100, 4: 100, 5: 100, 6: 100, 7: 100, 8: 100, 9: 100, 10: 100 },
+      progressMap: {
+        1: 100,
+        2: 100,
+        3: 100,
+        4: 100,
+        5: 100,
+        6: 100,
+        7: 100,
+        8: 100,
+        9: 100,
+        10: 100,
+      },
       defaultProgress: 100,
       needingReview: reviewModules,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.getByText('⚠️')).toBeInTheDocument();
     expect(screen.getByText(/6 modules marked for review/)).toBeInTheDocument();
@@ -444,39 +421,43 @@ describe('SmartRecommendations', () => {
     // Today is 2025-01-15T12:00:00, goal ends on 2025-01-17
     // daysRemaining = Math.ceil((new Date('2025-01-17') - new Date('2025-01-15T12:00:00')) / 86400000)
     // = Math.ceil(1.5 * 86400000 / 86400000) = Math.ceil(1.5) = 2
-    localStorage.setItem('learning-goals', JSON.stringify({
-      current: { endDate: '2025-01-17' },
-    }));
+    localStorage.setItem(
+      'learning-goals',
+      JSON.stringify({
+        current: { endDate: '2025-01-17' },
+      })
+    );
 
     setupMocks({
       progressMap: { 1: 100, 2: 0, 3: 0, 4: 0, 5: 0 },
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.getByText('⏰')).toBeInTheDocument();
-    expect(screen.getByText('Your goal ends in 2 days. Time to push for the finish!')).toBeInTheDocument();
+    expect(
+      screen.getByText('Your goal ends in 2 days. Time to push for the finish!')
+    ).toBeInTheDocument();
   });
 
   // VAL-SMARTREC-014: No deadline insight when goal ends in >3 days
   it('should not show goal deadline insight when goal ends in more than 3 days', () => {
     const modules = createModules(5);
     // Goal ends on 2025-01-20 (5 days remaining)
-    localStorage.setItem('learning-goals', JSON.stringify({
-      current: { endDate: '2025-01-20' },
-    }));
+    localStorage.setItem(
+      'learning-goals',
+      JSON.stringify({
+        current: { endDate: '2025-01-20' },
+      })
+    );
 
     setupMocks({
       progressMap: { 1: 100, 2: 0, 3: 0, 4: 0, 5: 0 },
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.queryByText('⏰')).not.toBeInTheDocument();
   });
@@ -492,9 +473,7 @@ describe('SmartRecommendations', () => {
     });
 
     expect(() => {
-      render(
-        <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-      );
+      render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
     }).not.toThrow();
 
     // Should still render recommendations section
@@ -510,9 +489,7 @@ describe('SmartRecommendations', () => {
       streakInfo: { currentStreak: 0, longestStreak: 0, lastStudyDate: null },
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.queryByText('Maintain Your Streak')).not.toBeInTheDocument();
   });
@@ -522,14 +499,23 @@ describe('SmartRecommendations', () => {
     const modules = createModules(10);
     const reviewModules = modules.slice(0, 5);
     setupMocks({
-      progressMap: { 1: 100, 2: 100, 3: 100, 4: 100, 5: 100, 6: 100, 7: 100, 8: 100, 9: 100, 10: 100 },
+      progressMap: {
+        1: 100,
+        2: 100,
+        3: 100,
+        4: 100,
+        5: 100,
+        6: 100,
+        7: 100,
+        8: 100,
+        9: 100,
+        10: 100,
+      },
       defaultProgress: 100,
       needingReview: reviewModules,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.queryByText('⚠️')).not.toBeInTheDocument();
   });
@@ -543,9 +529,7 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.getByText('Insights')).toBeInTheDocument();
     expect(screen.getByText('Recommended For You')).toBeInTheDocument();
@@ -560,9 +544,7 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.queryByText('Continue Where You Left Off')).not.toBeInTheDocument();
   });
@@ -576,9 +558,7 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     // Math.round(75.7) = 76
     expect(screen.getByText(/Complete Day 3: Module 3 \(76% done\)/)).toBeInTheDocument();
@@ -592,9 +572,7 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.queryByText('Quick Win Opportunity')).not.toBeInTheDocument();
   });
@@ -609,9 +587,7 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     // Module 4 at 90% should be the quick win (highest progress >50%)
     expect(screen.getByText(/Complete Day 4: Module 4 \(90% done\)/)).toBeInTheDocument();
@@ -627,9 +603,7 @@ describe('SmartRecommendations', () => {
       defaultProgress: 0,
     });
 
-    render(
-      <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
-    );
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     expect(screen.queryByText('⏰')).not.toBeInTheDocument();
   });

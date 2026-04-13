@@ -1,0 +1,39 @@
+{
+  "featureId": "test-dashboard",
+  "reviewedAt": "2026-04-13T01:15:00.000Z",
+  "commitId": "277f650",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The test file provides comprehensive coverage of the Dashboard component with 24 well-structured test cases covering all 13 VAL-DASHBOARD assertions (VAL-DASHBOARD-001 through VAL-DASHBOARD-013). Mocking strategy is sound — ProgressTracker, ActivityTracker, SettingsManager, and all 7 DashboardSections sub-components are properly mocked. The worker correctly identified and handled the double-render issue caused by the refreshKey state increment on mount, switching from toHaveBeenCalledWith to toHaveBeenLastCalledWith where needed. Tests cover config loading with fallback, section filtering/sorting, grid pairing logic (both pair groups tested), unpaired rendering (including when partner is disabled), data initialization, navigation logic (3 branches), review limiting to 5, empty/null/undefined modules, and duplicate prevention.",
+    "issues": [
+      {
+        "file": "src/components/__tests__/Dashboard.test.jsx",
+        "line": 215,
+        "severity": "non_blocking",
+        "description": "The sort order test (VAL-DASHBOARD-004) only checks the first child's data-testid against a config with 3 sections (performance-charts order 1, overall-progress order 2, study-streak order 3). Since study-streak and learning-goals are a pair but learning-goals isn't in the config, study-streak renders solo. The test only asserts the first element is performance-charts but doesn't verify the relative ordering of overall-progress vs study-streak. The assertion is correct but could be stronger by checking all children order."
+      },
+      {
+        "file": "src/components/__tests__/Dashboard.test.jsx",
+        "line": 356,
+        "severity": "non_blocking",
+        "description": "The navigation test for 'first incomplete module when no last watched' relies on a mockImplementation that returns 0 for module id 1, 50 for id 2, and 100 for id 3. This correctly tests the fallback path, but the assertion only checks that onModuleSelect was called with modules[0] — it doesn't verify that modules[0] is indeed the one with progress < 100 (which is true but implicit). This is a minor readability concern; the test is functionally correct."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The worker used toHaveBeenLastCalledWith instead of toHaveBeenCalledWith to handle the double-render caused by the refreshKey increment on mount. This React StrictMode-like double invocation is a pattern that may affect other component tests. AGENTS.md doesn't mention this quirk of the Dashboard component.",
+      "evidence": "Transcript shows the worker encountered 3 test failures on first run due to components being called twice, then switched to toHaveBeenLastCalledWith. Dashboard.js lines 29-31 show the useEffect that increments refreshKey on mount causing re-render."
+    },
+    {
+      "area": "knowledge",
+      "observation": "The Dashboard component has a refreshKey state that increments on mount (useEffect with [] dependency), causing the data-loading useEffect to run twice. This is a deliberate pattern for ensuring fresh data on mount, but it causes all mocked component calls to execute twice in tests. This knowledge could save future test workers debugging time.",
+      "evidence": "Dashboard.js:29-31 — useEffect(() => { setRefreshKey(prev => prev + 1); }, []); combined with the second useEffect depending on refreshKey."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "The test-dashboard feature passes scrutiny. 24 tests cover all 13 VAL-DASHBOARD assertions with good quality. Mocking is thorough and correct. The worker followed the test-worker skill procedure, adapted to the double-render quirk, and verified the full suite passes. Two non-blocking issues noted around test assertion strength — both are readability/robustness improvements, not correctness problems."
+}

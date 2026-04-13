@@ -343,9 +343,7 @@ describe('GoalCard', () => {
     const deleteButton = screen.getByTitle('Delete goal');
     await user.click(deleteButton);
 
-    expect(window.confirm).toHaveBeenCalledWith(
-      'Are you sure you want to delete this goal?'
-    );
+    expect(window.confirm).toHaveBeenCalledWith('Are you sure you want to delete this goal?');
     expect(GoalTracker.deleteCurrentGoal).toHaveBeenCalledTimes(1);
   });
 
