@@ -1,0 +1,31 @@
+{
+  "milestone": "csp-cleanup",
+  "round": 1,
+  "status": "pass",
+  "assertionsSummary": {
+    "total": 9,
+    "passed": 9,
+    "failed": 0,
+    "blocked": 0
+  },
+  "passedAssertions": [
+    "VAL-CSP-001",
+    "VAL-CSP-002",
+    "VAL-CSP-003",
+    "VAL-CROSS-001",
+    "VAL-CROSS-002",
+    "VAL-CROSS-003",
+    "VAL-CROSS-004",
+    "VAL-CROSS-005",
+    "VAL-CROSS-006"
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [],
+  "flowReports": [
+    ".factory/validation/csp-cleanup/user-testing/flows/csp-assertions.json",
+    ".factory/validation/csp-cleanup/user-testing/flows/cross-build-test.json",
+    ".factory/validation/csp-cleanup/user-testing/flows/cross-structure.json"
+  ],
+  "appliedUpdates": [],
+  "previousRound": null
+}
