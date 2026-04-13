@@ -56,6 +56,24 @@ App.js (root)
 - `main.js` handles: resource file opening, video windows, config persistence, data export
 - Video windows use a separate session (`persist:youtube-session`) with custom CSS injection
 
+## Electron IPC
+
+- `preload.js` exposes `window.electronAPI` via contextBridge with 12 IPC channels
+- `main.js` handles: resource file opening, video windows, config persistence, data export
+- Video windows use a separate session (`persist:youtube-session`) with custom CSS injection
+- **All IPC handlers validate inputs** — URLs, file paths, video IDs, window IDs
+- **Path traversal prevention**: `open-resource` resolves paths and verifies containment within resources directory
+- **URL protocol whitelist**: `open-external-url` only allows `https:` and `http:`
+- **Hostname-based navigation**: `will-navigate` and `setWindowOpenHandler` use `new URL().hostname` checking
+
+## Security Model
+
+- `contextIsolation: true`, `nodeIntegration: false`, `webSecurity: true` on all windows
+- CSP meta tag in index.html — production builds omit `unsafe-eval`
+- OutOfBlinkCors is NOT disabled (was removed in security hardening)
+- YouTube window user-agent is dynamically constructed from Electron's Chromium (not hardcoded)
+- No `eval()`, `new Function()`, or `innerHTML` in source code
+
 ## Key Invariants
 
 - All tracking data lives in localStorage with prefixed keys
