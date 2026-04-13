@@ -1,0 +1,54 @@
+{
+  "milestone": "ipc-security",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "npm test",
+      "exitCode": 0,
+      "observation": "426 tests passed, 19 suites, 0 failures"
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "echo 'No typecheck configured'",
+      "exitCode": 0,
+      "observation": "No typecheck configured for this JavaScript project"
+    },
+    "lint": {
+      "passed": true,
+      "command": "npm run lint",
+      "exitCode": 0,
+      "observation": "0 errors, 4 warnings (all pre-existing no-unused-vars in test files)"
+    }
+  },
+  "reviewsSummary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Add convention: When using browser globals (URL, Buffer, etc.) in Electron main process files, add the appropriate /* global */ ESLint directive at the top of the file to satisfy no-undef. Example: /* global URL */ for main.js.",
+      "evidence": "Feature ipc-input-validation added /* global URL */ at main.js:1 to satisfy ESLint's no-undef rule for the URL constructor, which is available in Electron's main process via V8 but not in ESLint's default node environment.",
+      "isSystemic": false
+    },
+    {
+      "target": "skills/security-worker/SKILL.md",
+      "suggestion": "Update the IPC Input Validation Pattern example to show the actual pattern used in production: validate typeof first, then parse URL inside the existing try/catch alongside the operation. This matches the real implementation pattern and is more concise. The current example shows a separate try/catch for URL parsing which works but differs from the actual implementation.",
+      "evidence": "Feature ipc-input-validation implemented URL validation differently from the skill example. The skill shows 'try { const parsed = new URL(param); ... } catch { return error }' as a standalone block, but the actual implementation wraps validation + shell.openExternal in one try/catch where malformed URLs are caught by the generic error handler.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "architecture.md already documents IPC validation patterns (path traversal prevention, URL protocol whitelist, hostname-based navigation)",
+      "reason": "already-documented"
+    }
+  ],
+  "previousRound": null
+}
