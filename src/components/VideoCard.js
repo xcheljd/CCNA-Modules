@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useToast } from '@/components/ui/toast';
+import { YOUTUBE_THUMBNAIL_BASE } from '@/utils/constants';
 import '../styles/modules.css';
 
 function VideoCard({ video, moduleId, isCompleted, onMarkComplete }) {
@@ -42,7 +43,7 @@ function VideoCard({ video, moduleId, isCompleted, onMarkComplete }) {
         aria-label={`Play video: ${video.title}`}
       >
         <img
-          src={`https://img.youtube.com/vi/${video.id}/mqdefault.jpg`}
+          src={`${YOUTUBE_THUMBNAIL_BASE}/${video.id}/mqdefault.jpg`}
           alt={video.title}
           className="video-thumbnail"
           loading="lazy"

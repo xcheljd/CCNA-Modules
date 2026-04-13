@@ -7,6 +7,7 @@ import modules from './data/modules';
 import ProgressTracker from './utils/progressTracker';
 import ActivityTracker from './utils/activityTracker';
 import themes from './utils/themes';
+import { RESOURCE_DOWNLOAD_URL } from '@/utils/constants';
 
 // Lazy load heavy components for code splitting
 const Dashboard = lazy(() => import('./components/Dashboard'));
@@ -16,19 +17,8 @@ const Settings = lazy(() => import('./components/Settings'));
 
 // Loading fallback component
 const LazyLoadingFallback = () => (
-  <div className="lazy-loading" style={{ padding: '20px', textAlign: 'center' }}>
-    <div
-      className="spinner"
-      style={{
-        width: '40px',
-        height: '40px',
-        border: '3px solid rgba(0,0,0,0.1)',
-        borderTop: '3px solid var(--primary)',
-        borderRadius: '50%',
-        animation: 'spin 1s linear infinite',
-        margin: '20px auto',
-      }}
-    ></div>
+  <div className="lazy-loading">
+    <div className="spinner lazy-loading-spinner"></div>
     <p>Loading...</p>
   </div>
 );
@@ -382,11 +372,7 @@ function AppContent() {
       {!resourcesAvailable && (
         <div className="warning-banner">
           ⚠️ Resources folder not found. Some features may not work.
-          <a
-            href="https://drive.google.com/drive/folders/1g8r_jP9xTLvxVpbhh4mTQCH4DFg6DDHA"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={RESOURCE_DOWNLOAD_URL} target="_blank" rel="noopener noreferrer">
             Download resources from Jeremy's IT Lab
           </a>
         </div>

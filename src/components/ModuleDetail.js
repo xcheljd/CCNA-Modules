@@ -4,6 +4,7 @@ import ConfidenceRating from './ConfidenceRating';
 import { useToast } from '@/components/ui/toast';
 import ProgressTracker from '../utils/progressTracker';
 import ActivityTracker from '../utils/activityTracker';
+import { asArray } from '@/utils/helpers';
 import '../styles/modules.css';
 
 function ModuleDetail({
@@ -49,7 +50,6 @@ function ModuleDetail({
     setAnimationClass('');
 
     // Load completion status
-    const asArray = val => (Array.isArray(val) ? val : val ? [val] : []);
     const moduleLabs = asArray(module.resources?.lab);
     setLabCompletions(ProgressTracker.getLabCompletions(module.id, moduleLabs.length));
     setFlashcardsAdded(ProgressTracker.areFlashcardsAdded(module.id));
@@ -85,8 +85,6 @@ function ModuleDetail({
     setFlashcardsAdded(newState);
     onProgressChange?.();
   };
-
-  const asArray = val => (Array.isArray(val) ? val : val ? [val] : []);
 
   const labs = asArray(module.resources?.lab);
   const flashcards = asArray(module.resources?.flashcards);

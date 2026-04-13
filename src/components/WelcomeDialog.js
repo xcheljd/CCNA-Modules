@@ -1,6 +1,16 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ExternalLink, Coffee, Lightbulb, Play } from 'lucide-react';
+import {
+  YOUTUBE_CHANNEL_URL,
+  JEREMYS_IT_LAB_URL,
+  COURSES_URL,
+  DISCORD_URL,
+  TWITTER_URL,
+  LINKEDIN_URL,
+  PAYPAL_URL,
+  VENMO_URL,
+} from '@/utils/constants';
 
 function WelcomeDialog({ open, onOpenChange }) {
   const handleGetStarted = () => {
@@ -65,45 +75,27 @@ function WelcomeDialog({ open, onOpenChange }) {
               through his platforms:
             </p>
             <div className="support-links">
-              <button
-                onClick={() => openExternal('https://www.youtube.com/c/JeremysITLab')}
-                className="support-link"
-              >
+              <button onClick={() => openExternal(YOUTUBE_CHANNEL_URL)} className="support-link">
                 <ExternalLink size={16} />
                 YouTube Channel
               </button>
-              <button
-                onClick={() => openExternal('https://www.jeremysitlab.com')}
-                className="support-link"
-              >
+              <button onClick={() => openExternal(JEREMYS_IT_LAB_URL)} className="support-link">
                 <ExternalLink size={16} />
                 Website
               </button>
-              <button
-                onClick={() => openExternal('https://courses.jeremysitlab.com')}
-                className="support-link"
-              >
+              <button onClick={() => openExternal(COURSES_URL)} className="support-link">
                 <ExternalLink size={16} />
                 Premium Courses
               </button>
-              <button
-                onClick={() => openExternal('https://www.jeremysitlab.com/discord')}
-                className="support-link"
-              >
+              <button onClick={() => openExternal(DISCORD_URL)} className="support-link">
                 <ExternalLink size={16} />
                 Discord Community
               </button>
-              <button
-                onClick={() => openExternal('https://twitter.com/jeremysitlab')}
-                className="support-link"
-              >
+              <button onClick={() => openExternal(TWITTER_URL)} className="support-link">
                 <ExternalLink size={16} />
                 Twitter
               </button>
-              <button
-                onClick={() => openExternal('https://www.linkedin.com/company/jeremysitlab')}
-                className="support-link"
-              >
+              <button onClick={() => openExternal(LINKEDIN_URL)} className="support-link">
                 <ExternalLink size={16} />
                 LinkedIn
               </button>
@@ -120,16 +112,10 @@ function WelcomeDialog({ open, onOpenChange }) {
               Lab. If you find this tool helpful, consider supporting my development work:
             </p>
             <div className="donation-links">
-              <button
-                onClick={() => openExternal('https://www.paypal.me/xchel')}
-                className="donation-link"
-              >
+              <button onClick={() => openExternal(PAYPAL_URL)} className="donation-link">
                 PayPal
               </button>
-              <button
-                onClick={() => openExternal('https://venmo.com/xcheljd')}
-                className="donation-link"
-              >
+              <button onClick={() => openExternal(VENMO_URL)} className="donation-link">
                 Venmo
               </button>
             </div>

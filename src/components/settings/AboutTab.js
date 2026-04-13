@@ -1,5 +1,15 @@
 import React from 'react';
 import { Heart, ExternalLink, Coffee, Lightbulb } from 'lucide-react';
+import {
+  YOUTUBE_CHANNEL_URL,
+  JEREMYS_IT_LAB_URL,
+  COURSES_URL,
+  DISCORD_URL,
+  TWITTER_URL,
+  LINKEDIN_URL,
+  PAYPAL_URL,
+  VENMO_URL,
+} from '@/utils/constants';
 
 function AboutTab() {
   return (
@@ -53,54 +63,42 @@ function AboutTab() {
             </p>
             <div className="support-links">
               <button
-                onClick={() =>
-                  window.electronAPI.openExternalUrl('https://www.youtube.com/c/JeremysITLab')
-                }
+                onClick={() => window.electronAPI.openExternalUrl(YOUTUBE_CHANNEL_URL)}
                 className="support-link"
               >
                 <ExternalLink size={16} />
                 YouTube Channel
               </button>
               <button
-                onClick={() => window.electronAPI.openExternalUrl('https://www.jeremysitlab.com')}
+                onClick={() => window.electronAPI.openExternalUrl(JEREMYS_IT_LAB_URL)}
                 className="support-link"
               >
                 <ExternalLink size={16} />
                 Website
               </button>
               <button
-                onClick={() =>
-                  window.electronAPI.openExternalUrl('https://courses.jeremysitlab.com')
-                }
+                onClick={() => window.electronAPI.openExternalUrl(COURSES_URL)}
                 className="support-link"
               >
                 <ExternalLink size={16} />
                 Premium Courses
               </button>
               <button
-                onClick={() =>
-                  window.electronAPI.openExternalUrl('https://www.jeremysitlab.com/discord')
-                }
+                onClick={() => window.electronAPI.openExternalUrl(DISCORD_URL)}
                 className="support-link"
               >
                 <ExternalLink size={16} />
                 Discord Community
               </button>
               <button
-                onClick={() =>
-                  window.electronAPI.openExternalUrl('https://twitter.com/jeremysitlab')
-                }
+                onClick={() => window.electronAPI.openExternalUrl(TWITTER_URL)}
                 className="support-link"
               >
                 <ExternalLink size={16} />
                 Twitter
               </button>
               <button
-                onClick={() =>
-                  window.electronAPI.openExternalUrl(
-                    'https://www.linkedin.com/company/jeremysitlab'
-                  )
-                }
+                onClick={() => window.electronAPI.openExternalUrl(LINKEDIN_URL)}
                 className="support-link"
               >
                 <ExternalLink size={16} />
@@ -120,13 +118,13 @@ function AboutTab() {
             </p>
             <div className="donation-links">
               <button
-                onClick={() => window.electronAPI.openExternalUrl('https://www.paypal.me/xchel')}
+                onClick={() => window.electronAPI.openExternalUrl(PAYPAL_URL)}
                 className="donation-link"
               >
                 PayPal
               </button>
               <button
-                onClick={() => window.electronAPI.openExternalUrl('https://venmo.com/xcheljd')}
+                onClick={() => window.electronAPI.openExternalUrl(VENMO_URL)}
                 className="donation-link"
               >
                 Venmo
