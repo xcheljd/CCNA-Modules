@@ -1,0 +1,303 @@
+{
+  "flowId": "smart-recommendations",
+  "testedAt": "2026-04-12T12:00:00Z",
+  "isolation": {
+    "workingDirectory": "/home/x/labs/CCNA-Modules",
+    "tool": "jest",
+    "testFile": "src/components/__tests__/SmartRecommendations.test.jsx"
+  },
+  "toolsUsed": ["jest"],
+  "assertions": [
+    {
+      "id": "VAL-SMARTREC-001",
+      "title": "Returns null when no recommendations and no insights",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Render SmartRecommendations with empty modules array, no lastWatched, no streak",
+          "expected": "Component returns null (empty container)",
+          "observed": "container.innerHTML === '' confirmed"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testName": "should render null when no recommendations and no insights",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SMARTREC-002",
+      "title": "Renders 'Continue Where You Left Off' recommendation",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Set lastWatched module to module[0] at 50% progress, render",
+          "expected": "Card with ▶️ icon and 'Continue Where You Left Off' text visible",
+          "observed": "All three elements found in document"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testName": "should render \"Continue Where You Left Off\" card with ▶️ icon when last watched is incomplete",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SMARTREC-003",
+      "title": "Renders 'Review Low Confidence Module'",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Set needingReview to module[1] with confidence 2, render",
+          "expected": "Card with 🔄 icon, 'Review Low Confidence Module' title, confidence score in description",
+          "observed": "All elements found: icon, title, 'Day 2: Module 2 (2/5 confidence)' description"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testName": "should render \"Review Low Confidence Module\" card with 🔄 icon and confidence score",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SMARTREC-004",
+      "title": "Renders 'Continue Your Learning Path'",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Set module[0] at 100%, module[1] at 0%, render",
+          "expected": "Card with 🎯 icon and 'Continue Your Learning Path' for next incomplete module",
+          "observed": "Icon, title, and 'Start Day 2: Module 2' description all found"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testName": "should render \"Continue Your Learning Path\" card with 🎯 for next incomplete module",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SMARTREC-005",
+      "title": "Renders 'Quick Win Opportunity'",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Set module[0] complete, module[1] at 20%, module[2] at 75%, render",
+          "expected": "Card with ⚡ icon for module[2] which is >50% complete and not first incomplete",
+          "observed": "Icon, title, and 'Complete Day 3: Module 3 (75% done)' description all found"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testName": "should render \"Quick Win Opportunity\" card with ⚡ for modules >50% complete",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SMARTREC-006",
+      "title": "Renders 'Maintain Your Streak' when active and not studied today",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Set streakInfo with currentStreak=5, lastStudyDate=yesterday, render",
+          "expected": "Card with 🔥 icon and streak day count message",
+          "observed": "'Maintain Your Streak', '🔥', and 'You're on a 5-day streak!' all found"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testName": "should render \"Maintain Your Streak\" card with 🔥 and streak day count",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SMARTREC-007",
+      "title": "No streak recommendation when already studied today",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Set streakInfo with lastStudyDate = today (2025-01-15), render",
+          "expected": "'Maintain Your Streak' NOT in document",
+          "observed": "queryByText('Maintain Your Streak') returned null"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testName": "should not show streak recommendation when already studied today",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SMARTREC-008",
+      "title": "Recommendations sorted by priority, max 4",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Create scenario with 5+ possible recommendations, render",
+          "expected": "At most 4 cards shown, first card is 'Continue Where You Left Off' (priority 10)",
+          "observed": "Cards ≤ 4, first title is 'Continue Where You Left Off', deduplication works (quick-win skipped for already-recommended module)"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testNames": [
+          "should sort recommendations by descending priority and limit to 4",
+          "should show at most 4 recommendation cards even when more are available"
+        ],
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SMARTREC-009",
+      "title": "Deduplicates — same module not shown twice",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Set module[0] as lastWatched at 60% (also qualifies as quick-win), render",
+          "expected": "Module 1 appears only once, quick-win skipped for already-recommended module",
+          "observed": "module1Mentions.length === 1, 'Quick Win Opportunity' not in document"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testName": "should not show same module in multiple recommendation cards",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SMARTREC-010",
+      "title": "Calls onModuleSelect when card clicked",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Click the 'Continue Your Learning Path' recommendation card",
+          "expected": "onModuleSelect called once with modules[1] (the next incomplete module)",
+          "observed": "onModuleSelect.toHaveBeenCalledTimes(1), toHaveBeenCalledWith(modules[1]) confirmed"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testName": "should call onModuleSelect with correct module when card clicked",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SMARTREC-011",
+      "title": "Correct cursor style per card type",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Render with module-backed recommendations, check cursor style on all cards",
+          "expected": "Cards with modules have 'pointer' cursor",
+          "observed": "All cards with .recommendation-action have cursor === 'pointer'"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testNames": [
+          "should set pointer cursor for cards with a module",
+          "should set default cursor for cards without a module reference"
+        ],
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SMARTREC-012",
+      "title": "Insights show correct completion-rate messages",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Test 4 completion rate thresholds: >75%, >50%, >25%, >0%",
+          "expected": "Correct insight message and emoji for each threshold",
+          "observed": ">75%: 'almost there' with 🌟, >50%: 'over half' with 💪, >25%: 'momentum' with 📚, >0%: 'Good start' with 🚀 — all confirmed"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testNames": [
+          "should show \"almost there\" insight when completion rate >75%",
+          "should show \"over half\" insight when completion rate >50%",
+          "should show \"momentum\" insight when completion rate >25%",
+          "should show \"Good start\" insight when completion rate >0%"
+        ],
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SMARTREC-013",
+      "title": "Shows review warning when >5 modules need review",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Set 6 modules needing review, all modules complete, render",
+          "expected": "⚠️ icon with '6 modules marked for review' text",
+          "observed": "Both elements found in document"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testNames": [
+          "should show ⚠️ warning when more than 5 modules need review",
+          "should not show review warning when 5 or fewer modules need review"
+        ],
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SMARTREC-014",
+      "title": "Shows goal deadline insight when ending within 3 days",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Set learning-goals with endDate 2 days from now, render",
+          "expected": "⏰ icon with deadline message",
+          "observed": "'⏰' and 'Your goal ends in 2 days. Time to push for the finish!' found"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testNames": [
+          "should show ⏰ goal deadline insight when goal ends within 3 days",
+          "should not show goal deadline insight when goal ends in more than 3 days",
+          "should not show goal deadline insight when no current goal exists"
+        ],
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SMARTREC-015",
+      "title": "Handles corrupted learning-goals localStorage data",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Set localStorage 'learning-goals' to invalid JSON string, render",
+          "expected": "No crash, component renders normally",
+          "observed": "expect(() => render(...)).not.toThrow() passed, 'Recommended For You' heading found"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/smart-recommendations/VAL-SMARTREC-test-output.txt",
+        "testName": "should handle corrupted learning-goals localStorage data without crashing",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 15 assertions (VAL-SMARTREC-001 through VAL-SMARTREC-015): all 15 passed. SmartRecommendations test suite has 31 tests total (15 covering assertions + 16 additional edge-case tests). Full suite of 426 tests across 19 test suites passes with no regressions."
+}

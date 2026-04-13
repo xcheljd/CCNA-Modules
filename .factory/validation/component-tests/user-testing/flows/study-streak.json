@@ -1,0 +1,340 @@
+{
+  "flowId": "study-streak",
+  "testedAt": "2026-04-12T00:00:00.000Z",
+  "isolation": {
+    "workingDirectory": "/home/x/labs/CCNA-Modules",
+    "testTool": "jest + @testing-library/react",
+    "testCommand": "npm test -- --no-coverage src/components/__tests__/StudyStreak.test.jsx",
+    "fullSuiteCommand": "npm test -- --no-coverage"
+  },
+  "toolsUsed": ["jest"],
+  "assertions": [
+    {
+      "id": "VAL-STREAK-COMP-001",
+      "title": "Displays current streak number and label",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'should display current streak number and \"day streak\" label' with currentStreak=5",
+          "expected": "Renders '5' and 'day streak' text",
+          "observed": "Test passed - streak count '5' and 'day streak' label found in document"
+        },
+        {
+          "action": "Run test: 'should display 0 when no streak exists' with currentStreak=0",
+          "expected": "Renders '0' and 'day streak' text",
+          "observed": "Test passed - '0' and 'day streak' found in document"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/study-streak/VAL-STREAK-COMP-test-output.txt",
+        "tests": [
+          "should display current streak number and \"day streak\" label",
+          "should display 0 when no streak exists"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-COMP-002",
+      "title": "Shows correct emoji for streak ranges",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'should show 📚 emoji when streak is 0'",
+          "expected": "📚 rendered",
+          "observed": "Test passed - 📚 found in document"
+        },
+        {
+          "action": "Run test: 'should show 🔥 for streak 1-6' (iterates 1 through 6)",
+          "expected": "Single 🔥 rendered, no 🔥🔥 or 🔥🔥🔥",
+          "observed": "Test passed - 🔥 found, 🔥🔥 and 🔥🔥🔥 not found for all values 1-6"
+        },
+        {
+          "action": "Run test: 'should show 🔥🔥 for streak 7-29' (tests 7, 14, 29)",
+          "expected": "🔥🔥 rendered",
+          "observed": "Test passed - 🔥🔥 found for streaks 7, 14, 29"
+        },
+        {
+          "action": "Run test: 'should show 🔥🔥🔥 for streak 30+' (tests 30, 60, 100)",
+          "expected": "🔥🔥🔥 rendered",
+          "observed": "Test passed - 🔥🔥🔥 found for streaks 30, 60, 100"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/study-streak/VAL-STREAK-COMP-test-output.txt",
+        "tests": [
+          "should show 📚 emoji when streak is 0",
+          "should show 🔥 for streak 1-6",
+          "should show 🔥🔥 for streak 7-29",
+          "should show 🔥🔥🔥 for streak 30+"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-COMP-003",
+      "title": "Displays appropriate streak message per state",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: streak=0, atRisk=false → 'Start your learning journey today!'",
+          "expected": "Correct message rendered",
+          "observed": "Test passed"
+        },
+        {
+          "action": "Run test: streak=5, atRisk=true → \"Don't break your streak! Study today!\"",
+          "expected": "At-risk message rendered",
+          "observed": "Test passed"
+        },
+        {
+          "action": "Run test: streak=1, atRisk=false → 'Great start! Come back tomorrow!'",
+          "expected": "Day 1 message rendered",
+          "observed": "Test passed"
+        },
+        {
+          "action": "Run test: streak=3, atRisk=false → '4 more days to earn your first badge!'",
+          "expected": "Days-to-badge message rendered",
+          "observed": "Test passed"
+        },
+        {
+          "action": "Run test: streak=10, atRisk=false → 'Amazing dedication! Keep it up!'",
+          "expected": "Dedication message rendered",
+          "observed": "Test passed"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/study-streak/VAL-STREAK-COMP-test-output.txt",
+        "tests": [
+          "should show \"Start your learning journey\" when streak is 0",
+          "should show at-risk message when streak is at risk",
+          "should show \"Great start\" message when streak is 1 and not at risk",
+          "should show \"more days to earn your first badge\" for streak 2-6",
+          "should show \"Amazing dedication\" message for streak >= 7 and not at risk"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-COMP-004",
+      "title": "Shows longest streak only when > 0",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: longestStreak=10 → 'Longest Streak' section present",
+          "expected": "Section rendered with 'Longest Streak' text and '10 days'",
+          "observed": "Test passed - 'Longest Streak' and /10 days/ found in document"
+        },
+        {
+          "action": "Run test: longestStreak=0 → 'Longest Streak' section absent",
+          "expected": "Section not rendered",
+          "observed": "Test passed - 'Longest Streak' not found in document"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/study-streak/VAL-STREAK-COMP-test-output.txt",
+        "tests": [
+          "should show longest streak section when longestStreak > 0",
+          "should hide longest streak section when longestStreak is 0"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-COMP-005",
+      "title": "Renders 7-day activity calendar with day labels",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test with system time 2025-01-15 (Wednesday), 7 days of activity data",
+          "expected": "'Last 7 Days' label, day abbreviations Thu-Sun-Mon-Tue-Wed",
+          "observed": "Test passed - 'Last 7 Days', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed' all found in document"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/study-streak/VAL-STREAK-COMP-test-output.txt",
+        "tests": [
+          "should render 7-day activity calendar with correct day-of-week abbreviations"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-COMP-006",
+      "title": "Applies correct intensity CSS classes",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 0 activities → 'empty' class on all 7 cells",
+          "expected": "7 cells with class 'activity-cell empty'",
+          "observed": "Test passed - 7 empty cells found"
+        },
+        {
+          "action": "Run test: 1-2 activities → 'low' class",
+          "expected": "Cells with activities 1 and 2 have 'activity-cell low' class",
+          "observed": "Test passed - 2 low cells found"
+        },
+        {
+          "action": "Run test: 3-5 activities → 'medium' class",
+          "expected": "Cells with activities 3 and 5 have 'activity-cell medium' class",
+          "observed": "Test passed - 2 medium cells found"
+        },
+        {
+          "action": "Run test: 6+ activities → 'high' class",
+          "expected": "Cells with activities 6 and 10 have 'activity-cell high' class",
+          "observed": "Test passed - 2 high cells found"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/study-streak/VAL-STREAK-COMP-test-output.txt",
+        "tests": [
+          "should apply \"empty\" class for 0 activities",
+          "should apply \"low\" class for 1-2 activities",
+          "should apply \"medium\" class for 3-5 activities",
+          "should apply \"high\" class for 6+ activities"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-COMP-007",
+      "title": "Shows activity count badge only when > 0",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: day with 3 activities → count badge rendered",
+          "expected": "'3' text found in document",
+          "observed": "Test passed - '3' found in document"
+        },
+        {
+          "action": "Run test: only 1 of 7 days has activity → exactly 1 .activity-count span",
+          "expected": "1 element with class 'activity-count'",
+          "observed": "Test passed - exactly 1 activity-count span found"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/study-streak/VAL-STREAK-COMP-test-output.txt",
+        "tests": [
+          "should show activity count for days with activity",
+          "should not show activity count span for days with 0 activities"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-COMP-008",
+      "title": "Renders next milestone progress bar",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test with streak=3, next milestone '7-Day Warrior' at 42.86%",
+          "expected": "Milestone name 'Next: 7-Day Warrior', '3/7 days', progress bar width 42.86%",
+          "observed": "Test passed - 'Next: 7-Day Warrior' and '3/7 days' found, milestone-fill has width: '42.86%'"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/study-streak/VAL-STREAK-COMP-test-output.txt",
+        "tests": [
+          "should render next milestone progress bar with name, days, and progress"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-COMP-009",
+      "title": "Hides next milestone when all achieved",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: all 5 milestones with achieved=true",
+          "expected": "No 'Next:' text in document",
+          "observed": "Test passed - 'Next:' text not found in document"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/study-streak/VAL-STREAK-COMP-test-output.txt",
+        "tests": [
+          "should hide next milestone section when all milestones are achieved"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-COMP-010",
+      "title": "Renders achieved milestone badges",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 2 achieved milestones (7-Day Warrior, 2-Week Champion)",
+          "expected": "'Achievements' section present, badge elements with correct titles",
+          "observed": "Test passed - 'Achievements' found, elements with title '7-Day Warrior' and '2-Week Champion' found"
+        },
+        {
+          "action": "Run test: 0 achieved milestones",
+          "expected": "'Achievements' section absent",
+          "observed": "Test passed - 'Achievements' not found in document"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/study-streak/VAL-STREAK-COMP-test-output.txt",
+        "tests": [
+          "should render achieved milestone badges when at least one milestone is achieved",
+          "should not render achievements section when no milestones are achieved"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-COMP-011",
+      "title": "Applies at-risk CSS class when streak at risk",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: atRisk=true → '.streak-message.at-risk' class present",
+          "expected": "Element with both classes found",
+          "observed": "Test passed - '.streak-message.at-risk' element found in container"
+        },
+        {
+          "action": "Run test: atRisk=false → '.streak-message.at-risk' class absent",
+          "expected": "No element with both classes",
+          "observed": "Test passed - '.streak-message.at-risk' element not found"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/study-streak/VAL-STREAK-COMP-test-output.txt",
+        "tests": [
+          "should apply at-risk CSS class to streak message when at risk",
+          "should not apply at-risk class when not at risk"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-COMP-012",
+      "title": "Refreshes data when refreshKey prop changes",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: render with refreshKey=1, then rerender with refreshKey=2",
+          "expected": "StreakTracker methods called again after refreshKey change",
+          "observed": "Test passed - getStreakInfo, getRecentActivity, getStreakMilestones, isStreakAtRisk all called once after rerender"
+        },
+        {
+          "action": "Run test: render with refreshKey=1, then rerender with same refreshKey=1",
+          "expected": "StreakTracker methods NOT called again",
+          "observed": "Test passed - getStreakInfo not called after same-key rerender"
+        }
+      ],
+      "evidence": {
+        "testOutput": "evidence/component-tests/study-streak/VAL-STREAK-COMP-test-output.txt",
+        "tests": [
+          "should re-fetch data when refreshKey prop changes",
+          "should not re-fetch data when re-rendered with same refreshKey"
+        ]
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 12 assertions (VAL-STREAK-COMP-001 through VAL-STREAK-COMP-012): all 12 passed. StudyStreak test suite has 33 tests total (21 covering the 12 validation assertions + 12 additional edge cases). Full test suite (426 tests across 19 suites) passes with no failures."
+}

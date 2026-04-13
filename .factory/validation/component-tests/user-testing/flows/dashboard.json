@@ -1,0 +1,276 @@
+{
+  "flowId": "dashboard",
+  "testedAt": "2026-04-12T00:00:00.000Z",
+  "isolation": {
+    "workingDirectory": "/home/x/labs/CCNA-Modules",
+    "tool": "jest",
+    "noServicesNeeded": true
+  },
+  "toolsUsed": ["jest"],
+  "assertions": [
+    {
+      "id": "VAL-DASHBOARD-001",
+      "title": "Renders dashboard container",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: should render dashboard container with .dashboard class",
+          "expected": "Test passes — .dashboard wrapper div exists",
+          "observed": "Test passed. container.querySelector('.dashboard') found in document."
+        }
+      ],
+      "evidence": {
+        "testOutput": "component-tests/dashboard/dashboard-test-output.txt",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASHBOARD-002",
+      "title": "Loads config from SettingsManager, falls back to default",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: should load config from SettingsManager and use it",
+          "expected": "Test passes — getDashboardConfig called",
+          "observed": "Test passed. SettingsManager.getDashboardConfigtoHaveBeenCalled()."
+        },
+        {
+          "action": "Run test: should fall back to default config when SettingsManager returns null",
+          "expected": "Test passes — saveDashboardConfig called with default when null",
+          "observed": "Test passed. saveDashboardConfig called; saved config has sections array with all enabled."
+        }
+      ],
+      "evidence": {
+        "testOutput": "component-tests/dashboard/dashboard-test-output.txt",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASHBOARD-003",
+      "title": "Filters disabled sections",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: should not render sections with enabled: false",
+          "expected": "Test passes — disabled sections not in DOM",
+          "observed": "Test passed. Enabled sections (study-streak, overall-progress, smart-recommendations) found. Disabled sections (learning-goals, modules-needing-review, upcoming-milestones, performance-charts) not found."
+        }
+      ],
+      "evidence": {
+        "testOutput": "component-tests/dashboard/dashboard-test-output.txt",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASHBOARD-004",
+      "title": "Sorts sections by config order",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: should render sections sorted by config order",
+          "expected": "Test passes — DOM order matches sorted config order",
+          "observed": "Test passed. Config with performance-charts order=1, overall-progress order=2, study-streak order=3 rendered performance-charts first (sections[0])."
+        }
+      ],
+      "evidence": {
+        "testOutput": "component-tests/dashboard/dashboard-test-output.txt",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASHBOARD-005",
+      "title": "Renders paired sections in grid-pair containers",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: should render paired sections (study-streak + learning-goals) in grid-pair container",
+          "expected": "Test passes — .dashboard-grid-pair wraps both sections",
+          "observed": "Test passed. gridPair found with both section-study-streak and section-learning-goals inside."
+        },
+        {
+          "action": "Run test: should render upcoming-milestones + smart-recommendations as a grid pair",
+          "expected": "Test passes — .dashboard-grid-pair wraps both sections",
+          "observed": "Test passed. gridPair found with both section-upcoming-milestones and section-smart-recommendations inside."
+        }
+      ],
+      "evidence": {
+        "testOutput": "component-tests/dashboard/dashboard-test-output.txt",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASHBOARD-006",
+      "title": "Unpaired sections render individually",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: should render unpaired section individually without grid-pair wrapper",
+          "expected": "Test passes — no .dashboard-grid-pair, section renders directly",
+          "observed": "Test passed. No grid-pair found; overall-progress section rendered individually."
+        },
+        {
+          "action": "Run test: should render unpaired section when its pair is disabled",
+          "expected": "Test passes — study-streak renders solo when learning-goals disabled",
+          "observed": "Test passed. study-streak in DOM, no grid-pair present."
+        }
+      ],
+      "evidence": {
+        "testOutput": "component-tests/dashboard/dashboard-test-output.txt",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASHBOARD-007",
+      "title": "Initializes ActivityTracker and calculates progress on mount",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: should initialize ActivityTracker and calculate progress on mount",
+          "expected": "Test passes — both utilities called with modules",
+          "observed": "Test passed. ActivityTracker.initializeTracking called with modules; ProgressTracker.getOverallProgress called with modules."
+        }
+      ],
+      "evidence": {
+        "testOutput": "component-tests/dashboard/dashboard-test-output.txt",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASHBOARD-008",
+      "title": "Passes correct stats to OverallProgressSection",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: should pass correct stats from getModuleStatistics to OverallProgressSection",
+          "expected": "Test passes — getModuleStatistics called, stats rendered correctly",
+          "observed": "Test passed. getModuleStatistics called with modules; stats-value textContent matches customStats JSON."
+        }
+      ],
+      "evidence": {
+        "testOutput": "component-tests/dashboard/dashboard-test-output.txt",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASHBOARD-009",
+      "title": "Identifies last watched module",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: should get last watched module from ProgressTracker",
+          "expected": "Test passes — getLastWatchedModule called with modules",
+          "observed": "Test passed. ProgressTracker.getLastWatchedModule called with modules array."
+        }
+      ],
+      "evidence": {
+        "testOutput": "component-tests/dashboard/dashboard-test-output.txt",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASHBOARD-010",
+      "title": "Start/Continue Learning navigates correctly",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: should navigate to last watched module when action is clicked",
+          "expected": "Test passes — onModuleSelect called with last watched module",
+          "observed": "Test passed. onModuleSelect called with lastWatchedModule."
+        },
+        {
+          "action": "Run test: should navigate to first incomplete module when no last watched",
+          "expected": "Test passes — onModuleSelect called with first incomplete module",
+          "observed": "Test passed. onModuleSelect called with modules[0] (progress 0)."
+        },
+        {
+          "action": "Run test: should navigate to first module when all modules are complete",
+          "expected": "Test passes — onModuleSelect called with first module",
+          "observed": "Test passed. onModuleSelect called with modules[0] when all progress is 100."
+        }
+      ],
+      "evidence": {
+        "testOutput": "component-tests/dashboard/dashboard-test-output.txt",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASHBOARD-011",
+      "title": "Limits modules needing review to 5",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: should limit modules needing review to 5",
+          "expected": "Test passes — at most 5 review modules rendered",
+          "observed": "Test passed. 8 modules needing review, but only 5 review-module-* elements rendered."
+        }
+      ],
+      "evidence": {
+        "testOutput": "component-tests/dashboard/dashboard-test-output.txt",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASHBOARD-012",
+      "title": "Handles empty modules gracefully",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: should render without crashing when modules is empty array",
+          "expected": "Test passes — .dashboard container rendered",
+          "observed": "Test passed. container.querySelector('.dashboard') found."
+        },
+        {
+          "action": "Run test: should render without crashing when modules is null",
+          "expected": "Test passes — .dashboard container rendered",
+          "observed": "Test passed. container.querySelector('.dashboard') found."
+        },
+        {
+          "action": "Run test: should render without crashing when modules is undefined",
+          "expected": "Test passes — .dashboard container rendered",
+          "observed": "Test passed. container.querySelector('.dashboard') found."
+        }
+      ],
+      "evidence": {
+        "testOutput": "component-tests/dashboard/dashboard-test-output.txt",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASHBOARD-013",
+      "title": "No duplicate section rendering",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: should render each enabled section exactly once",
+          "expected": "Test passes — each section testid appears at most once",
+          "observed": "Test passed. All 7 section testids appear exactly once (elements.length <= 1 for each)."
+        },
+        {
+          "action": "Run test: should not duplicate any section ID in rendered DOM",
+          "expected": "Test passes — all section data-testid values are unique",
+          "observed": "Test passed. testIds.length === uniqueIds.size confirmed."
+        }
+      ],
+      "evidence": {
+        "testOutput": "component-tests/dashboard/dashboard-test-output.txt",
+        "consoleErrors": "none"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 13 assertions (VAL-DASHBOARD-001 through VAL-DASHBOARD-013): all 13 passed. Dashboard.test.jsx contains 24 tests covering all assertions with multiple sub-tests for complex assertions (navigation logic, empty state handling, section uniqueness). Full test suite (426 tests across 19 suites) passes with no regressions."
+}

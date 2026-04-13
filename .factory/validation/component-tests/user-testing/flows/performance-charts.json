@@ -1,0 +1,225 @@
+{
+  "flowId": "performance-charts",
+  "testedAt": "2026-04-12T00:00:00.000Z",
+  "isolation": {
+    "workingDirectory": "/home/x/labs/CCNA-Modules",
+    "testingTool": "jest",
+    "testFile": "src/components/__tests__/PerformanceCharts.test.jsx"
+  },
+  "toolsUsed": ["jest"],
+  "assertions": [
+    {
+      "id": "VAL-PERFCHARTS-001",
+      "title": "Renders time range selector buttons",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'should render three time range buttons with 30-day active by default'",
+          "expected": "Three buttons (7 Days, 30 Days, 3 Months) rendered; 30 Days has 'active' class",
+          "observed": "Test passed. All three buttons found in DOM; 30-day button confirmed to have 'active' class via toHaveClass assertion."
+        }
+      ],
+      "evidence": {
+        "testName": "should render three time range buttons with 30-day active by default",
+        "consoleErrors": "none",
+        "assertionsChecked": [
+          "screen.getByText('7 Days') in document",
+          "screen.getByText('30 Days') in document",
+          "screen.getByText('3 Months') in document",
+          "30-day button has 'active' class"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFCHARTS-002",
+      "title": "Switches active time range on click",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'should switch active class to clicked time range button'",
+          "expected": "Clicking '7 Days' moves active class from '30 Days' to '7 Days'",
+          "observed": "Test passed. After clicking '7 Days', the 7-day button has 'active' class and 30-day button does not."
+        }
+      ],
+      "evidence": {
+        "testName": "should switch active class to clicked time range button",
+        "consoleErrors": "none",
+        "assertionsChecked": [
+          "7-day button has 'active' class after click",
+          "30-day button does NOT have 'active' class after click"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFCHARTS-003",
+      "title": "Re-loads data when time range changes",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'should call PerformanceTracker with new range when time range changes'",
+          "expected": "getRecentPerformance called with 30 (initial), 7 (after click), 90 (after click)",
+          "observed": "Test passed. PerformanceTracker.getRecentPerformance called with 30, 7, and 90 in sequence."
+        }
+      ],
+      "evidence": {
+        "testName": "should call PerformanceTracker with new range when time range changes",
+        "consoleErrors": "none",
+        "assertionsChecked": [
+          "getRecentPerformance called with 30 (initial load)",
+          "getRecentPerformance called with 7 (after clicking 7 Days)",
+          "getRecentPerformance called with 90 (after clicking 3 Months)"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFCHARTS-004",
+      "title": "Shows completion prediction when available",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'should display completion prediction with date string'",
+          "expected": "'Estimated Completion:' label and 'March 15, 2025' date visible",
+          "observed": "Test passed. Both the label and date string found in the document."
+        }
+      ],
+      "evidence": {
+        "testName": "should display completion prediction with date string",
+        "consoleErrors": "none",
+        "assertionsChecked": [
+          "'Estimated Completion:' text in document",
+          "'March 15, 2025' date text in document"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFCHARTS-005",
+      "title": "Hides prediction for 'Completed' and 'Unknown'",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'should hide prediction section when prediction is Completed'",
+          "expected": "'Estimated Completion:' not in document when prediction is 'Completed'",
+          "observed": "Test passed. queryByText returns null for 'Estimated Completion:'."
+        },
+        {
+          "action": "Run test: 'should hide prediction section when prediction is Unknown'",
+          "expected": "'Estimated Completion:' not in document when prediction is 'Unknown'",
+          "observed": "Test passed. queryByText returns null for 'Estimated Completion:'."
+        }
+      ],
+      "evidence": {
+        "testName": "Two tests: hide prediction for 'Completed' and 'Unknown'",
+        "consoleErrors": "none",
+        "assertionsChecked": [
+          "'Estimated Completion:' not in document when prediction='Completed'",
+          "'Estimated Completion:' not in document when prediction='Unknown'"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFCHARTS-006",
+      "title": "Renders all four chart cards",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'should render all four chart card headings'",
+          "expected": "Headings: Progress Over Time, Activity Calendar, Weekly Completion Rate, Confidence Levels",
+          "observed": "Test passed. All four headings found in document."
+        }
+      ],
+      "evidence": {
+        "testName": "should render all four chart card headings",
+        "consoleErrors": "none",
+        "assertionsChecked": [
+          "'Progress Over Time' heading in document",
+          "'Activity Calendar' heading in document",
+          "'Weekly Completion Rate' heading in document",
+          "'Confidence Levels' heading in document"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFCHARTS-007",
+      "title": "Passes data to child chart components",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'should pass correct data props to chart sub-components'",
+          "expected": "ProgressLineChart receives progressData, VelocityBarChart receives velocityData, ConfidenceDistribution receives confidenceData, ActivityHeatmap receives days=30",
+          "observed": "Test passed. Each mocked chart component received the correct data via JSON.stringify comparison. ActivityHeatmap received '30' as days prop."
+        }
+      ],
+      "evidence": {
+        "testName": "should pass correct data props to chart sub-components",
+        "consoleErrors": "none",
+        "assertionsChecked": [
+          "ProgressLineChart receives progressData array",
+          "VelocityBarChart receives velocityData array",
+          "ConfidenceDistribution receives confidenceData object",
+          "ActivityHeatmap receives days=30 (default timeRange)"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFCHARTS-008",
+      "title": "Handles null/empty modules gracefully",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'should not crash when modules is null'",
+          "expected": "No crash; tracker methods not called with null modules",
+          "observed": "Test passed. Component renders without throwing; getRecentPerformance and getWeeklyVelocity not called."
+        },
+        {
+          "action": "Run test: 'should not crash when modules is empty array'",
+          "expected": "No crash; useEffect returns early for empty array",
+          "observed": "Test passed. Component renders without throwing; getRecentPerformance not called."
+        }
+      ],
+      "evidence": {
+        "testName": "Two tests: null modules and empty array modules",
+        "consoleErrors": "none",
+        "assertionsChecked": [
+          "No throw when modules=null",
+          "getRecentPerformance not called when modules=null",
+          "getWeeklyVelocity not called when modules=null",
+          "No throw when modules=[]",
+          "getRecentPerformance not called when modules=[]"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFCHARTS-009",
+      "title": "Catches and logs errors from tracker",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'should catch and log errors when PerformanceTracker throws'",
+          "expected": "No crash; console.error called with error details",
+          "observed": "Test passed. render() does not throw; console.error called with 'Error loading performance data:' and the error object."
+        }
+      ],
+      "evidence": {
+        "testName": "should catch and log errors when PerformanceTracker throws",
+        "consoleErrors": "Expected console.error call captured via jest.spyOn",
+        "assertionsChecked": [
+          "render() does not throw (expect(() => render()).not.toThrow())",
+          "console.error called with 'Error loading performance data:' message",
+          "console.error called with the actual Error object"
+        ]
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 9 assertions (VAL-PERFCHARTS-001 through VAL-PERFCHARTS-009): all 9 passed. The PerformanceCharts test file contains 16 tests total (7 additional tests beyond the 9 contract assertions), all passing. Full test suite also passes (426/426 tests, 19 suites)."
+}
