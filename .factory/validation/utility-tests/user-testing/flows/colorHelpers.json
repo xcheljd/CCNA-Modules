@@ -1,0 +1,182 @@
+{
+  "groupId": "colorHelpers",
+  "testedAt": "2026-04-12T00:00:00.000Z",
+  "isolation": {
+    "workingDirectory": "/home/x/labs/CCNA-Modules",
+    "testFile": "src/utils/__tests__/colorHelpers.test.js",
+    "sourceFile": "src/utils/colorHelpers.js",
+    "tool": "jest"
+  },
+  "toolsUsed": ["jest"],
+  "assertions": [
+    {
+      "id": "VAL-COLOR-001",
+      "title": "getProgressColor(0) returns 'hsl(var(--muted))'",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'returns muted color for zero progress'",
+          "expected": "Test passes asserting getProgressColor(0) === 'hsl(var(--muted))'",
+          "observed": "Test passed. Source code confirms: if (progress === 0) return 'hsl(var(--muted))'"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns muted color for zero progress (2 ms)",
+        "sourceVerification": "colorHelpers.js line: if (progress === 0) return 'hsl(var(--muted))';"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-COLOR-002",
+      "title": "getProgressColor(100) returns 'var(--color-progress-complete)'",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'returns complete color for 100% progress'",
+          "expected": "Test passes asserting getProgressColor(100) === 'var(--color-progress-complete)'",
+          "observed": "Test passed. Source code confirms: if (progress === 100) return 'var(--color-progress-complete)'"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns complete color for 100% progress (1 ms)",
+        "sourceVerification": "colorHelpers.js line: if (progress === 100) return 'var(--color-progress-complete)';"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-COLOR-003",
+      "title": "getProgressColor(50) returns 'hsl(var(--ring))'; boundary values 1, 99 also return ring",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'returns ring color for partial progress (50)'",
+          "expected": "Test passes asserting getProgressColor(50) === 'hsl(var(--ring))'",
+          "observed": "Test passed"
+        },
+        {
+          "action": "Run test: 'returns ring color for lower boundary (1)'",
+          "expected": "Test passes asserting getProgressColor(1) === 'hsl(var(--ring))'",
+          "observed": "Test passed"
+        },
+        {
+          "action": "Run test: 'returns ring color for upper boundary (99)'",
+          "expected": "Test passes asserting getProgressColor(99) === 'hsl(var(--ring))'",
+          "observed": "Test passed"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns ring color for partial progress (50)\n✓ returns ring color for lower boundary (1)\n✓ returns ring color for upper boundary (99) (1 ms)",
+        "sourceVerification": "colorHelpers.js: fallback return 'hsl(var(--ring))' covers all non-zero, non-100 values"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-COLOR-004",
+      "title": "getProgressColor(undefined/null/NaN) do not throw",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'does not throw for undefined input'",
+          "expected": "Test passes asserting getProgressColor(undefined) does not throw",
+          "observed": "Test passed"
+        },
+        {
+          "action": "Run test: 'does not throw for null input'",
+          "expected": "Test passes asserting getProgressColor(null) does not throw",
+          "observed": "Test passed"
+        },
+        {
+          "action": "Run test: 'does not throw for NaN input'",
+          "expected": "Test passes asserting getProgressColor(NaN) does not throw",
+          "observed": "Test passed"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ does not throw for undefined input (1 ms)\n✓ does not throw for null input\n✓ does not throw for NaN input",
+        "sourceVerification": "colorHelpers.js: strict equality checks (=== 0, === 100) safely fall through for undefined/null/NaN"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-COLOR-005",
+      "title": "getConfidenceColor(0) returns 'var(--color-confidence-none, #e0e0e0)'",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'returns none color for zero confidence'",
+          "expected": "Test passes asserting getConfidenceColor(0) === 'var(--color-confidence-none, #e0e0e0)'",
+          "observed": "Test passed. Source code confirms: if (confidence === 0) return 'var(--color-confidence-none, #e0e0e0)'"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns none color for zero confidence (1 ms)",
+        "sourceVerification": "colorHelpers.js line: if (confidence === 0) return 'var(--color-confidence-none, #e0e0e0)';"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-COLOR-006",
+      "title": "getConfidenceColor(1) and (2) return 'var(--color-confidence-low, #f44336)'",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'returns low color for confidence 1'",
+          "expected": "Test passes asserting getConfidenceColor(1) === 'var(--color-confidence-low, #f44336)'",
+          "observed": "Test passed"
+        },
+        {
+          "action": "Run test: 'returns low color for confidence 2'",
+          "expected": "Test passes asserting getConfidenceColor(2) === 'var(--color-confidence-low, #f44336)'",
+          "observed": "Test passed"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns low color for confidence 1\n✓ returns low color for confidence 2",
+        "sourceVerification": "colorHelpers.js line: if (confidence <= 2) return 'var(--color-confidence-low, #f44336)';"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-COLOR-007",
+      "title": "getConfidenceColor(3) returns 'var(--color-confidence-medium, #ff9800)'",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'returns medium color for confidence 3'",
+          "expected": "Test passes asserting getConfidenceColor(3) === 'var(--color-confidence-medium, #ff9800)'",
+          "observed": "Test passed. Source code confirms: if (confidence === 3) return 'var(--color-confidence-medium, #ff9800)'"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns medium color for confidence 3 (1 ms)",
+        "sourceVerification": "colorHelpers.js line: if (confidence === 3) return 'var(--color-confidence-medium, #ff9800)';"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-COLOR-008",
+      "title": "getConfidenceColor(4) and (5) return 'var(--color-confidence-high, #4caf50)'",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'returns high color for confidence 4'",
+          "expected": "Test passes asserting getConfidenceColor(4) === 'var(--color-confidence-high, #4caf50)'",
+          "observed": "Test passed"
+        },
+        {
+          "action": "Run test: 'returns high color for confidence 5'",
+          "expected": "Test passes asserting getConfidenceColor(5) === 'var(--color-confidence-high, #4caf50)'",
+          "observed": "Test passed"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns high color for confidence 4\n✓ returns high color for confidence 5 (1 ms)",
+        "sourceVerification": "colorHelpers.js: fallback return 'var(--color-confidence-high, #4caf50)' covers values > 3"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 8 assertions: all 8 passed. 18 jest tests cover all specified behaviors including boundary values and edge cases (undefined/null/NaN). All tests pass with exit code 0."
+}

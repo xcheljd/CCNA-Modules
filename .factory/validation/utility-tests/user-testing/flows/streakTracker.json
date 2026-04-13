@@ -1,0 +1,432 @@
+{
+  "groupId": "streakTracker",
+  "testedAt": "2026-04-12T00:00:00.000Z",
+  "isolation": {
+    "workingDirectory": "/home/x/labs/CCNA-Modules",
+    "testFile": "src/utils/__tests__/streakTracker.test.js",
+    "sourceFile": "src/utils/streakTracker.js",
+    "tool": "jest"
+  },
+  "toolsUsed": ["jest"],
+  "assertions": [
+    {
+      "id": "VAL-STREAK-001",
+      "title": "getStreakData returns defaults when empty",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'returns defaults when localStorage is empty'",
+          "expected": "Returns { currentStreak: 0, longestStreak: 0, lastStudyDate: null, streakHistory: [] }",
+          "observed": "Test passed — asserts exact default object equality"
+        }
+      ],
+      "evidence": {
+        "testName": "getStreakData > returns defaults when localStorage is empty",
+        "testOutput": "✓ returns defaults when localStorage is empty (3 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-002",
+      "title": "getStreakData returns parsed data from localStorage",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'returns parsed data from localStorage'",
+          "expected": "Returns parsed object matching what was stored",
+          "observed": "Test passed — stores object with currentStreak:5, longestStreak:10, lastStudyDate, streakHistory and asserts equality"
+        }
+      ],
+      "evidence": {
+        "testName": "getStreakData > returns parsed data from localStorage",
+        "testOutput": "✓ returns parsed data from localStorage (1 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-003",
+      "title": "getStreakData recovers from corrupted data",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'recovers from corrupted data by removing key and returning defaults'",
+          "expected": "Removes key from localStorage, returns defaults",
+          "observed": "Test passed — stores '{invalid json!!!', asserts defaults returned and localStorage key removed"
+        }
+      ],
+      "evidence": {
+        "testName": "getStreakData > recovers from corrupted data by removing key and returning defaults",
+        "testOutput": "✓ recovers from corrupted data by removing key and returning defaults (17 ms)",
+        "consoleOutput": "console.error: 'Corrupted study-streak data, resetting to defaults'",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-004",
+      "title": "saveStreakData persists to localStorage",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'persists data to localStorage'",
+          "expected": "Data is stored in localStorage as JSON",
+          "observed": "Test passed — calls saveStreakData, retrieves from localStorage, asserts deep equality"
+        }
+      ],
+      "evidence": {
+        "testName": "saveStreakData > persists data to localStorage",
+        "testOutput": "✓ persists data to localStorage (1 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-005",
+      "title": "saveStreakData handles write failure",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'handles localStorage write failure without crashing'",
+          "expected": "Does not throw; logs error",
+          "observed": "Test passed — mocks setItem to throw, asserts no throw, asserts console.error called with 'Error saving streak data:'"
+        }
+      ],
+      "evidence": {
+        "testName": "saveStreakData > handles localStorage write failure without crashing",
+        "testOutput": "✓ handles localStorage write failure without crashing (2 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-006",
+      "title": "recordStudyActivity starts streak at 1 for first-time study",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'starts streak at 1 for first-time study'",
+          "expected": "currentStreak=1, longestStreak=1, lastStudyDate=today",
+          "observed": "Test passed — with fake timer at 2025-01-15, asserts currentStreak=1, longestStreak=1, lastStudyDate='2025-01-15'"
+        }
+      ],
+      "evidence": {
+        "testName": "recordStudyActivity > starts streak at 1 for first-time study",
+        "testOutput": "✓ starts streak at 1 for first-time study (3 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-007",
+      "title": "recordStudyActivity increments streak from yesterday",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'increments streak when last study was yesterday'",
+          "expected": "currentStreak increments from 3 to 4",
+          "observed": "Test passed — sets lastStudyDate to yesterday (2025-01-14), currentStreak=3, asserts currentStreak=4 after record"
+        }
+      ],
+      "evidence": {
+        "testName": "recordStudyActivity > increments streak when last study was yesterday",
+        "testOutput": "✓ increments streak when last study was yesterday (1 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-008",
+      "title": "recordStudyActivity same-day repeat does not change streak",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'does not change streak on same-day repeat activity'",
+          "expected": "Streak unchanged, lastStudyDate unchanged",
+          "observed": "Test passed — sets lastStudyDate=today, currentStreak=3, records again, asserts currentStreak=3, longestStreak=5, lastStudyDate='2025-01-15'"
+        }
+      ],
+      "evidence": {
+        "testName": "recordStudyActivity > does not change streak on same-day repeat activity",
+        "testOutput": "✓ does not change streak on same-day repeat activity (1 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-009",
+      "title": "recordStudyActivity resets streak to 1 when broken",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'resets streak to 1 when streak is broken'",
+          "expected": "currentStreak resets to 1, longestStreak preserved",
+          "observed": "Test passed — sets lastStudyDate to 3 days ago (2025-01-12), currentStreak=10, records activity, asserts currentStreak=1, longestStreak=10"
+        }
+      ],
+      "evidence": {
+        "testName": "recordStudyActivity > resets streak to 1 when streak is broken",
+        "testOutput": "✓ resets streak to 1 when streak is broken (1 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-010",
+      "title": "recordStudyActivity updates longestStreak when exceeded",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'updates longestStreak when currentStreak exceeds it'",
+          "expected": "longestStreak updated to match currentStreak",
+          "observed": "Test passed — sets currentStreak=9, longestStreak=9, lastStudyDate=yesterday, records activity, asserts currentStreak=10, longestStreak=10"
+        }
+      ],
+      "evidence": {
+        "testName": "recordStudyActivity > updates longestStreak when currentStreak exceeds it",
+        "testOutput": "✓ updates longestStreak when currentStreak exceeds it (1 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-011",
+      "title": "recordStudyActivity adds history entry for new day",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'adds history entry for new study day'",
+          "expected": "History has 1 entry with date, activitiesCompleted, activities array",
+          "observed": "Test passed — asserts history length=1, entry has date='2025-01-15', activitiesCompleted=1, activities array with type and timestamp"
+        }
+      ],
+      "evidence": {
+        "testName": "recordStudyActivity > adds history entry for new study day",
+        "testOutput": "✓ adds history entry for new study day (1 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-012",
+      "title": "recordStudyActivity increments existing today entry",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'increments activity count on same-day repeat'",
+          "expected": "activitiesCompleted incremented, activities array appended",
+          "observed": "Test passed — sets existing today entry with 1 activity, records second, asserts activitiesCompleted=2, activities length=2, second type='lab'"
+        }
+      ],
+      "evidence": {
+        "testName": "recordStudyActivity > increments activity count on same-day repeat",
+        "testOutput": "✓ increments activity count on same-day repeat (1 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-013",
+      "title": "recordStudyActivity trims history to 365 days",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'trims history to 365 entries when exceeded'",
+          "expected": "History length ≤ 365, latest entry is today",
+          "observed": "Test passed — pre-populates 365 entries from past, records new activity, asserts history length=365, last entry date='2025-01-15'"
+        }
+      ],
+      "evidence": {
+        "testName": "recordStudyActivity > trims history to 365 entries when exceeded",
+        "testOutput": "✓ trims history to 365 entries when exceeded (2 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-014",
+      "title": "checkStreakStatus resets streak when last study before yesterday",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'resets streak to 0 when last study was before yesterday'",
+          "expected": "currentStreak set to 0",
+          "observed": "Test passed — sets lastStudyDate to 3 days ago (2025-01-12), currentStreak=5, asserts currentStreak=0, longestStreak=10 preserved"
+        }
+      ],
+      "evidence": {
+        "testName": "checkStreakStatus > resets streak to 0 when last study was before yesterday",
+        "testOutput": "✓ resets streak to 0 when last study was before yesterday (1 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-015",
+      "title": "checkStreakStatus preserves streak when last study is today or yesterday",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run two jest tests: 'preserves streak when last study was today' and 'preserves streak when last study was yesterday'",
+          "expected": "currentStreak unchanged in both cases",
+          "observed": "Both tests passed — with lastStudyDate=today: currentStreak=5; with lastStudyDate=yesterday: currentStreak=5"
+        }
+      ],
+      "evidence": {
+        "testNames": [
+          "checkStreakStatus > preserves streak when last study was today",
+          "checkStreakStatus > preserves streak when last study was yesterday"
+        ],
+        "testOutput": "✓ preserves streak when last study was today (1 ms)\n✓ preserves streak when last study was yesterday",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-016",
+      "title": "checkStreakStatus does nothing when lastStudyDate is null",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'does nothing when lastStudyDate is null'",
+          "expected": "Data returned unchanged",
+          "observed": "Test passed — sets lastStudyDate=null, currentStreak=0, asserts currentStreak=0, lastStudyDate=null after check"
+        }
+      ],
+      "evidence": {
+        "testName": "checkStreakStatus > does nothing when lastStudyDate is null",
+        "testOutput": "✓ does nothing when lastStudyDate is null",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-017",
+      "title": "getStreakCalendar returns entries for specified month, caps intensity at 4",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run two jest tests: 'returns entries for specified month with intensity capped at 4' and 'caps intensity at 4 for high activity counts'",
+          "expected": "Correct filtering by year/month; intensity capped at 4",
+          "observed": "Both tests passed — 3 entries in Jan returned with correct intensities (2, 4 capped from 7, 3); March test confirms 10→4, 1→1, 4→4, 3→3"
+        }
+      ],
+      "evidence": {
+        "testNames": [
+          "getStreakCalendar > returns entries for specified month with intensity capped at 4",
+          "getStreakCalendar > caps intensity at 4 for high activity counts"
+        ],
+        "testOutput": "✓ returns entries for specified month with intensity capped at 4 (1 ms)\n✓ caps intensity at 4 for high activity counts",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-018",
+      "title": "getStreakCalendar returns empty for month with no activity",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'returns empty object for month with no activity'",
+          "expected": "Empty object {}",
+          "observed": "Test passed — with empty history, asserts calendar equals {}"
+        }
+      ],
+      "evidence": {
+        "testName": "getStreakCalendar > returns empty object for month with no activity",
+        "testOutput": "✓ returns empty object for month with no activity (1 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-019",
+      "title": "getRecentActivity returns last N days with correct structure",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run three jest tests: 'returns last 7 days with correct structure by default', 'returns last N days when specified', 'fills missing days with zeros'",
+          "expected": "Correct day count, date range, structure {date, activitiesCompleted, hasActivity}",
+          "observed": "All 3 tests passed — default 7 days with correct date range; custom N=3 returns 3 days; empty days filled with activitiesCompleted=0, hasActivity=false"
+        }
+      ],
+      "evidence": {
+        "testNames": [
+          "getRecentActivity > returns last 7 days with correct structure by default",
+          "getRecentActivity > returns last N days when specified",
+          "getRecentActivity > fills missing days with zeros"
+        ],
+        "testOutput": "✓ returns last 7 days with correct structure by default (1 ms)\n✓ returns last N days when specified (1 ms)\n✓ fills missing days with zeros",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-020",
+      "title": "isStreakAtRisk returns true when streak > 0 and not studied today",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run three jest tests: 'returns true when streak > 0 and not studied today', 'returns false when streak is 0', 'returns false when already studied today'",
+          "expected": "true for active streak without today study; false for streak=0 or already studied today",
+          "observed": "All 3 tests passed — streak=5 with yesterday study → true; streak=0 → false; streak=5 with today study → false"
+        }
+      ],
+      "evidence": {
+        "testNames": [
+          "isStreakAtRisk > returns true when streak > 0 and not studied today",
+          "isStreakAtRisk > returns false when streak is 0",
+          "isStreakAtRisk > returns false when already studied today"
+        ],
+        "testOutput": "✓ returns true when streak > 0 and not studied today (1 ms)\n✓ returns false when streak is 0 (1 ms)\n✓ returns false when already studied today",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-021",
+      "title": "getStreakMilestones returns 5 milestones with correct structure",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run four jest tests: 'returns 5 milestones with correct structure', 'marks milestones as achieved when longestStreak meets threshold', 'calculates progress percentage for incomplete milestones', 'caps progress at 100 for achieved milestones'",
+          "expected": "5 milestones with {days, name, achieved, progress}; correct achievement and progress calculation",
+          "observed": "All 4 tests passed — 5 milestones returned; 14-day longestStreak correctly marks 7 and 14 achieved; progress percentage matches formula; progress capped at 100 for achieved milestones"
+        }
+      ],
+      "evidence": {
+        "testNames": [
+          "getStreakMilestones > returns 5 milestones with correct structure",
+          "getStreakMilestones > marks milestones as achieved when longestStreak meets threshold",
+          "getStreakMilestones > calculates progress percentage for incomplete milestones",
+          "getStreakMilestones > caps progress at 100 for achieved milestones"
+        ],
+        "testOutput": "✓ returns 5 milestones with correct structure\n✓ marks milestones as achieved when longestStreak meets threshold (1 ms)\n✓ calculates progress percentage for incomplete milestones (1 ms)\n✓ caps progress at 100 for achieved milestones (1 ms)",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-STREAK-022",
+      "title": "resetStreakData removes key from localStorage",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run jest test: 'removes study-streak key from localStorage'",
+          "expected": "localStorage.getItem('study-streak') is null",
+          "observed": "Test passed — stores data, calls resetStreakData, asserts getItem returns null"
+        }
+      ],
+      "evidence": {
+        "testName": "resetStreakData > removes study-streak key from localStorage",
+        "testOutput": "✓ removes study-streak key from localStorage",
+        "evidenceFile": "evidence/utility-tests/streakTracker/test-output.txt"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested all 22 streakTracker assertions (VAL-STREAK-001 through VAL-STREAK-022). All 32 jest tests passed covering every assertion. The test file uses fake timers for date-dependent tests, mocks localStorage for storage tests, and comprehensively covers all specified behaviors including edge cases like corrupted data, streak breaking, history trimming, and intensity capping."
+}

@@ -1,0 +1,324 @@
+{
+  "groupId": "performanceTracker",
+  "testedAt": "2026-04-12T00:00:00.000Z",
+  "isolation": {
+    "workingDirectory": "/home/x/labs/CCNA-Modules",
+    "testFile": "src/utils/__tests__/performanceTracker.test.js",
+    "sourceFile": "src/utils/performanceTracker.js",
+    "tool": "jest",
+    "noServicesNeeded": true
+  },
+  "toolsUsed": ["jest"],
+  "assertions": [
+    {
+      "id": "VAL-PERFORMANCE-001",
+      "title": "getPerformanceData returns defaults when empty",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'returns defaults when localStorage is empty'",
+          "expected": "Returns { daily: [], weekly: [], lastSnapshotDate: null }",
+          "observed": "Test passed: assertion expect(data).toEqual({ daily: [], weekly: [], lastSnapshotDate: null }) succeeded"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns defaults when localStorage is empty (3 ms)",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "getPerformanceData > returns defaults when localStorage is empty"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-002",
+      "title": "getPerformanceData returns parsed data from localStorage",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'returns parsed data from localStorage'",
+          "expected": "Returns parsed object matching stored data",
+          "observed": "Test passed: stored data with daily entry, weekly array, and lastSnapshotDate was correctly parsed and returned"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns parsed data from localStorage (1 ms)",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "getPerformanceData > returns parsed data from localStorage"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-003",
+      "title": "getPerformanceData recovers from corrupted data",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'recovers from corrupted data by removing key and returning defaults'",
+          "expected": "Removes corrupted key, returns defaults",
+          "observed": "Test passed: corrupted JSON '{invalid json!!!' triggered error recovery, key removed, defaults returned"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ recovers from corrupted data by removing key and returning defaults (22 ms)",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "getPerformanceData > recovers from corrupted data by removing key and returning defaults",
+        "consoleErrors": "Expected console.error for corrupted data recovery (by design)"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-004",
+      "title": "savePerformanceData persists to localStorage",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'persists data to localStorage'",
+          "expected": "Data stored as JSON in localStorage",
+          "observed": "Test passed: JSON.parse(localStorage.getItem('performance-history')) matched saved data object"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ persists data to localStorage (1 ms)",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "savePerformanceData > persists data to localStorage"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-005",
+      "title": "recordDailySnapshot creates new entry for today with correct fields",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'creates new entry for today with correct fields'",
+          "expected": "Entry has date, overallProgress, modulesCompleted, videosCompleted, labsCompleted, flashcardsAdded, avgConfidence",
+          "observed": "Test passed: snapshot contained all required fields with correct values"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ creates new entry for today with correct fields (3 ms)",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "recordDailySnapshot > creates new entry for today with correct fields"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-006",
+      "title": "recordDailySnapshot updates existing entry for today",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'updates existing entry for today'",
+          "expected": "Replaces existing same-day snapshot with updated stats",
+          "observed": "Test passed: after two snapshots on same day, only one entry exists with the latest stats"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ updates existing entry for today (2 ms)",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "recordDailySnapshot > updates existing entry for today"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-007",
+      "title": "recordDailySnapshot rounds overallProgress to 1 decimal",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run tests: 'rounds overallProgress to 1 decimal place' and 'rounds overallProgress with Math.round(value * 10) / 10'",
+          "expected": "Math.round(value * 10) / 10 applied",
+          "observed": "Test passed: 33.333 → 33.3, 55.55 → 55.6 (Math.round(555.5)/10 = 556/10 = 55.6)"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ rounds overallProgress to 1 decimal place (1 ms)\n✓ rounds overallProgress with Math.round(value * 10) / 10 (1 ms)",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "recordDailySnapshot > rounds overallProgress to 1 decimal place"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-008",
+      "title": "recordDailySnapshot trims daily to 365 entries",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'trims daily entries to 365 when exceeded'",
+          "expected": "Daily array capped at 365 entries",
+          "observed": "Test passed: after pre-populating 365 entries and adding one more, daily.length === 365 with latest entry being today"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ trims daily entries to 365 when exceeded (3 ms)",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "recordDailySnapshot > trims daily entries to 365 when exceeded"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-009",
+      "title": "recordDailySnapshot updates lastSnapshotDate and returns snapshot",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'updates lastSnapshotDate and returns snapshot'",
+          "expected": "lastSnapshotDate set to today, snapshot returned",
+          "observed": "Test passed: data.lastSnapshotDate === '2025-01-15', snapshot.date === '2025-01-15'"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ updates lastSnapshotDate and returns snapshot (1 ms)",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "recordDailySnapshot > updates lastSnapshotDate and returns snapshot"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-010",
+      "title": "recordDailySnapshot uses ProgressTracker for stats",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run test: 'calls getOverallProgress and getModuleStatistics on ProgressTracker'",
+          "expected": "Both ProgressTracker methods called with modules",
+          "observed": "Test passed: getOverallProgress and getModuleStatistics both called with mockModules"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ calls getOverallProgress and getModuleStatistics on ProgressTracker (1 ms)",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "recordDailySnapshot > calls getOverallProgress and getModuleStatistics on ProgressTracker"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-011",
+      "title": "getPerformanceRange filters by date range",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run tests: 'returns only entries within the date range', 'returns empty array when no entries match', 'includes boundary dates', 'returns all entries when range covers all dates'",
+          "expected": "Only entries within [startDate, endDate] returned; empty when none match; boundaries included",
+          "observed": "All 4 tests passed: range filtering, empty result, boundary inclusion, full coverage all correct"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns only entries within the date range (1 ms)\n✓ returns empty array when no entries match\n✓ includes boundary dates (1 ms)\n✓ returns all entries when range covers all dates",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "getPerformanceRange"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-012",
+      "title": "getRecentPerformance returns correct number of days, fills gaps, defaults to 30",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run tests: 'returns correct number of days with default 30', 'returns correct number of days when specified', 'fills gaps with zeroed default entries', 'returns existing data for days that have entries', 'returns entries ordered oldest to newest'",
+          "expected": "Default 30 days, fills gaps with zeros, ordered oldest to newest",
+          "observed": "All 5 tests passed: default 30, custom 7, gap filling, existing data preservation, ordering all correct"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns correct number of days with default 30 (1 ms)\n✓ returns correct number of days when specified\n✓ fills gaps with zeroed default entries (1 ms)\n✓ returns existing data for days that have entries (2 ms)\n✓ returns entries ordered oldest to newest (1 ms)",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "getRecentPerformance"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-013",
+      "title": "calculateWeeklyData returns null when no data; computes deltas when data exists",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run tests: 'returns null when no data for the week', 'computes weekly deltas when data exists', 'handles single entry in the week'",
+          "expected": "Null for empty week; correct deltas when data exists",
+          "observed": "All 3 tests passed: null for empty, correct deltas (modulesCompleted: 2, videos: 4, labs: 2, progress: 20), zero deltas for single entry"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns null when no data for the week (1 ms)\n✓ computes weekly deltas when data exists (1 ms)\n✓ handles single entry in the week (first === last) (2 ms)",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "calculateWeeklyData"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-014",
+      "title": "getWeeklyVelocity returns correct week count, defaults to 0, clamps negative",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run tests: 'returns 0 modulesCompleted when fewer than 2 data points', 'calculates module delta per week correctly', 'clamps negative velocity to 0', 'returns correct number of weeks', 'defaults to 8 weeks'",
+          "expected": "Correct week count, defaults to 0 when < 2 data points, clamps negative to 0",
+          "observed": "All 5 tests passed: 0 for < 2 points, correct deltas (3 and 2), negative clamped to 0, correct count, default 8 weeks"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns 0 modulesCompleted when fewer than 2 data points in a week (1 ms)\n✓ calculates module delta per week correctly (1 ms)\n✓ clamps negative velocity to 0\n✓ returns correct number of weeks (2 ms)\n✓ defaults to 8 weeks (1 ms)",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "getWeeklyVelocity"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-015",
+      "title": "predictCompletionDate handles edge cases",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run tests: 'returns null when fewer than 7 days of data', 'returns Completed when all modules done', 'returns Unknown when velocity is 0', 'returns Unknown when velocity is negative', 'returns formatted date string when velocity is positive', 'returns null when daily data has fewer than 7 entries'",
+          "expected": "Null for < 7 days, 'Completed' when all done, 'Unknown' when velocity <= 0, formatted date otherwise",
+          "observed": "All 6 tests passed: null for < 7 days, 'Completed' for all done, 'Unknown' for zero/negative velocity, formatted date matching /^[A-Z][a-z]{2} \\d{1,2}, \\d{4}$/"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns null when fewer than 7 days of data (1 ms)\n✓ returns \"Completed\" when all modules done (1 ms)\n✓ returns \"Unknown\" when velocity is 0\n✓ returns \"Unknown\" when velocity is negative (2 ms)\n✓ returns formatted date string when velocity is positive (2 ms)\n✓ returns null when daily data has fewer than 7 entries",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "predictCompletionDate"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-016",
+      "title": "getConfidenceDistribution categorizes correctly",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run tests: 'returns all zeros for empty modules array', 'categorizes needsReview for confidence 1 and 2', 'categorizes moderate for confidence 3', 'categorizes confident for confidence 4 and 5', 'categorizes notRated for confidence 0 with progress > 0', 'skips modules with 0 progress', 'handles mixed distribution correctly'",
+          "expected": "needsReview (1-2), moderate (3), confident (4-5), notRated (0); skips 0-progress modules; all zeros for empty",
+          "observed": "All 7 tests passed: correct categorization for all confidence levels, 0-progress skip, mixed distribution (needsReview: 2, moderate: 1, confident: 2)"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ returns all zeros for empty modules array\n✓ categorizes needsReview for confidence 1 and 2 (1 ms)\n✓ categorizes moderate for confidence 3\n✓ categorizes confident for confidence 4 and 5 (1 ms)\n✓ categorizes notRated for confidence 0 with progress > 0\n✓ skips modules with 0 progress (1 ms)\n✓ handles mixed distribution correctly (1 ms)",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "getConfidenceDistribution"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-PERFORMANCE-017",
+      "title": "resetPerformanceData removes key from localStorage",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run tests: 'removes performance-history key from localStorage', 'does nothing when key does not exist'",
+          "expected": "localStorage key removed; no crash when key absent",
+          "observed": "Both tests passed: key removed after reset, no throw when key doesn't exist"
+        }
+      ],
+      "evidence": {
+        "testOutput": "✓ removes performance-history key from localStorage\n✓ does nothing when key does not exist",
+        "testFile": "src/utils/__tests__/performanceTracker.test.js",
+        "testName": "resetPerformanceData"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested all 17 VAL-PERFORMANCE assertions (VAL-PERFORMANCE-001 through VAL-PERFORMANCE-017). All 44 jest tests passed covering every assertion. Each assertion maps to one or more specific test cases that verify the exact behavior specified in the validation contract."
+}
