@@ -1,3 +1,4 @@
+/* global URL */
 const { app, BrowserWindow, ipcMain, shell, dialog, nativeImage } = require('electron');
 const path = require('path');
 const fs = require('fs');
@@ -153,10 +154,20 @@ ipcMain.handle('open-anki', async () => {
 
 // Open resource file in external application
 ipcMain.handle('open-resource', async (event, filename) => {
-  const resourcesPath = getResourcesPath();
-  const filePath = path.join(resourcesPath, filename);
-
   try {
+    // Validate filename to prevent path traversal
+    if (typeof filename !== 'string' || filename.length === 0) {
+      return { success: false, error: 'Invalid filename' };
+    }
+
+    const resourcesPath = path.resolve(getResourcesPath());
+    const filePath = path.resolve(path.join(resourcesPath, filename));
+
+    // Ensure resolved path stays within resources directory
+    if (!filePath.startsWith(resourcesPath + path.sep) && filePath !== resourcesPath) {
+      return { success: false, error: 'Invalid file path: path traversal detected' };
+    }
+
     // Check if file exists
     await fs.promises.access(filePath);
 
@@ -243,10 +254,18 @@ ipcMain.handle('reset-resources-path', async () => {
 // Open external URL in default browser
 ipcMain.handle('open-external-url', async (event, url) => {
   try {
+    // Validate URL: only allow https: and http: protocols
+    if (typeof url !== 'string') {
+      return { success: false, error: 'Invalid URL: expected a string' };
+    }
+    const parsed = new URL(url);
+    if (!['https:', 'http:'].includes(parsed.protocol)) {
+      return { success: false, error: `Protocol not allowed: ${parsed.protocol}` };
+    }
     await shell.openExternal(url);
     return { success: true };
   } catch (error) {
-    return { success: false, error: error.message };
+    return { success: false, error: `Invalid URL: ${error.message}` };
   }
 });
 
@@ -280,6 +299,10 @@ ipcMain.handle('export-progress-backup', async (event, exportData) => {
 // Open video in separate window
 ipcMain.handle('open-video-window', async (event, { videoId, moduleId: _moduleId }) => {
   try {
+    // Validate videoId: must match YouTube 11-character format
+    if (typeof videoId !== 'string' || !/^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
+      return { success: false, error: 'Invalid video ID: must be 11 alphanumeric characters' };
+    }
     // Get persistent session for YouTube (enables login persistence)
     const { session } = require('electron');
     const youtubeSession = session.fromPartition('persist:youtube-session');
@@ -439,6 +462,11 @@ ipcMain.handle('open-video-window', async (event, { videoId, moduleId: _moduleId
 
 // Close specific video window
 ipcMain.handle('close-video-window', async (event, windowId) => {
+  // Validate windowId: must be a number
+  if (typeof windowId !== 'number') {
+    return { success: false, error: 'Invalid window ID: must be a number' };
+  }
+
   const window = videoWindows.get(windowId);
   if (window && !window.isDestroyed()) {
     window.close();
