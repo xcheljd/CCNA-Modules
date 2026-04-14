@@ -49,6 +49,7 @@ const DialogContent = React.forwardRef(({ className, children, ...props }, ref) 
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
+      aria-describedby={undefined}
       style={{
         position: 'fixed',
         left: '50%',

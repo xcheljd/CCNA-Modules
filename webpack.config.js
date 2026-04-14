@@ -27,7 +27,7 @@ module.exports = (env, argv) => {
       },
       runtimeChunk: 'single',
     },
-    target: isProduction ? 'electron-renderer' : 'web',
+    target: 'web',
     module: {
       rules: [
         {
