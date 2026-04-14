@@ -335,8 +335,6 @@ ipcMain.handle('open-video-window', async (event, { videoId, moduleId: _moduleId
     const videoWindow = new BrowserWindow({
       width: 1024,
       height: 768,
-      parent: mainWindow,
-      modal: false,
       backgroundColor: '#000000',
       webPreferences: {
         nodeIntegration: false,
@@ -493,6 +491,8 @@ ipcMain.handle('close-video-window', async (event, windowId) => {
     window.close();
     return { success: true };
   }
+  // Clean up stale entry if window was already destroyed
+  videoWindows.delete(windowId);
   return { success: false, error: 'Window not found' };
 });
 
@@ -522,6 +522,14 @@ app.on('before-quit', () => {
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
+  // Close any lingering video windows on all platforms
+  videoWindows.forEach(window => {
+    if (!window.isDestroyed()) {
+      window.destroy();
+    }
+  });
+  videoWindows.clear();
+
   if (process.platform !== 'darwin') app.quit();
 });
 
