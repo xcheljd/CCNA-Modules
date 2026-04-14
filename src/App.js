@@ -9,6 +9,7 @@ import ActivityTracker from './utils/activityTracker';
 import themes from './utils/themes';
 import { RESOURCE_DOWNLOAD_URL } from '@/utils/constants';
 import { GridIcon } from '@/components/ui/Icons';
+import { Migrations } from './utils/migrations';
 
 // Lazy load heavy components for code splitting
 const Dashboard = lazy(() => import('./components/Dashboard'));
@@ -49,6 +50,13 @@ function AppContent() {
   useEffect(() => {
     const initializeApp = async () => {
       const startTime = Date.now();
+
+      // Run pending data migrations before anything else
+      try {
+        Migrations.runMigrations();
+      } catch (migrationError) {
+        console.error('Migration system error:', migrationError);
+      }
 
       const phases = [
         {
