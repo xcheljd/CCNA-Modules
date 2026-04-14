@@ -4,23 +4,37 @@ const reactHooks = require('eslint-plugin-react-hooks');
 const prettier = require('eslint-plugin-prettier');
 const babelParser = require('@babel/eslint-parser');
 
+const sharedParserOptions = {
+  ecmaVersion: 2021,
+  sourceType: 'module',
+  ecmaFeatures: { jsx: true },
+  requireConfigFile: false,
+  babelOptions: { presets: ['@babel/preset-react'] },
+};
+
+const sharedRules = {
+  'react/jsx-uses-react': 'error',
+  'react/jsx-uses-vars': 'error',
+  'react/prop-types': 'off',
+  'react/react-in-jsx-scope': 'off',
+  'react-hooks/rules-of-hooks': 'error',
+  'react-hooks/exhaustive-deps': 'warn',
+  'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+  'no-console': 'off',
+  'prefer-const': 'warn',
+  'no-var': 'error',
+  'prettier/prettier': 'warn',
+};
+
+const sharedSettings = { react: { version: 'detect' } };
+
 module.exports = [
   js.configs.recommended,
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {
       parser: babelParser,
-      parserOptions: {
-        ecmaVersion: 2021,
-        sourceType: 'module',
-        ecmaFeatures: {
-          jsx: true,
-        },
-        requireConfigFile: false,
-        babelOptions: {
-          presets: ['@babel/preset-react'],
-        },
-      },
+      parserOptions: sharedParserOptions,
       globals: {
         window: 'readonly',
         document: 'readonly',
@@ -36,58 +50,19 @@ module.exports = [
         clearInterval: 'readonly',
         setTimeout: 'readonly',
         clearTimeout: 'readonly',
-        // Electron API
         electronAPI: 'readonly',
       },
     },
-    plugins: {
-      react,
-      'react-hooks': reactHooks,
-      prettier,
-    },
-    rules: {
-      // React rules
-      'react/jsx-uses-react': 'error',
-      'react/jsx-uses-vars': 'error',
-      'react/prop-types': 'off', // Turn off if not using PropTypes
-      'react/react-in-jsx-scope': 'off', // Not needed with React 17+
-
-      // React Hooks rules
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
-
-      // General rules
-      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      'no-console': 'off', // Allow console in Electron app
-      'prefer-const': 'warn',
-      'no-var': 'error',
-
-      // Prettier integration
-      'prettier/prettier': 'warn',
-    },
-    settings: {
-      react: {
-        version: 'detect',
-      },
-    },
+    plugins: { react, 'react-hooks': reactHooks, prettier },
+    rules: sharedRules,
+    settings: sharedSettings,
   },
   {
     files: ['src/**/*.test.js', 'src/**/*.test.jsx'],
     languageOptions: {
       parser: babelParser,
-      parserOptions: {
-        ecmaVersion: 2021,
-        sourceType: 'module',
-        ecmaFeatures: {
-          jsx: true,
-        },
-        requireConfigFile: false,
-        babelOptions: {
-          presets: ['@babel/preset-react'],
-        },
-      },
+      parserOptions: sharedParserOptions,
       globals: {
-        // Jest globals
         jest: 'readonly',
         describe: 'readonly',
         it: 'readonly',
@@ -97,41 +72,13 @@ module.exports = [
         afterEach: 'readonly',
         beforeAll: 'readonly',
         afterAll: 'readonly',
-        // Node.js globals
         module: 'readonly',
         require: 'readonly',
       },
     },
-    plugins: {
-      react,
-      'react-hooks': reactHooks,
-      prettier,
-    },
-    rules: {
-      // React rules
-      'react/jsx-uses-react': 'error',
-      'react/jsx-uses-vars': 'error',
-      'react/prop-types': 'off', // Turn off if not using PropTypes
-      'react/react-in-jsx-scope': 'off', // Not needed with React 17+
-
-      // React Hooks rules
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
-
-      // General rules
-      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      'no-console': 'off', // Allow console in Electron app
-      'prefer-const': 'warn',
-      'no-var': 'error',
-
-      // Prettier integration
-      'prettier/prettier': 'warn',
-    },
-    settings: {
-      react: {
-        version: 'detect',
-      },
-    },
+    plugins: { react, 'react-hooks': reactHooks, prettier },
+    rules: sharedRules,
+    settings: sharedSettings,
   },
   {
     ignores: [
