@@ -1,7 +1,7 @@
 # CCNA Modules Desktop Application
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)]()
 [![Electron](https://img.shields.io/badge/Electron-39-47848F?logo=electron&logoColor=white)]()
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)]()
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-06B6D4?logo=tailwindcss&logoColor=white)]()
@@ -135,12 +135,28 @@ npm start
 npm run dist
 
 # Build for specific platforms
-npm run dist:mac    # macOS (DMG + ZIP)
-npm run dist:win    # Windows (NSIS + Portable)
+npm run dist:mac    # macOS (DMG + ZIP, x64 + arm64)
+npm run dist:win    # Windows (NSIS installer + portable, x64 + ia32)
 npm run dist:linux  # Linux (AppImage + deb)
 ```
 
-See [BUILD_NOTES.md](BUILD_NOTES.md) for detailed build information.
+Build output lands in `release/`. The `resources/` folder (`.pkt`, `.apkg`,
+`.pka`, `.xlsx`) is bundled via electron-builder `extraResources` and read at
+runtime from `process.resourcesPath`.
+
+#### Code signing
+
+The app is **not** code signed. macOS users will need to right-click → Open on
+first launch (Gatekeeper); Windows users may see SmartScreen warnings. To sign,
+you need an Apple Developer ID certificate or a Windows code-signing
+certificate.
+
+#### Cross-platform building
+
+electron-builder can target other platforms from a single host, with caveats —
+macOS builds require macOS, Wine is needed to target Windows from non-Windows
+hosts, etc. For release artifacts the CI workflow in `.github/workflows/`
+builds each platform on its native runner.
 
 ## Project Structure
 
@@ -205,7 +221,9 @@ To use all features, users need:
 
 ### Video Playback
 
-Videos open in a new window.
+Videos open in a dedicated in-app window (Electron `BrowserWindow` pointed at
+`youtube.com/watch?v=…`) so playback is isolated from the main window and
+persists its own YouTube session.
 
 ### Resource Handling
 
@@ -257,28 +275,22 @@ Each module in `src/data/modules.js`:
    - macOS users must right-click → Open on first launch
    - Windows users may see SmartScreen warnings
 
-2. **Icon**: Uses default Electron icon
-   - Custom icons can be added to `build/` directory
+2. **Video Progress**: Cannot resume videos from the last position. Playback
+   controls (speed, chapter skip, PiP) are not available either. All require
+   the YouTube IFrame Player API + an authenticated session, which the
+   current dedicated-window approach does not integrate.
 
-3. **Video Progress**: Cannot resume videos from last position
-   - Requires YouTube API access and authentication (not implemented)
-   - Videos open in external browser window
+## Roadmap
 
-## Future Enhancements
+See [FEATURE_IDEAS.md](FEATURE_IDEAS.md) for the current near-term roadmap.
+Headline items under consideration:
 
-- [ ] Add custom application icons
-- [ ] Code signing certificates for trusted distribution
-- [ ] Study timer with session tracking
-- [ ] Notes feature for each module
-- [ ] Quiz mode & self-assessment
-- [ ] Keyboard shortcuts
-- [ ] Cloud backup & sync
-- [x] Search/filter functionality - ✅ Implemented
-- [x] Theme customization - ✅ 14 themes available
-- [x] Confidence ratings - ✅ Implemented
-- [x] Study streak tracking - ✅ Implemented
-- [x] Performance analytics - ✅ Implemented
-- [x] Smart recommendations - ✅ Implemented
+- Keyboard shortcuts with a `?` help overlay
+- Per-module markdown notes
+- Study timer with Pomodoro sessions
+- Quiz mode with spaced-repetition review
+- Code signing for trusted distribution
+- Cloud backup & sync (local JSON export/import already ships)
 
 ## Theme Credits
 
@@ -313,16 +325,4 @@ For course content questions, visit [Jeremy's IT Lab YouTube channel](https://ww
 
 ## Changelog
 
-### Version 1.0.0
-
-- Initial release
-- 63 complete modules with all video IDs
-- 59 Packet Tracer labs + 97 Anki flashcard decks
-- Progress tracking with localStorage
-- Search and filter functionality
-- 14 customizable color themes
-- Study streak tracking with calendar
-- Performance analytics and charts
-- Smart study recommendations
-- Confidence rating system (1-5 stars)
-- Cross-platform build configuration (macOS, Windows, Linux)
+See [CHANGELOG.md](CHANGELOG.md) for the full version history.
