@@ -98,7 +98,7 @@ _These materials are © Jeremy's IT Lab and provided for educational use_
 
 #### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 22+ and npm
 - Git
 
 #### Installation

@@ -30,6 +30,9 @@
   },
   "license": "MIT",
   "description": "Desktop application for Jeremy's IT Lab CCNA 200-301 Course with progress tracking",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "build": {
     "appId": "com.ccna.modules",
     "productName": "CCNA Modules",
