@@ -209,6 +209,14 @@ npm run format      # Format with Prettier
 npm run format:check # Check formatting
 ```
 
+### Testing
+
+```bash
+npm test             # Run Jest suite once
+npm run test:watch   # Jest in watch mode
+npm run test:coverage # Jest with coverage report
+```
+
 ## User Prerequisites
 
 To use all features, users need:
