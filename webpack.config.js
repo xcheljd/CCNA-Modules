@@ -54,10 +54,6 @@ module.exports = (env, argv) => {
       alias: {
         '@': path.resolve(__dirname, 'src'),
       },
-      fallback: {
-        process: require.resolve('process/browser'),
-        buffer: require.resolve('buffer/'),
-      },
     },
     plugins: [
       new HtmlWebpackPlugin({
@@ -66,10 +62,6 @@ module.exports = (env, argv) => {
         templateParameters: {
           isProduction: isProduction,
         },
-      }),
-      new webpack.ProvidePlugin({
-        process: 'process',
-        Buffer: ['buffer', 'Buffer'],
       }),
       new webpack.DefinePlugin({
         'process.env': JSON.stringify({ NODE_ENV: isProduction ? 'production' : 'development' }),
