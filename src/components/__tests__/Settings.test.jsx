@@ -69,11 +69,11 @@ describe('Settings', () => {
       render(<SettingsWrapper open={true} onOpenChange={jest.fn()} />);
     });
 
-    const tabs = screen.getAllByRole('button');
+    const tabs = screen.getAllByRole('tab');
     const firstTab = tabs.find(tab => tab.textContent?.includes('Resources'));
 
     expect(firstTab).toHaveClass('settings-tab');
-    expect(firstTab).toHaveClass('active');
+    expect(firstTab).toHaveAttribute('data-state', 'active');
   });
 
   it('should switch tabs when clicked', async () => {
@@ -82,12 +82,11 @@ describe('Settings', () => {
       render(<SettingsWrapper open={true} onOpenChange={jest.fn()} />);
     });
 
-    const themeTab = screen.getByText('Theme');
+    const themeTab = screen.getByRole('tab', { name: /Theme/ });
     await user.click(themeTab);
 
-    const themeButton = themeTab.closest('button');
-    expect(themeButton).toHaveClass('settings-tab');
-    expect(themeButton).toHaveClass('active');
+    expect(themeTab).toHaveClass('settings-tab');
+    expect(themeTab).toHaveAttribute('data-state', 'active');
   });
 
   it('should close when pressing Escape', async () => {

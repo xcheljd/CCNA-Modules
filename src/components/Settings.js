@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Dialog,
   DialogContent,
@@ -6,6 +6,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { FolderOpen, LayoutDashboard, Database, Palette, Info } from 'lucide-react';
 import ResourcesPathTab from './settings/ResourcesPathTab';
 import DashboardTab from './settings/DashboardTab';
@@ -15,14 +16,12 @@ import AboutTab from './settings/AboutTab';
 import '../styles/Settings.css';
 
 function Settings({ open, onOpenChange }) {
-  const [activeTab, setActiveTab] = useState('resources');
-
   const tabs = [
-    { id: 'resources', label: 'Resources Path', Icon: FolderOpen },
-    { id: 'dashboard', label: 'Dashboard', Icon: LayoutDashboard },
-    { id: 'theme', label: 'Theme', Icon: Palette },
-    { id: 'data', label: 'Data Management', Icon: Database },
-    { id: 'about', label: 'About', Icon: Info },
+    { id: 'resources', label: 'Resources Path', Icon: FolderOpen, Component: ResourcesPathTab },
+    { id: 'dashboard', label: 'Dashboard', Icon: LayoutDashboard, Component: DashboardTab },
+    { id: 'theme', label: 'Theme', Icon: Palette, Component: ThemeTab },
+    { id: 'data', label: 'Data Management', Icon: Database, Component: DataManagementTab },
+    { id: 'about', label: 'About', Icon: Info, Component: AboutTab },
   ];
 
   return (
@@ -35,33 +34,22 @@ function Settings({ open, onOpenChange }) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="settings-container">
-          {/* Tab Navigation */}
-          <div className="settings-tabs">
-            {tabs.map(tab => {
-              const IconComponent = tab.Icon;
-              return (
-                <button
-                  key={tab.id}
-                  className={`settings-tab ${activeTab === tab.id ? 'active' : ''}`}
-                  onClick={() => setActiveTab(tab.id)}
-                >
-                  <IconComponent className="tab-icon" size={20} />
-                  <span className="tab-label">{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
+        <Tabs defaultValue="resources" className="settings-container">
+          <TabsList className="settings-tabs">
+            {tabs.map(({ id, label, Icon }) => (
+              <TabsTrigger key={id} value={id} className="settings-tab">
+                <Icon className="tab-icon" size={20} />
+                <span className="tab-label">{label}</span>
+              </TabsTrigger>
+            ))}
+          </TabsList>
 
-          {/* Tab Content */}
-          <div className="settings-content">
-            {activeTab === 'resources' && <ResourcesPathTab />}
-            {activeTab === 'dashboard' && <DashboardTab />}
-            {activeTab === 'theme' && <ThemeTab />}
-            {activeTab === 'data' && <DataManagementTab />}
-            {activeTab === 'about' && <AboutTab />}
-          </div>
-        </div>
+          {tabs.map(({ id, Component }) => (
+            <TabsContent key={id} value={id} className="settings-content">
+              <Component />
+            </TabsContent>
+          ))}
+        </Tabs>
       </DialogContent>
     </Dialog>
   );

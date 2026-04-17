@@ -120,7 +120,7 @@
     transform: translateY(-1px);
   }
 
-  .settings-tab.active {
+  .settings-tab[data-state='active'] {
     background: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
     font-weight: 600;
