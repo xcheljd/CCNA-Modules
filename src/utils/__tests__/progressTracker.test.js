@@ -391,6 +391,35 @@ describe('ProgressTracker', () => {
       expect(localStorage.getItem('lab_1_0_completed')).toBe('true');
       expect(localStorage.getItem('confidence_1')).toBe('4');
     });
+
+    it('should ignore non-progress keys during import', () => {
+      // Pre-seed values that import must not overwrite
+      localStorage.setItem('app-settings', '{"original":true}');
+      localStorage.setItem('schema-version', '1');
+      localStorage.setItem('hasSeenWelcome', 'true');
+
+      const maliciousPayload = {
+        // Legitimate progress keys (should be written)
+        video_1_v1_completed: 'true',
+        confidence_2: '5',
+        // Non-progress keys (must be ignored)
+        'app-settings': '{"malicious":true}',
+        'schema-version': '99',
+        hasSeenWelcome: 'false',
+        'app-theme': 'evil',
+        arbitraryKey: 'pwned',
+      };
+
+      ProgressTracker.importProgress(maliciousPayload);
+
+      expect(localStorage.getItem('video_1_v1_completed')).toBe('true');
+      expect(localStorage.getItem('confidence_2')).toBe('5');
+      expect(localStorage.getItem('app-settings')).toBe('{"original":true}');
+      expect(localStorage.getItem('schema-version')).toBe('1');
+      expect(localStorage.getItem('hasSeenWelcome')).toBe('true');
+      expect(localStorage.getItem('app-theme')).toBeNull();
+      expect(localStorage.getItem('arbitraryKey')).toBeNull();
+    });
   });
 
   describe('clear all progress', () => {

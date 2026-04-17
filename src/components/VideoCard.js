@@ -39,7 +39,12 @@ function VideoCard({ video, moduleId, isCompleted, onMarkComplete }) {
         onClick={openVideoWindow}
         role="button"
         tabIndex={0}
-        onKeyDown={e => e.key === 'Enter' && openVideoWindow()}
+        onKeyDown={e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openVideoWindow();
+          }
+        }}
         aria-label={`Play video: ${video.title}`}
       >
         <img

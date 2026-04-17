@@ -124,7 +124,21 @@ export const PerformanceTracker = {
     const weekStartStr = format(weekStart, 'yyyy-MM-dd');
     const weekData = this.getPerformanceRange(weekStartStr, format(weekEnd, 'yyyy-MM-dd'));
 
-    if (weekData.length === 0) return null;
+    // Deltas require at least two snapshots (baseline + current); one snapshot
+    // means the week just started and weekly progress can't be computed yet.
+    if (weekData.length < 2) {
+      return weekData.length === 1
+        ? {
+            weekStart: weekStartStr,
+            modulesCompletedThisWeek: 0,
+            videosCompletedThisWeek: 0,
+            labsCompletedThisWeek: 0,
+            progressGain: 0,
+            avgConfidence: weekData[0].avgConfidence,
+            insufficientData: true,
+          }
+        : null;
+    }
 
     const firstDay = weekData[0];
     const lastDay = weekData[weekData.length - 1];

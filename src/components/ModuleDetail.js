@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import VideoCard from './VideoCard';
 import ConfidenceRating from './ConfidenceRating';
 import { useToast } from '@/components/ui/toast';
@@ -21,29 +21,40 @@ function ModuleDetail({
   const [videoCompletions, setVideoCompletions] = useState({});
   const [confidence, setConfidence] = useState(0);
   const [animationClass, setAnimationClass] = useState('');
+  const navTimerRef = useRef(null);
 
   // Find the next and previous modules by array position
   const moduleIndex = modules.findIndex(m => m.id === module.id);
   const nextModule = moduleIndex >= 0 ? modules[moduleIndex + 1] : undefined;
   const prevModule = moduleIndex > 0 ? modules[moduleIndex - 1] : undefined;
 
-  const handleNextModule = () => {
-    if (nextModule) {
-      setAnimationClass('slide-right');
-      setTimeout(() => {
-        onModuleSelect(nextModule);
-      }, 300);
+  const scheduleNavigation = (target, direction) => {
+    if (navTimerRef.current) {
+      clearTimeout(navTimerRef.current);
     }
+    setAnimationClass(direction);
+    navTimerRef.current = setTimeout(() => {
+      navTimerRef.current = null;
+      onModuleSelect(target);
+    }, 300);
+  };
+
+  const handleNextModule = () => {
+    if (nextModule) scheduleNavigation(nextModule, 'slide-right');
   };
 
   const handlePrevModule = () => {
-    if (prevModule) {
-      setAnimationClass('slide-left');
-      setTimeout(() => {
-        onModuleSelect(prevModule);
-      }, 300);
-    }
+    if (prevModule) scheduleNavigation(prevModule, 'slide-left');
   };
+
+  useEffect(() => {
+    return () => {
+      if (navTimerRef.current) {
+        clearTimeout(navTimerRef.current);
+        navTimerRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     // Reset animation class

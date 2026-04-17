@@ -10,6 +10,7 @@ import {
   PAYPAL_URL,
   VENMO_URL,
 } from '@/utils/constants';
+import { openExternal } from '@/utils/helpers';
 
 function AboutTab() {
   return (
@@ -62,45 +63,27 @@ function AboutTab() {
               through his platforms:
             </p>
             <div className="support-links">
-              <button
-                onClick={() => window.electronAPI.openExternalUrl(YOUTUBE_CHANNEL_URL)}
-                className="support-link"
-              >
+              <button onClick={() => openExternal(YOUTUBE_CHANNEL_URL)} className="support-link">
                 <ExternalLink size={16} />
                 YouTube Channel
               </button>
-              <button
-                onClick={() => window.electronAPI.openExternalUrl(JEREMYS_IT_LAB_URL)}
-                className="support-link"
-              >
+              <button onClick={() => openExternal(JEREMYS_IT_LAB_URL)} className="support-link">
                 <ExternalLink size={16} />
                 Website
               </button>
-              <button
-                onClick={() => window.electronAPI.openExternalUrl(COURSES_URL)}
-                className="support-link"
-              >
+              <button onClick={() => openExternal(COURSES_URL)} className="support-link">
                 <ExternalLink size={16} />
                 Premium Courses
               </button>
-              <button
-                onClick={() => window.electronAPI.openExternalUrl(DISCORD_URL)}
-                className="support-link"
-              >
+              <button onClick={() => openExternal(DISCORD_URL)} className="support-link">
                 <ExternalLink size={16} />
                 Discord Community
               </button>
-              <button
-                onClick={() => window.electronAPI.openExternalUrl(TWITTER_URL)}
-                className="support-link"
-              >
+              <button onClick={() => openExternal(TWITTER_URL)} className="support-link">
                 <ExternalLink size={16} />
                 Twitter
               </button>
-              <button
-                onClick={() => window.electronAPI.openExternalUrl(LINKEDIN_URL)}
-                className="support-link"
-              >
+              <button onClick={() => openExternal(LINKEDIN_URL)} className="support-link">
                 <ExternalLink size={16} />
                 LinkedIn
               </button>
@@ -117,16 +100,10 @@ function AboutTab() {
               Lab. If you find this tool helpful, consider supporting my development work:
             </p>
             <div className="donation-links">
-              <button
-                onClick={() => window.electronAPI.openExternalUrl(PAYPAL_URL)}
-                className="donation-link"
-              >
+              <button onClick={() => openExternal(PAYPAL_URL)} className="donation-link">
                 PayPal
               </button>
-              <button
-                onClick={() => window.electronAPI.openExternalUrl(VENMO_URL)}
-                className="donation-link"
-              >
+              <button onClick={() => openExternal(VENMO_URL)} className="donation-link">
                 Venmo
               </button>
             </div>

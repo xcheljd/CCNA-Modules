@@ -1,4 +1,5 @@
 // Progress tracking utilities using localStorage
+import { asArray } from './helpers';
 
 export const PROGRESS_KEY_PREFIXES = [
   'video_',
@@ -114,20 +115,13 @@ export const ProgressTracker = {
     }
 
     // Count labs (each lab file counts individually)
-    if (module.resources && module.resources.lab) {
-      const labFiles = Array.isArray(module.resources.lab)
-        ? module.resources.lab
-        : module.resources.lab
-          ? [module.resources.lab]
-          : [];
-      this._migrateLegacyLabData(module.id);
-      totalItems += labFiles.length;
-      labFiles.forEach((_, index) => {
-        if (this.isLabComplete(module.id, index)) {
-          completedItems += 1;
-        }
-      });
-    }
+    const labFiles = asArray(module.resources?.lab);
+    totalItems += labFiles.length;
+    labFiles.forEach((_, index) => {
+      if (this.isLabComplete(module.id, index)) {
+        completedItems += 1;
+      }
+    });
 
     // Count flashcards
     if (module.resources && module.resources.flashcards) {
@@ -186,7 +180,9 @@ export const ProgressTracker = {
   // Import progress data
   importProgress(data) {
     Object.keys(data).forEach(key => {
-      localStorage.setItem(key, data[key]);
+      if (isProgressKey(key)) {
+        localStorage.setItem(key, data[key]);
+      }
     });
   },
 
@@ -261,18 +257,13 @@ export const ProgressTracker = {
       }
 
       // Count completed labs and total labs (each lab file counts individually)
-      if (module.resources?.lab) {
-        const labFiles = Array.isArray(module.resources.lab)
-          ? module.resources.lab
-          : [module.resources.lab];
-        totalLabs += labFiles.length;
-        this._migrateLegacyLabData(module.id);
-        labFiles.forEach((_, index) => {
-          if (this.isLabComplete(module.id, index)) {
-            completedLabs++;
-          }
-        });
-      }
+      const labFiles = asArray(module.resources?.lab);
+      totalLabs += labFiles.length;
+      labFiles.forEach((_, index) => {
+        if (this.isLabComplete(module.id, index)) {
+          completedLabs++;
+        }
+      });
 
       // Count added flashcards and total flashcards
       if (module.resources?.flashcards) {

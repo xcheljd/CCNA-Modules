@@ -25,8 +25,10 @@ const MIGRATIONS = [
       if (match && localStorage.getItem(key) === 'true') {
         const moduleId = match[1];
         const newKey = `lab_${moduleId}_0_completed`;
-        // Only migrate if the new key doesn't already exist
-        if (!localStorage.getItem(newKey)) {
+        // Only queue the add if the new key is not already marked complete.
+        // If the new key exists but isn't 'true', preserve the legacy 'true'
+        // by writing it to the new key before removing the legacy key.
+        if (localStorage.getItem(newKey) !== 'true') {
           keysToAdd.push({ key: newKey, value: 'true' });
         }
         keysToRemove.push(key);

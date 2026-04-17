@@ -48,6 +48,8 @@ function AppContent() {
   const [loadingProgress, setLoadingProgress] = useState(0);
 
   useEffect(() => {
+    let finishTimer;
+
     const initializeApp = async () => {
       const startTime = Date.now();
 
@@ -108,12 +110,16 @@ function AppContent() {
 
       setLoadingStatus('Almost ready...');
 
-      setTimeout(() => {
+      finishTimer = setTimeout(() => {
         setIsLoading(false);
       }, remainingTime);
     };
 
     initializeApp();
+
+    return () => {
+      if (finishTimer) clearTimeout(finishTimer);
+    };
   }, []);
 
   useEffect(() => {

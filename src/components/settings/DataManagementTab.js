@@ -3,6 +3,14 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { Save, Download, Upload, Trash2, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import ProgressTracker, { isProgressKey } from '../../utils/progressTracker';
@@ -11,6 +19,7 @@ import SettingsManager from '../../utils/settingsManager';
 function DataManagementTab() {
   const { success, error, info } = useToast();
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [pendingImport, setPendingImport] = useState(null);
 
   const handleExport = async () => {
     try {
@@ -101,45 +110,8 @@ function DataManagementTab() {
             throw new Error('Invalid backup file format');
           }
 
-          // Confirm import
-          const confirmMsg =
-            `Import backup from ${new Date(importData.exportDate).toLocaleDateString()}?\n\n` +
-            `This will restore:\n` +
-            `- ${importData.metadata.progressKeys} progress items\n` +
-            `- Settings and preferences\n\n` +
-            `Current data will be overwritten.`;
-
-          if (!window.confirm(confirmMsg)) return;
-
-          // Clear existing progress before importing backup so state matches the file
-          ProgressTracker.clearAllProgress();
-
-          // Import progress data
-          if (importData.data.progress) {
-            Object.keys(importData.data.progress).forEach(key => {
-              localStorage.setItem(key, importData.data.progress[key]);
-            });
-          }
-
-          // Import settings
-          if (importData.data.settings) {
-            SettingsManager.saveSettings(importData.data.settings);
-          }
-
-          // Import preferences
-          if (importData.data.preferences) {
-            if (importData.data.preferences.darkMode !== undefined) {
-              localStorage.setItem(
-                'darkMode',
-                JSON.stringify(importData.data.preferences.darkMode)
-              );
-            }
-            if (importData.data.preferences.defaultView) {
-              localStorage.setItem('defaultView', importData.data.preferences.defaultView);
-            }
-          }
-
-          success('Import successful! Refresh to see changes', { duration: 5000 });
+          // Defer execution until the user confirms in the dialog
+          setPendingImport(importData);
         } catch (err) {
           error(`Import failed: ${err.message}`);
         }
@@ -153,6 +125,42 @@ function DataManagementTab() {
     };
 
     input.click();
+  };
+
+  const applyImport = () => {
+    if (!pendingImport) return;
+    try {
+      const importData = pendingImport;
+
+      // Clear existing progress before importing backup so state matches the file
+      ProgressTracker.clearAllProgress();
+
+      // Import progress data (filtered through isProgressKey)
+      if (importData.data.progress) {
+        ProgressTracker.importProgress(importData.data.progress);
+      }
+
+      // Import settings
+      if (importData.data.settings) {
+        SettingsManager.saveSettings(importData.data.settings);
+      }
+
+      // Import preferences
+      if (importData.data.preferences) {
+        if (importData.data.preferences.darkMode !== undefined) {
+          localStorage.setItem('darkMode', JSON.stringify(importData.data.preferences.darkMode));
+        }
+        if (importData.data.preferences.defaultView) {
+          localStorage.setItem('defaultView', importData.data.preferences.defaultView);
+        }
+      }
+
+      success('Import successful! Refresh to see changes', { duration: 5000 });
+    } catch (err) {
+      error(`Import failed: ${err.message}`);
+    } finally {
+      setPendingImport(null);
+    }
   };
 
   const handleClear = () => {
@@ -249,6 +257,32 @@ function DataManagementTab() {
           </p>
         </div>
       </div>
+
+      <Dialog
+        open={pendingImport !== null}
+        onOpenChange={open => {
+          if (!open) setPendingImport(null);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Import Backup?</DialogTitle>
+            {pendingImport && (
+              <DialogDescription>
+                Backup from {new Date(pendingImport.exportDate).toLocaleDateString()} will restore{' '}
+                {pendingImport.metadata?.progressKeys ?? 0} progress items plus settings and
+                preferences. Current data will be overwritten.
+              </DialogDescription>
+            )}
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPendingImport(null)}>
+              Cancel
+            </Button>
+            <Button onClick={applyImport}>Import</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

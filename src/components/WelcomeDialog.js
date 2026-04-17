@@ -11,19 +11,12 @@ import {
   PAYPAL_URL,
   VENMO_URL,
 } from '@/utils/constants';
+import { openExternal } from '@/utils/helpers';
 
 function WelcomeDialog({ open, onOpenChange }) {
   const handleGetStarted = () => {
     localStorage.setItem('hasSeenWelcome', 'true');
     onOpenChange(false);
-  };
-
-  const openExternal = url => {
-    if (window.electronAPI?.openExternalUrl) {
-      window.electronAPI.openExternalUrl(url);
-    } else {
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
   };
 
   return (

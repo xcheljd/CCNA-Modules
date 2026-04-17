@@ -1,5 +1,5 @@
 /* global URL */
-const { app, BrowserWindow, ipcMain, shell, dialog, nativeImage } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, dialog, nativeImage, session } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -83,11 +83,9 @@ function createWindow() {
   }
 
   const isDev = !app.isPackaged;
+  mainWindow.loadFile(path.join(__dirname, 'dist/index.html'));
   if (isDev) {
-    mainWindow.loadFile('dist/index.html');
     mainWindow.webContents.openDevTools();
-  } else {
-    mainWindow.loadFile(path.join(__dirname, 'dist/index.html'));
   }
 }
 
@@ -321,7 +319,6 @@ ipcMain.handle('open-video-window', async (event, { videoId, moduleId: _moduleId
       return { success: false, error: 'Invalid video ID: must be 11 alphanumeric characters' };
     }
     // Get persistent session for YouTube (enables login persistence)
-    const { session } = require('electron');
     const youtubeSession = session.fromPartition('persist:youtube-session');
 
     // Set user agent dynamically from Electron's Chromium, stripping Electron identifiers
