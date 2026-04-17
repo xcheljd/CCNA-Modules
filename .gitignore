@@ -28,8 +28,7 @@ yarn-error.log*
 Thumbs.db
 
 # Test results
-playwright-report/
-test-results/
+coverage/
 
 # Local tooling state
 .sisyphus/

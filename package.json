@@ -16,9 +16,7 @@
     "format:check": "prettier --check \"src/**/*.{js,jsx,css}\" \"*.js\"",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:coverage": "jest --coverage"
   },
   "keywords": [
     "ccna",
@@ -115,7 +113,6 @@
     "@babel/eslint-parser": "^7.28.5",
     "@babel/preset-env": "^7.28.6",
     "@babel/preset-react": "^7.28.5",
-    "@playwright/test": "^1.58.1",
     "@tailwindcss/postcss": "^4.1.17",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
