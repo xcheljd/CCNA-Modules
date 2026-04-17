@@ -1,26 +1,25 @@
 // Jest setup file
 import '@testing-library/jest-dom';
 
-// Mock electronAPI for renderer process
+// Mock electronAPI matching preload.js exactly
 global.window.electronAPI = {
   openVideoWindow: jest.fn().mockResolvedValue({ success: true }),
-  openExternalUrl: jest.fn().mockResolvedValue({ success: true }),
-  getAppVersion: jest.fn().mockResolvedValue('1.0.0'),
-  openFile: jest.fn().mockResolvedValue({ success: true }),
-  getSystemPath: jest.fn().mockResolvedValue({ success: true, path: '/mock/path' }),
-  setSystemPath: jest.fn().mockResolvedValue({ success: true }),
+  closeVideoWindow: jest.fn().mockResolvedValue({ success: true }),
+  closeAllVideoWindows: jest.fn().mockResolvedValue({ success: true }),
+  checkResourcesFolder: jest.fn().mockResolvedValue({ success: true }),
+  getResourcesFiles: jest.fn().mockResolvedValue({ success: true, files: [] }),
+  openAnki: jest.fn().mockResolvedValue({ success: true }),
+  openResource: jest.fn().mockResolvedValue({ success: true }),
   getResourcesInfo: jest.fn().mockResolvedValue({
     success: true,
     defaultPath: '/mock/resources',
     customPath: null,
     fileCount: 119,
   }),
-  setResourcesPath: jest.fn().mockResolvedValue({ success: true }),
+  selectResourcesFolder: jest.fn().mockResolvedValue({ success: true, path: '/mock/path' }),
   resetResourcesPath: jest.fn().mockResolvedValue({ success: true }),
-  browseForFolder: jest.fn().mockResolvedValue({
-    success: true,
-    path: '/mock/selected/path',
-  }),
+  exportProgressBackup: jest.fn().mockResolvedValue({ success: true }),
+  openExternalUrl: jest.fn().mockResolvedValue({ success: true }),
 };
 
 // Mock process.resourcesPath for production builds
