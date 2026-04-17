@@ -111,6 +111,9 @@ jobs:
       contents: write
 
     steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v6
+
       - name: Download all artifacts
         uses: actions/download-artifact@v8
         with:
@@ -130,12 +133,30 @@ jobs:
           echo "Release files prepared:"
           ls -lh release-files/
 
+      - name: Extract changelog entry for tag
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v ver="$version" '
+            /^## \[/ {
+              if (found) exit
+              if ($0 ~ "^## \\[" ver "\\]") { found=1; next }
+            }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "::error::No changelog entry found for version $version in CHANGELOG.md"
+            exit 1
+          fi
+          echo "Release notes preview:"
+          cat release-notes.md
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           files: release-files/*
           draft: true
           prerelease: false
-          generate_release_notes: true
+          body_path: release-notes.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
