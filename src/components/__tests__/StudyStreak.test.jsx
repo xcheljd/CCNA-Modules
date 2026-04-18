@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import StudyStreak from '../StudyStreak';
 import StreakTracker from '../../utils/streakTracker';
 
@@ -413,7 +413,7 @@ describe('StudyStreak', () => {
       ],
     });
 
-    const { container } = render(<StudyStreak />);
+    render(<StudyStreak />);
 
     expect(screen.getByText('Achievements')).toBeInTheDocument();
     // Milestone names are in title attributes on badge elements

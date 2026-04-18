@@ -424,7 +424,7 @@ describe('ProgressTracker', () => {
 
   describe('clear all progress', () => {
     it('should clear all progress data', () => {
-      const modules = [
+      const _modules = [
         { id: 1, videos: [{ id: 'v1' }], resources: { lab: 'l1', flashcards: 'f1' } },
       ];
 

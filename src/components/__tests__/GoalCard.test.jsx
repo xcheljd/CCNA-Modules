@@ -1,9 +1,8 @@
 import React from 'react';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import GoalCard from '../GoalCard';
 import GoalTracker from '../../utils/goalTracker';
-import GoalModal from '../GoalModal';
 
 // Mock GoalTracker
 jest.mock('../../utils/goalTracker', () => ({

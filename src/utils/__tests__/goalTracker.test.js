@@ -78,7 +78,7 @@ describe('GoalTracker', () => {
 
     it('should return null for expired goal', () => {
       const targets = { modulesCompleted: 5 };
-      const goal = GoalTracker.createGoal('weekly', targets);
+      GoalTracker.createGoal('weekly', targets);
 
       const goalData = GoalTracker.getGoalsData();
       goalData.current.endDate = '2020-01-01';
@@ -147,7 +147,7 @@ describe('GoalTracker', () => {
       const targets = { modulesCompleted: 5 };
       GoalTracker.createGoal('weekly', targets);
 
-      const goal = GoalTracker.getActiveGoal();
+      const _goal = GoalTracker.getActiveGoal();
       const data = GoalTracker.getGoalsData();
       data.current.progress.modulesCompleted = 5;
       GoalTracker.saveGoalsData(data);
@@ -217,7 +217,7 @@ describe('GoalTracker', () => {
       for (let i = 0; i < 4; i++) {
         GoalTracker.createGoal('weekly', targets);
         if (i < 3) {
-          const goal = GoalTracker.getActiveGoal();
+          const _goal = GoalTracker.getActiveGoal();
           const data = GoalTracker.getGoalsData();
           data.current.progress.modulesCompleted = 5;
           GoalTracker.saveGoalsData(data);

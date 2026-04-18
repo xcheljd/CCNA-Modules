@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-04-18
+
+### Added
+
+- Optional YouTube/Google sign-in via **Settings → YouTube** for ad-free
+  playback (YouTube Premium), resume position, watch history, and subscription
+  signals. Authentication happens directly with Google in a partitioned window
+  — no OAuth tokens or credentials touch the app.
+- One-time "Sign in to YouTube" prompt shown after the welcome dialog on first
+  launch.
+
+### Changed
+
+- Extracted `getChromeUserAgent()` helper and `YOUTUBE_PARTITION` constant to
+  deduplicate session partition and UA-spoofing logic across video and sign-in
+  windows.
+- Consolidated `closeAllVideoWindows` into a single shared helper used by both
+  the `close-all-video-windows` IPC handler and YouTube sign-out.
+- Added `varsIgnorePattern: '^_'` to the ESLint `no-unused-vars` rule so
+  `_`-prefixed variables (common in jest.mock setups) don't trigger warnings.
+
+### Fixed
+
+- Eliminated all 27 pre-existing ESLint warnings across 9 test files (unused
+  imports, unused variables, dead helper functions).
+
 ## [1.1.0] - 2026-04-16
 
 ### Added

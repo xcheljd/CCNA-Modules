@@ -5,9 +5,9 @@ import ProgressTracker from '../../utils/progressTracker';
 import ActivityTracker from '../../utils/activityTracker';
 import SettingsManager from '../../utils/settingsManager';
 import {
-  OverallProgressSection,
-  ModulesNeedingReviewSection,
-  StudyStreakSection,
+  OverallProgressSection as _OverallProgressSection,
+  ModulesNeedingReviewSection as _ModulesNeedingReviewSection,
+  StudyStreakSection as _StudyStreakSection,
   LearningGoalsSection,
   SmartRecommendationsSection,
   UpcomingMilestonesSection,
@@ -52,7 +52,7 @@ jest.mock('../dashboard/DashboardSections', () => ({
       </button>
     </div>
   )),
-  ModulesNeedingReviewSection: jest.fn(({ modules, onModuleSelect }) => (
+  ModulesNeedingReviewSection: jest.fn(({ modules, onModuleSelect: _onModuleSelect }) => (
     <div data-testid="section-modules-needing-review">
       {modules.map(m => (
         <span key={m.id} data-testid={`review-module-${m.id}`}>
@@ -64,14 +64,16 @@ jest.mock('../dashboard/DashboardSections', () => ({
   StudyStreakSection: jest.fn(({ refreshKey }) => (
     <div data-testid="section-study-streak" data-refresh-key={refreshKey} />
   )),
-  LearningGoalsSection: jest.fn(({ modules }) => <div data-testid="section-learning-goals" />),
-  SmartRecommendationsSection: jest.fn(({ modules, onModuleSelect }) => (
+  LearningGoalsSection: jest.fn(({ modules: _modules }) => (
+    <div data-testid="section-learning-goals" />
+  )),
+  SmartRecommendationsSection: jest.fn(({ modules: _modules, onModuleSelect: _onModuleSelect }) => (
     <div data-testid="section-smart-recommendations" />
   )),
-  UpcomingMilestonesSection: jest.fn(({ modules }) => (
+  UpcomingMilestonesSection: jest.fn(({ modules: _modules }) => (
     <div data-testid="section-upcoming-milestones" />
   )),
-  PerformanceChartsSection: jest.fn(({ modules }) => (
+  PerformanceChartsSection: jest.fn(({ modules: _modules }) => (
     <div data-testid="section-performance-charts" />
   )),
 }));

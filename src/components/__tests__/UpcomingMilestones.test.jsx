@@ -26,16 +26,6 @@ function createModules(count, startId = 1, startDay = 1) {
   }));
 }
 
-// Helper to set ProgressTracker return values for modules
-function setProgressValues(modules, progressValues) {
-  modules.forEach((mod, i) => {
-    ProgressTracker.getModuleProgress.mockImplementation(m => {
-      const idx = modules.findIndex(mm => mm.id === m.id);
-      return idx >= 0 ? progressValues[idx] : 0;
-    });
-  });
-}
-
 describe('UpcomingMilestones', () => {
   beforeEach(() => {
     jest.clearAllMocks();

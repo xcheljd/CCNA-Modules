@@ -1,11 +1,10 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ConfidenceRating from '../ConfidenceRating';
 
 describe('ConfidenceRating', () => {
   const mockOnRate = jest.fn();
-  const defaultModuleId = 1;
 
   beforeEach(() => {
     jest.clearAllMocks();

@@ -498,8 +498,8 @@ ipcMain.handle('close-video-window', async (event, windowId) => {
   return { success: false, error: 'Window not found' };
 });
 
-// Close all video windows
-ipcMain.handle('close-all-video-windows', async () => {
+// Close all open video windows and return the count closed
+function closeAllVideoWindows() {
   let closed = 0;
   videoWindows.forEach(window => {
     if (!window.isDestroyed()) {
@@ -508,18 +508,13 @@ ipcMain.handle('close-all-video-windows', async () => {
     }
   });
   videoWindows.clear();
+  return closed;
+}
+
+ipcMain.handle('close-all-video-windows', async () => {
+  const closed = closeAllVideoWindows();
   return { success: true, closed };
 });
-
-// Close all open video windows (cookies cached in-memory shouldn't outlive a sign-out)
-function closeAllVideoWindows() {
-  videoWindows.forEach(window => {
-    if (!window.isDestroyed()) {
-      window.close();
-    }
-  });
-  videoWindows.clear();
-}
 
 // Open a Google/YouTube sign-in window in the shared persistent partition
 ipcMain.handle('open-youtube-signin', async () => {
