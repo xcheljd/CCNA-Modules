@@ -1,6 +1,9 @@
 // Study streak tracking utility using localStorage
 import { format, subDays } from 'date-fns';
-import { getTodayDate as getTodayDateFn, getYesterdayDate as getYesterdayDateFn } from './dateHelpers';
+import {
+  getTodayDate as getTodayDateFn,
+  getYesterdayDate as getYesterdayDateFn,
+} from './dateHelpers';
 
 export const StreakTracker = {
   // Initialize or get streak data
