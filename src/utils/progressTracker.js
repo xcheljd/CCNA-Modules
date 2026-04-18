@@ -66,19 +66,10 @@ export const ProgressTracker = {
     return labCount > 0;
   },
 
-  // Migrate legacy single-key lab data to per-lab keys
-  // Old format: lab_${moduleId}_completed -> New format: lab_${moduleId}_0_completed
-  _migrateLegacyLabData(moduleId) {
-    const legacyKey = `lab_${moduleId}_completed`;
-    if (localStorage.getItem(legacyKey) === 'true') {
-      localStorage.setItem(`lab_${moduleId}_0_completed`, 'true');
-      localStorage.removeItem(legacyKey);
-    }
-  },
-
   // Get lab completion state map for a module
+  // Note: legacy lab key migration (lab_X_completed -> lab_X_0_completed) is
+  // handled once at startup by migrations.js, not here.
   getLabCompletions(moduleId, labCount) {
-    this._migrateLegacyLabData(moduleId);
     const completions = {};
     for (let i = 0; i < labCount; i++) {
       completions[i] = this.isLabComplete(moduleId, i);

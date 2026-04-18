@@ -95,17 +95,6 @@ describe('ProgressTracker', () => {
       expect(localStorage.getItem(`lab_${moduleId}_${labIndex}_completed`)).toBeNull();
     });
 
-    it('should migrate legacy single-key lab data', () => {
-      const moduleId = 1;
-      localStorage.setItem(`lab_${moduleId}_completed`, 'true');
-
-      const completions = ProgressTracker.getLabCompletions(moduleId, 1);
-
-      expect(completions[0]).toBe(true);
-      expect(localStorage.getItem(`lab_${moduleId}_completed`)).toBeNull();
-      expect(localStorage.getItem(`lab_${moduleId}_0_completed`)).toBe('true');
-    });
-
     it('should get lab completions for multi-lab module', () => {
       const moduleId = 11;
       ProgressTracker.markLabComplete(moduleId, 0);

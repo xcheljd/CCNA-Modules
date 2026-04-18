@@ -10,9 +10,9 @@ const SCHEMA_VERSION_KEY = 'schema-version';
 // Must not throw -- wrap risky operations in try/catch and return data unchanged on failure
 const MIGRATIONS = [
   // Migration 0 -> 1: Normalize legacy lab keys and add schema tracking
-  // This is a no-op migration that establishes the schema version baseline.
-  // The legacy lab migration already exists in progressTracker._migrateLegacyLabData()
-  // and will continue to work. This migration just marks that schema versioning is active.
+  // Scans for legacy single-key format (lab_{moduleId}_completed) and converts
+  // to the indexed format (lab_{moduleId}_0_completed). This is the sole migration
+  // path -- progressTracker no longer performs per-call migration.
   function migrate0to1() {
     // Scan for legacy lab keys that progressTracker might not have migrated yet
     const keysToRemove = [];
