@@ -2,7 +2,46 @@ import React, { useState, useEffect, useCallback } from 'react';
 import GoalTracker from '../utils/goalTracker';
 import GoalModal from './GoalModal';
 import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon, CircularProgress } from './ui/Icons';
+import { ColorHelpers } from '@/utils/colorHelpers';
 import '../styles/dashboard.css';
+
+const GOAL_METRICS = [
+  { icon: GridIcon, label: 'Modules', key: 'modulesCompleted' },
+  { icon: VideoIcon, label: 'Videos', key: 'videosWatched' },
+  { icon: LabIcon, label: 'Labs', key: 'labsCompleted' },
+  { icon: FlashcardsIcon, label: 'Flashcards', key: 'flashcardsAdded' },
+];
+
+export function getProgressPercentage(current, target) {
+  if (target === 0) return 0;
+  return Math.min((current / target) * 100, 100);
+}
+
+function GoalMetricCard({ icon: Icon, label, current, target }) {
+  const pct = getProgressPercentage(current, target);
+  return (
+    <div className="goal-metric-card">
+      <Icon className="goal-metric-icon" />
+      <div className="goal-metric-content">
+        <div className="goal-metric-header">
+          <span className="goal-metric-label">{label}</span>
+          <span className="goal-metric-value">
+            {current}/{target}
+          </span>
+        </div>
+        <div className="goal-metric-bar">
+          <div
+            className="goal-metric-fill"
+            style={{
+              width: `${pct}%`,
+              background: ColorHelpers.getProgressColor(pct),
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function GoalCard({ modules }) {
   const [goal, setGoal] = useState(null);
@@ -47,18 +86,6 @@ function GoalCard({ modules }) {
     }
   };
 
-  const getProgressPercentage = (current, target) => {
-    if (target === 0) return 0;
-    return Math.min((current / target) * 100, 100);
-  };
-
-  const getProgressColor = (current, target) => {
-    const progress = getProgressPercentage(current, target);
-    if (progress === 0) return 'hsl(var(--muted))';
-    if (progress === 100) return 'var(--color-progress-complete)';
-    return 'hsl(var(--ring))';
-  };
-
   if (!goal) {
     return (
       <div className="goal-card no-goal">
@@ -101,109 +128,15 @@ function GoalCard({ modules }) {
       </div>
 
       <div className="goal-metrics goal-metrics-grid">
-        {goal.target.modulesCompleted > 0 && (
-          <div className="goal-metric-card">
-            <GridIcon className="goal-metric-icon" />
-            <div className="goal-metric-content">
-              <div className="goal-metric-header">
-                <span className="goal-metric-label">Modules</span>
-                <span className="goal-metric-value">
-                  {goal.progress.modulesCompleted}/{goal.target.modulesCompleted}
-                </span>
-              </div>
-              <div className="goal-metric-bar">
-                <div
-                  className="goal-metric-fill"
-                  style={{
-                    width: `${getProgressPercentage(goal.progress.modulesCompleted, goal.target.modulesCompleted)}%`,
-                    background: getProgressColor(
-                      goal.progress.modulesCompleted,
-                      goal.target.modulesCompleted
-                    ),
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {goal.target.videosWatched > 0 && (
-          <div className="goal-metric-card">
-            <VideoIcon className="goal-metric-icon" />
-            <div className="goal-metric-content">
-              <div className="goal-metric-header">
-                <span className="goal-metric-label">Videos</span>
-                <span className="goal-metric-value">
-                  {goal.progress.videosWatched}/{goal.target.videosWatched}
-                </span>
-              </div>
-              <div className="goal-metric-bar">
-                <div
-                  className="goal-metric-fill"
-                  style={{
-                    width: `${getProgressPercentage(goal.progress.videosWatched, goal.target.videosWatched)}%`,
-                    background: getProgressColor(
-                      goal.progress.videosWatched,
-                      goal.target.videosWatched
-                    ),
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {goal.target.labsCompleted > 0 && (
-          <div className="goal-metric-card">
-            <LabIcon className="goal-metric-icon" />
-            <div className="goal-metric-content">
-              <div className="goal-metric-header">
-                <span className="goal-metric-label">Labs</span>
-                <span className="goal-metric-value">
-                  {goal.progress.labsCompleted}/{goal.target.labsCompleted}
-                </span>
-              </div>
-              <div className="goal-metric-bar">
-                <div
-                  className="goal-metric-fill"
-                  style={{
-                    width: `${getProgressPercentage(goal.progress.labsCompleted, goal.target.labsCompleted)}%`,
-                    background: getProgressColor(
-                      goal.progress.labsCompleted,
-                      goal.target.labsCompleted
-                    ),
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {goal.target.flashcardsAdded > 0 && (
-          <div className="goal-metric-card">
-            <FlashcardsIcon className="goal-metric-icon" />
-            <div className="goal-metric-content">
-              <div className="goal-metric-header">
-                <span className="goal-metric-label">Flashcards</span>
-                <span className="goal-metric-value">
-                  {goal.progress.flashcardsAdded}/{goal.target.flashcardsAdded}
-                </span>
-              </div>
-              <div className="goal-metric-bar">
-                <div
-                  className="goal-metric-fill"
-                  style={{
-                    width: `${getProgressPercentage(goal.progress.flashcardsAdded, goal.target.flashcardsAdded)}%`,
-                    background: getProgressColor(
-                      goal.progress.flashcardsAdded,
-                      goal.target.flashcardsAdded
-                    ),
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
+        {GOAL_METRICS.filter(m => goal.target[m.key] > 0).map(m => (
+          <GoalMetricCard
+            key={m.key}
+            icon={m.icon}
+            label={m.label}
+            current={goal.progress[m.key]}
+            target={goal.target[m.key]}
+          />
+        ))}
       </div>
 
       {successRate > 0 && (
