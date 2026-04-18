@@ -1,6 +1,6 @@
 // Performance tracking utilities for historical data and analytics
 import { format, subDays, startOfWeek, endOfWeek, eachDayOfInterval } from 'date-fns';
-import { getTodayDate } from './dateHelpers';
+import { getTodayDate as getTodayDateFn } from './dateHelpers';
 import ProgressTracker from './progressTracker';
 
 export const PerformanceTracker = {
@@ -33,7 +33,9 @@ export const PerformanceTracker = {
   },
 
   // Date helper delegated to dateHelpers.js
-  getTodayDate,
+  getTodayDate() {
+    return getTodayDateFn();
+  },
 
   // Record daily snapshot of progress
   recordDailySnapshot(modules) {
