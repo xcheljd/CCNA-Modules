@@ -1,6 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import LoadingScreen from './components/LoadingScreen';
 import WelcomeDialog from './components/WelcomeDialog';
+import YoutubeSigninDialog from './components/YoutubeSigninDialog';
 import { ToastProvider, useToast } from '@/components/ui/toast';
 import { LayoutDashboard, List } from 'lucide-react';
 import modules from './data/modules';
@@ -43,6 +44,9 @@ function AppContent() {
   const [showWelcome, setShowWelcome] = useState(() => {
     const hasSeenWelcome = localStorage.getItem('hasSeenWelcome');
     return !hasSeenWelcome;
+  });
+  const [showYoutubePrompt, setShowYoutubePrompt] = useState(() => {
+    return !localStorage.getItem('hasSeenYoutubePrompt');
   });
   const [loadingStatus, setLoadingStatus] = useState('Initializing...');
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -417,6 +421,10 @@ function AppContent() {
       </main>
 
       <WelcomeDialog open={showWelcome && !isLoading} onOpenChange={setShowWelcome} />
+      <YoutubeSigninDialog
+        open={!showWelcome && showYoutubePrompt && !isLoading}
+        onOpenChange={setShowYoutubePrompt}
+      />
     </div>
   );
 }

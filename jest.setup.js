@@ -20,6 +20,10 @@ global.window.electronAPI = {
   resetResourcesPath: jest.fn().mockResolvedValue({ success: true }),
   exportProgressBackup: jest.fn().mockResolvedValue({ success: true }),
   openExternalUrl: jest.fn().mockResolvedValue({ success: true }),
+  openYoutubeSignin: jest.fn().mockResolvedValue({ success: true }),
+  getYoutubeSigninStatus: jest.fn().mockResolvedValue({ signedIn: false }),
+  signOutYoutube: jest.fn().mockResolvedValue({ success: true }),
+  onYoutubeSigninChanged: jest.fn(() => () => {}),
 };
 
 // Mock process.resourcesPath for production builds

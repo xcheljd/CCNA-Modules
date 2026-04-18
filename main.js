@@ -16,6 +16,17 @@ function isAllowedHostname(urlString, allowedDomains) {
   }
 }
 
+const YOUTUBE_PARTITION = 'persist:youtube-session';
+
+// YouTube treats the session as Chrome only when the Electron identifier is absent from the UA
+function getChromeUserAgent(sess) {
+  return sess
+    .getUserAgent()
+    .replace(/Electron\/\S+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 // Config file for storing custom resources path
 const configPath = path.join(app.getPath('userData'), 'config.json');
 
@@ -319,14 +330,8 @@ ipcMain.handle('open-video-window', async (event, { videoId, moduleId: _moduleId
       return { success: false, error: 'Invalid video ID: must be 11 alphanumeric characters' };
     }
     // Get persistent session for YouTube (enables login persistence)
-    const youtubeSession = session.fromPartition('persist:youtube-session');
-
-    // Set user agent dynamically from Electron's Chromium, stripping Electron identifiers
-    const originalUA = youtubeSession.getUserAgent();
-    const chromeUserAgent = originalUA
-      .replace(/Electron\/\S+/g, '')
-      .replace(/\s+/g, ' ')
-      .trim();
+    const youtubeSession = session.fromPartition(YOUTUBE_PARTITION);
+    const chromeUserAgent = getChromeUserAgent(youtubeSession);
     youtubeSession.setUserAgent(chromeUserAgent);
 
     const videoWindow = new BrowserWindow({
@@ -336,7 +341,7 @@ ipcMain.handle('open-video-window', async (event, { videoId, moduleId: _moduleId
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
-        partition: 'persist:youtube-session', // Critical for login persistence
+        partition: YOUTUBE_PARTITION, // Critical for login persistence
         webSecurity: true,
       },
     });
@@ -458,7 +463,7 @@ ipcMain.handle('open-video-window', async (event, { videoId, moduleId: _moduleId
             width: 500,
             height: 600,
             webPreferences: {
-              partition: 'persist:youtube-session', // Share same session
+              partition: YOUTUBE_PARTITION, // Share same session
               contextIsolation: true,
               nodeIntegration: false,
             },
@@ -504,6 +509,122 @@ ipcMain.handle('close-all-video-windows', async () => {
   });
   videoWindows.clear();
   return { success: true, closed };
+});
+
+// Close all open video windows (cookies cached in-memory shouldn't outlive a sign-out)
+function closeAllVideoWindows() {
+  videoWindows.forEach(window => {
+    if (!window.isDestroyed()) {
+      window.close();
+    }
+  });
+  videoWindows.clear();
+}
+
+// Open a Google/YouTube sign-in window in the shared persistent partition
+ipcMain.handle('open-youtube-signin', async () => {
+  try {
+    const youtubeSession = session.fromPartition(YOUTUBE_PARTITION);
+    const chromeUserAgent = getChromeUserAgent(youtubeSession);
+    youtubeSession.setUserAgent(chromeUserAgent);
+
+    const signinWindow = new BrowserWindow({
+      width: 500,
+      height: 700,
+      backgroundColor: '#ffffff',
+      title: 'Sign in to YouTube',
+      parent: mainWindow && !mainWindow.isDestroyed() ? mainWindow : undefined,
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: true,
+        partition: YOUTUBE_PARTITION,
+        webSecurity: true,
+      },
+    });
+
+    signinWindow.loadURL(
+      'https://accounts.google.com/ServiceLogin?service=youtube&continue=https%3A%2F%2Fwww.youtube.com%2F',
+      { userAgent: chromeUserAgent }
+    );
+
+    signinWindow.webContents.on('will-navigate', (event, url) => {
+      if (!isAllowedHostname(url, ['google.com', 'youtube.com'])) {
+        event.preventDefault();
+      }
+    });
+
+    // Deterministic signal that YouTube has finished its own session handshake:
+    // SAPISID is only written to .youtube.com once the user has an authenticated
+    // YouTube session. Listening for the cookie event avoids load-timing guesses.
+    const onCookieChanged = (_event, cookie, _cause, removed) => {
+      if (removed) return;
+      if (cookie.name !== 'SAPISID') return;
+      const domain = cookie.domain || '';
+      if (!domain.endsWith('youtube.com')) return;
+      youtubeSession.cookies.removeListener('changed', onCookieChanged);
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send('youtube-signin-changed', { signedIn: true });
+      }
+      if (!signinWindow.isDestroyed()) {
+        signinWindow.close();
+      }
+    };
+    youtubeSession.cookies.on('changed', onCookieChanged);
+    signinWindow.on('closed', () => {
+      youtubeSession.cookies.removeListener('changed', onCookieChanged);
+    });
+
+    signinWindow.webContents.setWindowOpenHandler(({ url }) => {
+      const allowed = isAllowedHostname(url, ['accounts.google.com', 'google.com']);
+      if (allowed) {
+        return {
+          action: 'allow',
+          overrideBrowserWindowOptions: {
+            width: 500,
+            height: 600,
+            webPreferences: {
+              partition: YOUTUBE_PARTITION,
+              contextIsolation: true,
+              nodeIntegration: false,
+            },
+          },
+        };
+      }
+      return { action: 'deny' };
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error opening YouTube sign-in window:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Presence of SAPISID on .youtube.com reliably indicates an authenticated session
+ipcMain.handle('youtube-signin-status', async () => {
+  try {
+    const cookies = await session
+      .fromPartition(YOUTUBE_PARTITION)
+      .cookies.get({ domain: '.youtube.com', name: 'SAPISID' });
+    return { signedIn: cookies.length > 0 };
+  } catch (error) {
+    console.error('Error reading YouTube sign-in status:', error);
+    return { signedIn: false, error: error.message };
+  }
+});
+
+ipcMain.handle('youtube-signout', async () => {
+  try {
+    closeAllVideoWindows();
+    await session.fromPartition(YOUTUBE_PARTITION).clearStorageData();
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('youtube-signin-changed', { signedIn: false });
+    }
+    return { success: true };
+  } catch (error) {
+    console.error('Error signing out of YouTube:', error);
+    return { success: false, error: error.message };
+  }
 });
 
 // Cleanup all video windows before app quits

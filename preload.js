@@ -31,4 +31,17 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   // External URL handling
   openExternalUrl: url => ipcRenderer.invoke('open-external-url', url),
+
+  // YouTube sign-in (persistent session cookies for Premium + resume state)
+  openYoutubeSignin: () => ipcRenderer.invoke('open-youtube-signin'),
+
+  getYoutubeSigninStatus: () => ipcRenderer.invoke('youtube-signin-status'),
+
+  signOutYoutube: () => ipcRenderer.invoke('youtube-signout'),
+
+  onYoutubeSigninChanged: callback => {
+    const listener = (_event, payload) => callback(payload);
+    ipcRenderer.on('youtube-signin-changed', listener);
+    return () => ipcRenderer.removeListener('youtube-signin-changed', listener);
+  },
 });

@@ -17,6 +17,10 @@ beforeAll(() => {
     resetResourcesPath: jest.fn().mockResolvedValue({ success: true }),
     openExternalUrl: jest.fn().mockResolvedValue({ success: true }),
     exportProgressBackup: jest.fn().mockResolvedValue({ success: true }),
+    openYoutubeSignin: jest.fn().mockResolvedValue({ success: true }),
+    getYoutubeSigninStatus: jest.fn().mockResolvedValue({ signedIn: false }),
+    signOutYoutube: jest.fn().mockResolvedValue({ success: true }),
+    onYoutubeSigninChanged: jest.fn(() => () => {}),
   };
 });
 
@@ -60,6 +64,7 @@ describe('Settings', () => {
     expect(screen.getByText('Resources Path')).toBeInTheDocument();
     expect(screen.getByText('Dashboard')).toBeInTheDocument();
     expect(screen.getByText('Theme')).toBeInTheDocument();
+    expect(screen.getByText('YouTube')).toBeInTheDocument();
     expect(screen.getByText('Data Management')).toBeInTheDocument();
     expect(screen.getByText('About')).toBeInTheDocument();
   });
@@ -87,6 +92,61 @@ describe('Settings', () => {
 
     expect(themeTab).toHaveClass('settings-tab');
     expect(themeTab).toHaveAttribute('data-state', 'active');
+  });
+
+  describe('YouTube tab', () => {
+    async function openYoutubeTab(user) {
+      await act(async () => {
+        render(<SettingsWrapper open={true} onOpenChange={jest.fn()} />);
+      });
+      await user.click(screen.getByRole('tab', { name: /YouTube/ }));
+    }
+
+    it('shows Not signed in and a Sign in button when status is signed-out', async () => {
+      window.electronAPI.getYoutubeSigninStatus.mockResolvedValueOnce({ signedIn: false });
+      const user = userEvent.setup();
+      await openYoutubeTab(user);
+
+      expect(await screen.findByText(/Not signed in/)).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Sign in to YouTube/ })).toBeInTheDocument();
+    });
+
+    it('invokes openYoutubeSignin when Sign in is clicked', async () => {
+      window.electronAPI.getYoutubeSigninStatus.mockResolvedValueOnce({ signedIn: false });
+      const user = userEvent.setup();
+      await openYoutubeTab(user);
+
+      const signInBtn = await screen.findByRole('button', { name: /Sign in to YouTube/ });
+      await user.click(signInBtn);
+
+      expect(window.electronAPI.openYoutubeSignin).toHaveBeenCalledTimes(1);
+    });
+
+    it('shows Sign out and calls signOutYoutube when already signed in', async () => {
+      window.electronAPI.getYoutubeSigninStatus.mockResolvedValueOnce({ signedIn: true });
+      const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
+      const user = userEvent.setup();
+      await openYoutubeTab(user);
+
+      const signOutBtn = await screen.findByRole('button', { name: /Sign out/ });
+      await user.click(signOutBtn);
+
+      expect(window.electronAPI.signOutYoutube).toHaveBeenCalledTimes(1);
+      confirmSpy.mockRestore();
+    });
+
+    it('does not sign out when the user cancels the confirm dialog', async () => {
+      window.electronAPI.getYoutubeSigninStatus.mockResolvedValueOnce({ signedIn: true });
+      const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
+      const user = userEvent.setup();
+      await openYoutubeTab(user);
+
+      const signOutBtn = await screen.findByRole('button', { name: /Sign out/ });
+      await user.click(signOutBtn);
+
+      expect(window.electronAPI.signOutYoutube).not.toHaveBeenCalled();
+      confirmSpy.mockRestore();
+    });
   });
 
   it('should close when pressing Escape', async () => {

@@ -233,6 +233,17 @@ Videos open in a dedicated in-app window (Electron `BrowserWindow` pointed at
 `youtube.com/watch?v=…`) so playback is isolated from the main window and
 persists its own YouTube session.
 
+Optional YouTube sign-in is available via **Settings → YouTube**. Signing in
+enables ad-free playback for YouTube Premium subscribers plus resume position,
+watch history, and subscription signals for everyone. Authentication happens
+directly with Google in a partitioned window — no OAuth tokens, passwords, or
+credentials are ever seen by CCNA-Modules. Session cookies are stored by
+Chromium under the app's user-data folder at
+`Partitions/persist:youtube-session/` (e.g. `~/.config/ccna-modules/` on Linux,
+`~/Library/Application Support/ccna-modules/` on macOS,
+`%APPDATA%\ccna-modules\` on Windows) and can be wiped at any time via the
+**Sign out** button in the same settings tab.
+
 ### Resource Handling
 
 - **User-provided**: Resources are downloaded by users from Jeremy's IT Lab
@@ -287,6 +298,14 @@ Each module in `src/data/modules.js`:
    controls (speed, chapter skip, PiP) are not available either. All require
    the YouTube IFrame Player API + an authenticated session, which the
    current dedicated-window approach does not integrate.
+
+3. **YouTube sign-in with passkeys (QR code option)**: The "Use a phone or
+   tablet" QR-code passkey flow relies on Chrome's hybrid transport (caBLE),
+   which is a Chrome-exclusive feature not included in upstream Chromium or
+   Electron. If you use passkeys, choose a USB security key, a platform
+   authenticator (Touch ID / Windows Hello), or fall back to password + 2FA
+   in the sign-in window. Standard username + password sign-in works
+   normally.
 
 ## Roadmap
 

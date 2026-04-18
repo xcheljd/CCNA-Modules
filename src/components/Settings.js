@@ -7,12 +7,13 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { FolderOpen, LayoutDashboard, Database, Palette, Info } from 'lucide-react';
+import { FolderOpen, LayoutDashboard, Database, Palette, Info, Video } from 'lucide-react';
 import ResourcesPathTab from './settings/ResourcesPathTab';
 import DashboardTab from './settings/DashboardTab';
 import DataManagementTab from './settings/DataManagementTab';
 import ThemeTab from './settings/ThemeTab';
 import AboutTab from './settings/AboutTab';
+import YoutubeTab from './settings/YoutubeTab';
 import '../styles/Settings.css';
 
 function Settings({ open, onOpenChange }) {
@@ -20,6 +21,7 @@ function Settings({ open, onOpenChange }) {
     { id: 'resources', label: 'Resources Path', Icon: FolderOpen, Component: ResourcesPathTab },
     { id: 'dashboard', label: 'Dashboard', Icon: LayoutDashboard, Component: DashboardTab },
     { id: 'theme', label: 'Theme', Icon: Palette, Component: ThemeTab },
+    { id: 'youtube', label: 'YouTube', Icon: Video, Component: YoutubeTab },
     { id: 'data', label: 'Data Management', Icon: Database, Component: DataManagementTab },
     { id: 'about', label: 'About', Icon: Info, Component: AboutTab },
   ];

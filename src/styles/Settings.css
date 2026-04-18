@@ -92,6 +92,7 @@
   /* Tabs Navigation */
   .settings-tabs {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.25rem;
     background: hsl(var(--muted) / 0.3);
     padding: 0.25rem;
@@ -102,8 +103,11 @@
   .settings-tab {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0.625rem 0.875rem;
     background: transparent;
     border: none;
     border-radius: 8px;
@@ -112,6 +116,7 @@
     color: hsl(var(--muted-foreground));
     font-weight: 500;
     position: relative;
+    white-space: nowrap;
   }
 
   .settings-tab:hover {
@@ -156,6 +161,15 @@
   .tab-description {
     color: hsl(var(--muted-foreground));
     margin-bottom: 1rem;
+  }
+
+  .tab-description-list {
+    color: hsl(var(--muted-foreground));
+    margin: 0 0 1rem 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
   }
 
   /* Resources Path Tab */
@@ -1046,6 +1060,11 @@
     margin-top: 1.5rem;
     padding-top: 1.5rem;
     border-top: 1px solid hsl(var(--border));
+  }
+
+  .welcome-actions-pair {
+    gap: 0.75rem;
+    flex-wrap: wrap;
   }
 
   .get-started-btn {
