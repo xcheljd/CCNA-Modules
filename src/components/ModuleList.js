@@ -87,8 +87,8 @@ function ModuleList({ modules, onModuleSelect }) {
   };
 
   return (
-    <div className="module-list">
-      <div className="module-list-header">
+    <div className="p-5">
+      <div className="flex justify-between items-start mb-5 gap-5">
         <SearchBar
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
@@ -97,16 +97,16 @@ function ModuleList({ modules, onModuleSelect }) {
           filterConfidence={filterConfidence}
           onConfidenceFilterChange={setFilterConfidence}
         />
-        <div className="view-toggle">
+        <div className="flex gap-1 bg-card rounded-lg p-1 border border-border">
           <button
-            className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
+            className={`view-toggle-btn px-3 py-2 bg-transparent border-none rounded-md cursor-pointer text-muted-foreground transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] flex items-center justify-center hover:bg-muted hover:text-foreground ${viewMode === 'grid' ? 'active' : ''}`}
             onClick={() => handleViewModeChange('grid')}
             aria-label="Grid view"
           >
             <GridIcon />
           </button>
           <button
-            className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
+            className={`view-toggle-btn px-3 py-2 bg-transparent border-none rounded-md cursor-pointer text-muted-foreground transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] flex items-center justify-center hover:bg-muted hover:text-foreground ${viewMode === 'list' ? 'active' : ''}`}
             onClick={() => handleViewModeChange('list')}
             aria-label="List view"
           >
@@ -123,55 +123,112 @@ function ModuleList({ modules, onModuleSelect }) {
       </div>
 
       {filteredModules.length === 0 && (
-        <div className="no-results">
-          <p>No modules found matching your criteria.</p>
+        <div className="text-center py-15 px-5 text-muted-foreground">
+          <p className="text-lg mb-5">No modules found matching your criteria.</p>
           {searchQuery && (
-            <button onClick={() => setSearchQuery('')} className="clear-filters-btn">
+            <button
+              onClick={() => setSearchQuery('')}
+              className="px-5 py-2.5 mx-2 text-[15px] bg-primary text-primary-foreground border-none rounded-lg cursor-pointer transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)]"
+            >
               Clear search
             </button>
           )}
           {filterStatus !== 'all' && (
-            <button onClick={() => setFilterStatus('all')} className="clear-filters-btn">
+            <button
+              onClick={() => setFilterStatus('all')}
+              className="px-5 py-2.5 mx-2 text-[15px] bg-primary text-primary-foreground border-none rounded-lg cursor-pointer transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)]"
+            >
               Clear status filter
             </button>
           )}
           {filterConfidence !== 'all' && (
-            <button onClick={() => setFilterConfidence('all')} className="clear-filters-btn">
+            <button
+              onClick={() => setFilterConfidence('all')}
+              className="px-5 py-2.5 mx-2 text-[15px] bg-primary text-primary-foreground border-none rounded-lg cursor-pointer transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)]"
+            >
               Clear confidence filter
             </button>
           )}
         </div>
       )}
 
-      <div className={`modules-container ${viewMode}-view ${isSwitchingView ? 'switching' : ''}`}>
+      <div
+        className={`modules-container grid gap-5 transition-opacity duration-150 ease ${
+          viewMode === 'grid'
+            ? 'grid-cols-[repeat(auto-fill,minmax(280px,1fr))]'
+            : 'grid-cols-1 gap-3'
+        } ${isSwitchingView ? 'opacity-0' : ''}`}
+      >
         {filteredModules.map(module => {
           const progress = moduleProgress[module.id] || 0;
           const progressColor = ColorHelpers.getProgressColor(progress);
           const confidence = ProgressTracker.getModuleConfidence(module.id);
 
           return (
-            <div key={module.id} className="module-card" onClick={() => onModuleSelect(module)}>
-              <div className="module-header">
-                <span className="module-day">Day {module.day}</span>
-                <span className="module-progress">{Math.round(progress)}%</span>
+            <div
+              key={module.id}
+              className={`module-card bg-card border border-border rounded-xl p-5 cursor-pointer transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] animate-[fadeInUp_0.4s_ease-out_backwards] ${
+                viewMode === 'grid'
+                  ? 'min-h-[220px] flex flex-col hover:shadow-[0_4px_12px_hsl(var(--primary-foreground)/0.12)] hover:-translate-y-1 hover:border-primary'
+                  : 'flex flex-col min-h-[120px] relative overflow-hidden mb-0 hover:translate-x-1 hover:shadow-[0_1px_6px_hsl(var(--primary-foreground)/0.08)]'
+              }`}
+              onClick={() => onModuleSelect(module)}
+            >
+              <div
+                className={`module-header ${
+                  viewMode === 'grid'
+                    ? 'flex justify-between items-center mb-2.5'
+                    : 'flex flex-col items-start gap-1.5 mb-0 min-w-[140px] shrink-0'
+                }`}
+              >
+                <span className="bg-primary text-primary-foreground px-3 py-1 rounded-xl text-sm font-semibold">
+                  Day {module.day}
+                </span>
+                <span
+                  className={`font-semibold text-muted-foreground ${
+                    viewMode === 'list' ? 'text-[15px] ml-auto' : ''
+                  }`}
+                >
+                  {Math.round(progress)}%
+                </span>
               </div>
 
-              <div className="module-title-row">
-                <h3 className="module-title">{module.title}</h3>
+              <div className="flex items-center justify-between my-2.5">
+                <h3
+                  className={`m-0 flex-1 ${
+                    viewMode === 'grid'
+                      ? 'text-lg text-foreground my-2.5'
+                      : 'text-[17px] font-semibold text-foreground leading-[1.3] line-clamp-2 overflow-hidden'
+                  }`}
+                >
+                  {module.title}
+                </h3>
                 <ConfidenceRating moduleId={module.id} confidence={confidence} compact={true} />
               </div>
 
-              <div className="module-info">
-                <div className="info-item">
-                  <VideoIcon className="info-icon" />
-                  <span>{module.videos.length}</span>
+              <div
+                className={`flex ${
+                  viewMode === 'grid'
+                    ? 'gap-2 text-sm text-muted-foreground mb-4'
+                    : 'flex-row gap-3 text-[13px] text-muted-foreground mb-0 shrink-0 items-center'
+                }`}
+              >
+                <div
+                  className={`flex items-center justify-center gap-1.5 px-2.5 py-2 bg-muted/50 rounded-lg ${
+                    viewMode === 'list' ? '' : ''
+                  }`}
+                >
+                  <VideoIcon className="w-[18px] h-[18px] text-primary shrink-0 [stroke-width:2]" />
+                  <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">
+                    {module.videos.length}
+                  </span>
                 </div>
                 {(() => {
                   const labs = asArray(module.resources.lab);
                   return labs.length > 0 ? (
-                    <div className="info-item">
-                      <LabIcon className="info-icon" />
-                      <span>
+                    <div className="flex items-center justify-center gap-1.5 px-2.5 py-2 bg-muted/50 rounded-lg">
+                      <LabIcon className="w-[18px] h-[18px] text-primary shrink-0 [stroke-width:2]" />
+                      <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">
                         {labs.length} Lab{labs.length > 1 ? 's' : ''}
                       </span>
                     </div>
@@ -180,9 +237,9 @@ function ModuleList({ modules, onModuleSelect }) {
                 {(() => {
                   const fcs = asArray(module.resources.flashcards);
                   return fcs.length > 0 ? (
-                    <div className="info-item">
-                      <FlashcardsIcon className="info-icon" />
-                      <span>
+                    <div className="flex items-center justify-center gap-1.5 px-2.5 py-2 bg-muted/50 rounded-lg">
+                      <FlashcardsIcon className="w-[18px] h-[18px] text-primary shrink-0 [stroke-width:2]" />
+                      <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">
                         {fcs.length} Card{fcs.length > 1 ? 's' : ''}
                       </span>
                     </div>
@@ -190,9 +247,13 @@ function ModuleList({ modules, onModuleSelect }) {
                 })()}
               </div>
 
-              <div className="progress-bar">
+              <div
+                className={`bg-muted rounded overflow-hidden ${
+                  viewMode === 'grid' ? 'w-full h-2 mt-auto' : 'shrink-0 w-[156px] h-2 ml-auto'
+                }`}
+              >
                 <div
-                  className="progress-fill"
+                  className="h-full rounded transition-[width] duration-350 ease"
                   style={{
                     width: `${progress}%`,
                     backgroundColor: progressColor,
