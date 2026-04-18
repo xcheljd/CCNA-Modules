@@ -121,7 +121,10 @@ function UpcomingMilestones({ modules }) {
                       <div className="upcoming-progress-bar">
                         <div
                           className="upcoming-progress-fill"
-                          style={{ width: `${progress}%`, background: ColorHelpers.getProgressColor(progress) }}
+                          style={{
+                            width: `${progress}%`,
+                            background: ColorHelpers.getProgressColor(progress),
+                          }}
                         />
                       </div>
                       <span className="upcoming-progress-text">{Math.round(progress)}%</span>
