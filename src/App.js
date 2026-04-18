@@ -145,23 +145,12 @@ function AppContent() {
           }
         });
 
-        document.body.classList.remove(
-          'theme-light',
-          'theme-dark',
-          'theme-ayu-light',
-          'theme-ayu-dark',
-          'theme-ocean',
-          'theme-neon',
-          'theme-nord',
-          'theme-rose-pine',
-          'theme-mocha',
-          'theme-gruvbox-dark',
-          'theme-gruvbox-light',
-          'theme-spacegray',
-          'theme-spacegray-light',
-          'theme-spacegray-oceanic'
-        );
         const themeClass = `theme-${currentTheme.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`)}`;
+        for (const cls of [...document.body.classList]) {
+          if (cls.startsWith('theme-') && cls !== themeClass) {
+            document.body.classList.remove(cls);
+          }
+        }
         document.body.classList.add(themeClass);
 
         document.documentElement.style.width = '100%';
@@ -174,22 +163,9 @@ function AppContent() {
         localStorage.setItem('app-theme', currentTheme);
       } catch (err) {
         console.error('Error applying theme:', err);
-        document.body.classList.remove(
-          'theme-light',
-          'theme-dark',
-          'theme-ayu-light',
-          'theme-ayu-dark',
-          'theme-ocean',
-          'theme-neon',
-          'theme-nord',
-          'theme-rose-pine',
-          'theme-mocha',
-          'theme-gruvbox-dark',
-          'theme-gruvbox-light',
-          'theme-spacegray',
-          'theme-spacegray-light',
-          'theme-spacegray-oceanic'
-        );
+        for (const cls of [...document.body.classList]) {
+          if (cls.startsWith('theme-')) document.body.classList.remove(cls);
+        }
         document.body.classList.add('theme-light');
       }
     }

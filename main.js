@@ -622,26 +622,26 @@ ipcMain.handle('youtube-signout', async () => {
   }
 });
 
-// Cleanup all video windows before app quits
-app.on('before-quit', () => {
+// Destroy all open video windows (used during app shutdown)
+function destroyAllVideoWindows() {
   videoWindows.forEach(window => {
     if (!window.isDestroyed()) {
       window.destroy();
     }
   });
   videoWindows.clear();
+}
+
+// Cleanup all video windows before app quits
+app.on('before-quit', () => {
+  destroyAllVideoWindows();
 });
 
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
-  // Close any lingering video windows on all platforms
-  videoWindows.forEach(window => {
-    if (!window.isDestroyed()) {
-      window.destroy();
-    }
-  });
-  videoWindows.clear();
+  // Destroy any lingering video windows on all platforms
+  destroyAllVideoWindows();
 
   if (process.platform !== 'darwin') app.quit();
 });

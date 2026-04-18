@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import SearchBar from './SearchBar';
 import ConfidenceRating from './ConfidenceRating';
 import ProgressTracker from '../utils/progressTracker';
+import { asArray } from '@/utils/helpers';
 import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon } from './ui/Icons';
 import '../styles/modules.css';
 
@@ -171,11 +172,7 @@ function ModuleList({ modules, onModuleSelect }) {
                   <span>{module.videos.length}</span>
                 </div>
                 {(() => {
-                  const labs = Array.isArray(module.resources.lab)
-                    ? module.resources.lab
-                    : module.resources.lab
-                      ? [module.resources.lab]
-                      : [];
+                  const labs = asArray(module.resources.lab);
                   return labs.length > 0 ? (
                     <div className="info-item">
                       <LabIcon className="info-icon" />
@@ -186,11 +183,7 @@ function ModuleList({ modules, onModuleSelect }) {
                   ) : null;
                 })()}
                 {(() => {
-                  const fcs = Array.isArray(module.resources.flashcards)
-                    ? module.resources.flashcards
-                    : module.resources.flashcards
-                      ? [module.resources.flashcards]
-                      : [];
+                  const fcs = asArray(module.resources.flashcards);
                   return fcs.length > 0 ? (
                     <div className="info-item">
                       <FlashcardsIcon className="info-icon" />

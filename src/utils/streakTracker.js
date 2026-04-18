@@ -1,5 +1,6 @@
 // Study streak tracking utility using localStorage
 import { format, subDays } from 'date-fns';
+import { getTodayDate, getYesterdayDate } from './dateHelpers';
 
 export const StreakTracker = {
   // Initialize or get streak data
@@ -31,15 +32,9 @@ export const StreakTracker = {
     }
   },
 
-  // Get today's date in ISO format (YYYY-MM-DD)
-  getTodayDate() {
-    return format(new Date(), 'yyyy-MM-dd');
-  },
-
-  // Get yesterday's date in ISO format
-  getYesterdayDate() {
-    return format(subDays(new Date(), 1), 'yyyy-MM-dd');
-  },
+  // Date helpers delegated to dateHelpers.js
+  getTodayDate,
+  getYesterdayDate,
 
   // Record a study activity (video, lab, or flashcard)
   recordStudyActivity(activityType = 'general') {
