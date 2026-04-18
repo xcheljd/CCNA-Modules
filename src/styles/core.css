@@ -1,18 +1,5 @@
 /* ============================================================================
-   CORE.CSS - Consolidated core application styles
-   ============================================================================
-
-   Contains styles from:
-   - global.css (158 lines) - CSS variables, reset, global styles
-   - App.css (407 lines) - App shell, header, navigation
-   - LoadingScreen.css (169 lines) - Loading screen animations
-
-   Total: 734 lines consolidated
-   ============================================================================ */
-
-/* ============================================================================
-   GLOBAL STYLES & CSS VARIABLES
-   (from global.css)
+   CORE.CSS - Application styles (Tailwind v4 + CSS custom properties)
    ============================================================================ */
 
 @import 'tailwindcss';
@@ -45,6 +32,12 @@
   --color-primary-foreground: hsl(var(--primary-foreground));
   --color-secondary: hsl(var(--secondary));
   --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-header: hsl(var(--header));
+  --color-header-foreground: hsl(var(--header-foreground));
+  --color-loading: hsl(var(--loading));
+  --color-loading-foreground: hsl(var(--loading-foreground));
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
 }
 
 @layer base {
@@ -152,9 +145,7 @@
     /* Neon theme variables applied via JS */
   }
 
-  /* Global reset — placed in @layer base so Tailwind utilities (@layer utilities)
-     correctly override padding/margin/border when needed. Previously this was
-     unlayered, which beat layered Tailwind classes in the cascade. */
+  /* Global reset */
   * {
     margin: 0;
     padding: 0;
@@ -164,9 +155,7 @@
       border-color var(--transition-slower) ease-in-out,
       color var(--transition-slower) ease-in-out;
   }
-}
 
-@layer components {
   html {
     overflow-y: scroll;
   }
@@ -178,19 +167,14 @@
   }
 
   body {
-    font-family:
-      -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
-      'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: hsl(var(--background));
     color: hsl(var(--foreground));
   }
 
-  button {
-    font-family: inherit;
-  }
-
+  button,
   input {
     font-family: inherit;
   }
@@ -209,7 +193,6 @@
     color: inherit;
   }
 
-  /* Scrollbar styling - uses theme variables */
   ::-webkit-scrollbar {
     width: 10px;
   }
@@ -226,409 +209,10 @@
   ::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--muted-foreground) / 0.5);
   }
+}
 
-  /* ============================================================================
-     APP SHELL & LAYOUT
-     (from App.css)
-     ============================================================================ */
-
-  .app {
-    min-height: 100vh;
-    width: 100%;
-    background: hsl(var(--background));
-    color: hsl(var(--foreground));
-    transition:
-      background var(--transition-base) ease,
-      color var(--transition-base) ease,
-      margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* App already uses theme variables above - no theme-specific overrides needed */
-
-  .app-header {
-    background: hsl(var(--header));
-    color: hsl(var(--header-foreground));
-    padding: 20px;
-    box-shadow: 0 1px 4px hsl(var(--header-foreground) / 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
-  .header-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2rem;
-  }
-
-  .header-title-group {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex: 1;
-    justify-content: center;
-  }
-
-  .header-content h1 {
-    margin: 0;
-    font-size: 28px;
-    color: hsl(var(--header-foreground));
-  }
-
-  .view-toggle {
-    display: flex;
-    gap: 0.25rem;
-    background: hsl(var(--header-foreground) / 0.1);
-    border-radius: 6px;
-    padding: 0.25rem;
-  }
-
-  .view-toggle-btn {
-    background: transparent;
-    border: 1px solid transparent;
-    padding: 0.5rem;
-    cursor: pointer;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    color: hsl(var(--header-foreground));
-    opacity: 0.7;
-  }
-
-  .view-toggle-btn:hover {
-    opacity: 1;
-    background: hsl(var(--header-foreground) / 0.15);
-    border-color: hsl(var(--header-foreground) / 0.3);
-    transform: scale(1.05);
-  }
-
-  .view-toggle-btn.active {
-    background: hsl(var(--header-foreground));
-    color: hsl(var(--header));
-    border-color: hsl(var(--header-foreground));
-    opacity: 1;
-    box-shadow:
-      0 2px 6px hsl(var(--header-foreground) / 0.3),
-      inset 0 1px 0 hsl(var(--header) / 0.1);
-  }
-
-  .header-nav {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    flex: 1;
-    justify-content: space-between;
-  }
-
-  .nav-buttons {
-    display: flex;
-    gap: 8px;
-    background: hsl(var(--header-foreground) / 0.1);
-    border-radius: 8px;
-    padding: 4px;
-  }
-
-  .nav-btn {
-    padding: 8px 16px;
-    background: none;
-    border: none;
-    border-radius: 6px;
-    color: hsl(var(--header-foreground) / 0.8);
-    cursor: pointer;
-    transition: all var(--transition-base) ease;
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  .nav-btn:hover {
-    background: hsl(var(--header-foreground) / 0.2);
-    color: hsl(var(--header-foreground));
-  }
-
-  .nav-btn.active {
-    background: hsl(var(--header-foreground) / 0.3);
-    color: hsl(var(--header-foreground));
-    font-weight: 600;
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    z-index: 1;
-  }
-
-  .header-stats {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    color: hsl(var(--header-foreground));
-  }
-
-  .progress-bar-small {
-    width: 200px;
-    height: 8px;
-    background: hsl(var(--primary) / 0.3);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  /* Dark Mode Toggle Switch - REMOVED: these selectors were colliding with body theme classes */
-
-  /* Toggle switch styles removed - they were causing body.theme-dark to collapse width */
-
-  /* Settings Button */
-  .settings-button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    border-radius: 0.375rem;
-    margin-left: 0.5rem;
-  }
-
-  .settings-button:hover {
-    background: hsl(var(--header-foreground) / 0.1);
-  }
-
-  .settings-icon {
-    width: 1.5rem;
-    height: 1.5rem;
-    color: hsl(var(--header-foreground));
-    transition: transform var(--transition-base) ease;
-  }
-
-  .settings-button:hover .settings-icon {
-    transform: rotate(30deg);
-  }
-
-  /* Hamburger Menu */
-  .hamburger-menu {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    z-index: 1;
-  }
-
-  .hamburger-menu span {
-    width: 24px;
-    height: 3px;
-    background: hsl(var(--header-foreground));
-    border-radius: 2px;
-    transition: all var(--transition-base) ease;
-  }
-
-  .hamburger-menu:hover span {
-    background: hsl(var(--header-foreground) / 0.8);
-  }
-
-  .menu-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: hsl(var(--primary-foreground) / 0.1);
-    z-index: 999;
-    animation: fadeIn 0.3s ease;
-  }
-
-  .dropdown-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 280px;
-    background: hsl(var(--sidebar));
-    color: hsl(var(--sidebar-foreground));
-    box-shadow: 2px 0 8px hsl(var(--primary-foreground) / 0.15);
-    padding: 80px 20px 20px 20px;
-    z-index: 1000;
-    animation: slideInFromLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .menu-item {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 20px;
-    background: none;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 16px;
-    color: hsl(var(--sidebar-foreground));
-    text-align: left;
-    transition: all var(--transition-base) ease;
-    font-weight: 500;
-  }
-
-  .menu-item:hover {
-    background: hsl(var(--muted));
-    transform: translateX(4px);
-  }
-
-  .menu-icon {
-    width: 22px;
-    height: 22px;
-    flex-shrink: 0;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  /* Dark mode menu - now handled by theme variables */
-
-  .menu-divider {
-    height: 1px;
-    background: hsl(var(--border));
-    margin: 8px 0;
-  }
-
-  /* Adjust app content when menu is open */
-  .app.menu-open {
-    margin-left: 280px;
-  }
-
-  .progress-bar-small {
-    width: 200px;
-    height: 10px;
-    background: hsl(var(--primary-foreground) / 0.3);
-    border-radius: 5px;
-    overflow: hidden;
-  }
-
-  .progress-fill-small {
-    height: 100%;
-    background: var(--color-progress-medium);
-    transition: width var(--transition-base) ease;
-  }
-
-  .warning-banner {
-    background: hsl(var(--destructive) / 0.1);
-    color: hsl(var(--destructive));
-    padding: 15px;
-    text-align: center;
-    border-bottom: 1px solid hsl(var(--destructive) / 0.2);
-  }
-
-  .warning-banner a {
-    color: hsl(var(--primary));
-    margin-left: 10px;
-  }
-
-  /* Lazy loading fallback */
-  .lazy-loading {
-    padding: 20px;
-    text-align: center;
-  }
-
-  .lazy-loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(0, 0, 0, 0.1);
-    border-top: 3px solid var(--primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 20px auto;
-  }
-
-  .app-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
-    overflow-x: hidden;
-  }
-
-  .continue-watching {
-    margin-bottom: 30px;
-    text-align: center;
-  }
-
-  .continue-button {
-    padding: 15px 40px;
-    font-size: 18px;
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px hsl(var(--primary) / 0.3);
-    transition: all var(--transition-base) ease;
-  }
-
-  .continue-button:hover {
-    background: hsl(var(--primary));
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px hsl(var(--primary) / 0.4);
-  }
-
-  /* Warning banner already uses theme variables - no overrides needed */
-
-  /* ============================================================================
-     LOADING SCREEN
-     (from LoadingScreen.css)
-     ============================================================================ */
-
-  .loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: hsl(var(--loading));
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    animation: fadeIn 0.3s ease-in;
-  }
-
-  .loading-content {
-    text-align: center;
-    color: hsl(var(--loading-foreground));
-  }
-
-  .loading-logo {
-    margin-bottom: 30px;
-    display: flex;
-    justify-content: center;
-  }
-
-  .cisco-icon {
-    width: 100px;
-    height: 100px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    backdrop-filter: blur(10px);
-  }
-
-  .network-lines {
-    width: 60px;
-    height: 60px;
-    position: relative;
-  }
-
+@layer components {
+  /* Network lines animation (requires :nth-child selectors) */
   .network-lines span {
     position: absolute;
     background: white;
@@ -659,30 +243,8 @@
     animation: pulse3 1.5s ease-in-out infinite;
   }
 
-  .loading-content h1 {
-    font-size: 32px;
-    margin-bottom: 40px;
-    font-weight: 600;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  }
-
-  .loading-spinner {
-    margin: 0 auto 20px;
-    width: 50px;
-    height: 50px;
-  }
-
-  .spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top: 4px solid white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    position: relative;
-  }
-
-  .spinner::after {
+  /* Spinner outer ring animation (requires ::after pseudo-element) */
+  .loading-spinner-el::after {
     content: '';
     position: absolute;
     inset: -4px;
@@ -691,98 +253,12 @@
     animation: pulse 2s ease-in-out infinite;
   }
 
-  .loading-content p {
-    font-size: 16px;
-    opacity: 0.9;
-    font-weight: 400;
-    letter-spacing: 0.5px;
-  }
-
-  .loading-status {
-    font-size: 16px;
-    opacity: 0.9;
-    font-weight: 400;
-    letter-spacing: 0.5px;
-    margin-bottom: 20px;
-  }
-
-  .loading-progress {
-    width: 200px;
-    margin: 0 auto;
-  }
-
-  .progress-bar {
-    width: 100%;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 2px;
-    overflow: hidden;
-    margin-bottom: 8px;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: white;
-    border-radius: 2px;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .progress-text {
-    display: block;
-    text-align: center;
-    font-size: 14px;
-    opacity: 0.8;
-    font-weight: 400;
-  }
-
-  /* Fade out animation when loading is done */
-  .loading-screen.fade-out {
-    animation: fadeOut 0.5s ease-out forwards;
-  }
-
-  /* ============================================================================
-     RESPONSIVE BREAKPOINTS
-     ============================================================================ */
-
-  @media (max-width: 768px) {
-    /* Header Navigation - Mobile */
-    .header-nav {
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .nav-buttons {
-      order: 2;
-    }
-
-    .header-right {
-      order: 1;
-    }
-
-    .header-content h1 {
-      font-size: 20px;
-    }
-
-    .nav-btn {
-      padding: 6px 12px;
-      font-size: 12px;
-    }
-  }
-
   /* ============================================================================
      ACCESSIBILITY - REDUCED MOTION
      ============================================================================ */
 
   /**
-   * Respect user's OS-level "Reduce Motion" preference
-   * This media query automatically detects the system setting and disables
-   * animations/transitions for users with motion sensitivity or vestibular disorders.
-   *
-   * How to enable:
-   * - macOS: System Preferences → Accessibility → Display → "Reduce motion"
-   * - Windows: Settings → Ease of Access → Display → Uncheck "Show animations"
-   * - iOS: Settings → Accessibility → Motion → "Reduce Motion"
-   *
+   * Respect user's OS-level "Reduce Motion" preference.
    * WCAG 2.1 Level AA compliance
    */
   @media (prefers-reduced-motion: reduce) {

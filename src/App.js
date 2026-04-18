@@ -20,8 +20,8 @@ const Settings = lazy(() => import('./components/Settings'));
 
 // Loading fallback component
 const LazyLoadingFallback = () => (
-  <div className="lazy-loading">
-    <div className="spinner lazy-loading-spinner"></div>
+  <div className="p-5 text-center">
+    <div className="w-10 h-10 border-[3px] border-black/10 border-t-[3px] border-t-primary rounded-full animate-[spin_1s_linear_infinite] mx-auto my-5"></div>
     <p>Loading...</p>
   </div>
 );
@@ -248,27 +248,33 @@ function AppContent() {
   }
 
   return (
-    <div className={`app ${menuOpen ? 'menu-open' : ''}`}>
-      <header className="app-header">
-        <div className="header-content">
-          <button className="hamburger-menu" onClick={toggleMenu} aria-label="Toggle menu">
-            <span></span>
-            <span></span>
-            <span></span>
+    <div
+      className={`min-h-screen w-full bg-background text-foreground transition-[background,color,margin-left] duration-250 ease-[ease] ${menuOpen ? 'ml-[280px]' : ''}`}
+    >
+      <header className="bg-header text-header-foreground p-5 shadow-[0_1px_4px_hsl(var(--header-foreground)/0.1)] sticky top-0 z-[100]">
+        <div className="max-w-[1200px] mx-auto flex justify-between items-center gap-8">
+          <button
+            className="bg-transparent border-none cursor-pointer p-2 flex flex-col gap-1 z-[1]"
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
+            <span className="block w-6 h-[3px] bg-header-foreground rounded-sm transition-all duration-250 ease-[ease]"></span>
+            <span className="block w-6 h-[3px] bg-header-foreground rounded-sm transition-all duration-250 ease-[ease]"></span>
+            <span className="block w-6 h-[3px] bg-header-foreground rounded-sm transition-all duration-250 ease-[ease]"></span>
           </button>
 
-          <div className="header-title-group">
-            <h1>CCNA 200-301 Course</h1>
-            <div className="view-toggle">
+          <div className="flex items-center gap-4 flex-1 justify-center">
+            <h1 className="m-0 text-[28px] text-header-foreground">CCNA 200-301 Course</h1>
+            <div className="flex gap-1 bg-[hsl(var(--header-foreground)/0.1)] rounded-md p-1">
               <button
-                className={`view-toggle-btn ${currentView === 'dashboard' ? 'active' : ''}`}
+                className={`flex items-center justify-center p-2 cursor-pointer rounded border transition-all duration-200 ${currentView === 'dashboard' ? 'bg-header-foreground text-header border-header-foreground opacity-100 shadow-[0_2px_6px_hsl(var(--header-foreground)/0.3),inset_0_1px_0_hsl(var(--header)/0.1)]' : 'bg-transparent border-transparent text-header-foreground opacity-70 hover:opacity-100 hover:bg-[hsl(var(--header-foreground)/0.15)] hover:border-[hsl(var(--header-foreground)/0.3)] hover:scale-105'}`}
                 onClick={() => setCurrentView('dashboard')}
                 aria-label="Dashboard view"
               >
                 <LayoutDashboard size={20} />
               </button>
               <button
-                className={`view-toggle-btn ${currentView === 'list' ? 'active' : ''}`}
+                className={`flex items-center justify-center p-2 cursor-pointer rounded border transition-all duration-200 ${currentView === 'list' ? 'bg-header-foreground text-header border-header-foreground opacity-100 shadow-[0_2px_6px_hsl(var(--header-foreground)/0.3),inset_0_1px_0_hsl(var(--header)/0.1)]' : 'bg-transparent border-transparent text-header-foreground opacity-70 hover:opacity-100 hover:bg-[hsl(var(--header-foreground)/0.15)] hover:border-[hsl(var(--header-foreground)/0.3)] hover:scale-105'}`}
                 onClick={() => setCurrentView('list')}
                 aria-label="Modules view"
               >
@@ -277,16 +283,18 @@ function AppContent() {
             </div>
           </div>
 
-          <div className="header-right">
-            <div className="header-stats">
+          <div className="flex items-center gap-5 z-[1]">
+            <div className="flex items-center gap-[15px] text-header-foreground">
               <span>Overall Progress: {Math.round(overallProgress)}%</span>
-              <div className="progress-bar-small">
+              <div className="w-[200px] h-2.5 bg-[hsl(var(--primary-foreground)/0.3)] rounded overflow-hidden">
                 <div
-                  className="progress-fill-small"
+                  className="h-full rounded transition-[width] duration-250 ease-[ease]"
                   style={{
                     width: `${overallProgress}%`,
                     background:
-                      overallProgress === 100 ? 'var(--color-progress-complete)' : undefined,
+                      overallProgress === 100
+                        ? 'var(--color-progress-complete)'
+                        : 'var(--color-progress-medium)',
                   }}
                 />
               </div>
@@ -296,16 +304,19 @@ function AppContent() {
 
         {menuOpen && (
           <>
-            <div className="menu-overlay" onClick={toggleMenu}></div>
-            <div className="dropdown-menu">
+            <div
+              className="fixed inset-0 bg-[hsl(var(--primary-foreground)/0.1)] z-[999] animate-[fadeIn_0.3s_ease]"
+              onClick={toggleMenu}
+            ></div>
+            <div className="fixed top-0 left-0 bottom-0 w-[280px] bg-sidebar text-sidebar-foreground shadow-[2px_0_8px_hsl(var(--primary-foreground)/0.15)] pt-20 px-5 pb-5 z-[1000] flex flex-col gap-2 animate-[slideInFromLeft_0.4s_cubic-bezier(0.4,0,0.2,1)]">
               <button
                 onClick={() => {
                   setCurrentView('dashboard');
                   setMenuOpen(false);
                 }}
-                className="menu-item"
+                className="w-full flex items-center gap-3 px-5 py-4 bg-transparent border-none rounded-xl cursor-pointer text-base text-sidebar-foreground text-left transition-all duration-250 ease-[ease] font-medium hover:bg-muted hover:translate-x-1"
               >
-                <GridIcon className="menu-icon" />
+                <GridIcon className="w-[22px] h-[22px] shrink-0" />
                 Dashboard
               </button>
               <button
@@ -313,10 +324,10 @@ function AppContent() {
                   setCurrentView('list');
                   setMenuOpen(false);
                 }}
-                className="menu-item"
+                className="w-full flex items-center gap-3 px-5 py-4 bg-transparent border-none rounded-xl cursor-pointer text-base text-sidebar-foreground text-left transition-all duration-250 ease-[ease] font-medium hover:bg-muted hover:translate-x-1"
               >
                 <svg
-                  className="menu-icon"
+                  className="w-[22px] h-[22px] shrink-0"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -333,11 +344,11 @@ function AppContent() {
                   setSettingsOpen(true);
                   setMenuOpen(false);
                 }}
-                className="menu-item"
+                className="w-full flex items-center gap-3 px-5 py-4 bg-transparent border-none rounded-xl cursor-pointer text-base text-sidebar-foreground text-left transition-all duration-250 ease-[ease] font-medium hover:bg-muted hover:translate-x-1"
                 aria-label="Settings"
               >
                 <svg
-                  className="menu-icon"
+                  className="w-[22px] h-[22px] shrink-0"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -354,15 +365,20 @@ function AppContent() {
       </header>
 
       {!resourcesAvailable && (
-        <div className="warning-banner">
+        <div className="bg-[hsl(var(--destructive)/0.1)] text-destructive p-4 text-center border-b border-[hsl(var(--destructive)/0.2)]">
           ⚠️ Resources folder not found. Some features may not work.
-          <a href={RESOURCE_DOWNLOAD_URL} target="_blank" rel="noopener noreferrer">
+          <a
+            href={RESOURCE_DOWNLOAD_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary ml-2.5"
+          >
             Download resources from Jeremy's IT Lab
           </a>
         </div>
       )}
 
-      <main className="app-content">
+      <main className="max-w-[1400px] mx-auto p-5 overflow-x-hidden">
         <Suspense fallback={<LazyLoadingFallback />}>
           {currentView === 'dashboard' && (
             <Dashboard modules={modules} onModuleSelect={handleModuleSelect} />
@@ -371,8 +387,11 @@ function AppContent() {
           {currentView === 'list' && (
             <>
               {ProgressTracker.getLastWatchedVideo() && (
-                <div className="continue-watching">
-                  <button onClick={handleContinueWatching} className="continue-button">
+                <div className="mb-[30px] text-center">
+                  <button
+                    onClick={handleContinueWatching}
+                    className="px-10 py-4 text-lg bg-primary text-primary-foreground border-none rounded-[30px] cursor-pointer shadow-[0_4px_12px_hsl(var(--primary)/0.3)] transition-all duration-250 ease-[ease] hover:translate-y-[-2px] hover:shadow-[0_6px_16px_hsl(var(--primary)/0.4)]"
+                  >
                     ▶ Continue Watching
                   </button>
                 </div>
