@@ -1,14 +1,9 @@
 import React from 'react';
 import ProgressTracker from '../utils/progressTracker';
+import { ColorHelpers } from '@/utils/colorHelpers';
 import '../styles/dashboard.css';
 
 function UpcomingMilestones({ modules }) {
-  const getProgressColor = progress => {
-    if (progress === 0) return 'hsl(var(--muted))';
-    if (progress === 100) return 'var(--color-progress-complete)';
-    return 'hsl(var(--ring))';
-  };
-
   const getMilestones = () => {
     const totalModules = modules.length;
     const completedModules = modules.filter(
@@ -97,7 +92,7 @@ function UpcomingMilestones({ modules }) {
               className="milestone-progress-fill"
               style={{
                 width: `${((nextMilestone.modulesNeeded - nextMilestone.modulesRemaining) / nextMilestone.modulesNeeded) * 100}%`,
-                background: getProgressColor(
+                background: ColorHelpers.getProgressColor(
                   ((nextMilestone.modulesNeeded - nextMilestone.modulesRemaining) /
                     nextMilestone.modulesNeeded) *
                     100
@@ -126,7 +121,7 @@ function UpcomingMilestones({ modules }) {
                       <div className="upcoming-progress-bar">
                         <div
                           className="upcoming-progress-fill"
-                          style={{ width: `${progress}%`, background: getProgressColor(progress) }}
+                          style={{ width: `${progress}%`, background: ColorHelpers.getProgressColor(progress) }}
                         />
                       </div>
                       <span className="upcoming-progress-text">{Math.round(progress)}%</span>

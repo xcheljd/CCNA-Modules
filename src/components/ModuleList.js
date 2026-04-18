@@ -3,6 +3,7 @@ import SearchBar from './SearchBar';
 import ConfidenceRating from './ConfidenceRating';
 import ProgressTracker from '../utils/progressTracker';
 import { asArray } from '@/utils/helpers';
+import { ColorHelpers } from '@/utils/colorHelpers';
 import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon } from './ui/Icons';
 import '../styles/modules.css';
 
@@ -72,12 +73,6 @@ function ModuleList({ modules, onModuleSelect }) {
       return true;
     });
   }, [modules, moduleProgress, filterStatus, filterConfidence, searchQuery]);
-
-  const getProgressColor = progress => {
-    if (progress === 0) return 'hsl(var(--muted))';
-    if (progress === 100) return 'var(--color-progress-complete)';
-    return 'hsl(var(--ring))';
-  };
 
   const handleViewModeChange = newMode => {
     if (newMode === viewMode) return;
@@ -151,7 +146,7 @@ function ModuleList({ modules, onModuleSelect }) {
       <div className={`modules-container ${viewMode}-view ${isSwitchingView ? 'switching' : ''}`}>
         {filteredModules.map(module => {
           const progress = moduleProgress[module.id] || 0;
-          const progressColor = getProgressColor(progress);
+          const progressColor = ColorHelpers.getProgressColor(progress);
           const confidence = ProgressTracker.getModuleConfidence(module.id);
 
           return (
