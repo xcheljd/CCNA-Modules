@@ -90,10 +90,10 @@ describe('PerformanceCharts', () => {
     expect(screen.getByText('30 Days')).toBeInTheDocument();
     expect(screen.getByText('3 Months')).toBeInTheDocument();
 
-    // 30 Days should have active class by default
+    // 30 Days should have active styling by default
     const buttons = screen.getAllByRole('button');
     const thirtyDayBtn = buttons.find(btn => btn.textContent === '30 Days');
-    expect(thirtyDayBtn).toHaveClass('active');
+    expect(thirtyDayBtn).toHaveClass('bg-primary');
   });
 
   // VAL-PERFCHARTS-002: Switches active time range on click
@@ -109,8 +109,8 @@ describe('PerformanceCharts', () => {
     const sevenDayBtn = buttons.find(btn => btn.textContent === '7 Days');
     const thirtyDayBtn = buttons.find(btn => btn.textContent === '30 Days');
 
-    expect(sevenDayBtn).toHaveClass('active');
-    expect(thirtyDayBtn).not.toHaveClass('active');
+    expect(sevenDayBtn).toHaveClass('bg-primary');
+    expect(thirtyDayBtn).not.toHaveClass('bg-primary');
   });
 
   // VAL-PERFCHARTS-003: Re-loads data when time range changes

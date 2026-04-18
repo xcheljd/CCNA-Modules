@@ -4,15 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 function VelocityBarChart({ data }) {
   if (!data || data.length === 0) {
     return (
-      <div
-        style={{
-          height: '250px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'hsl(var(--muted-foreground))',
-        }}
-      >
+      <div className="h-[250px] flex items-center justify-center text-muted-foreground">
         No velocity data yet. Complete modules to track your weekly progress!
       </div>
     );
@@ -21,26 +13,9 @@ function VelocityBarChart({ data }) {
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
-        <div
-          style={{
-            backgroundColor: 'hsl(var(--card))',
-            border: '1px solid hsl(var(--border))',
-            borderRadius: '8px',
-            padding: '12px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          }}
-        >
-          <p style={{ margin: '0 0 4px 0', fontSize: '13px', fontWeight: '600' }}>
-            Week of {payload[0].payload.week}
-          </p>
-          <p
-            style={{
-              margin: 0,
-              fontSize: '14px',
-              color: 'hsl(var(--foreground))',
-              fontWeight: 'bold',
-            }}
-          >
+        <div className="bg-card border border-border rounded-lg p-3 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+          <p className="m-0 mb-1 text-[13px] font-semibold">Week of {payload[0].payload.week}</p>
+          <p className="m-0 text-sm text-foreground font-bold">
             {payload[0].value} modules completed
           </p>
         </div>
@@ -50,7 +25,7 @@ function VelocityBarChart({ data }) {
   };
 
   return (
-    <div className="chart-container">
+    <div className="my-2 mx-0">
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />

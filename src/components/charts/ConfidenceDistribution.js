@@ -19,31 +19,14 @@ function ConfidenceDistribution({ distribution }) {
       color: 'var(--color-confidence-high)',
     },
     { name: 'Not Rated', value: distribution.notRated, color: 'var(--color-confidence-none)' },
-  ].filter(item => item.value > 0); // Only show non-zero values
+  ].filter(item => item.value > 0);
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
-        <div
-          style={{
-            backgroundColor: 'hsl(var(--card))',
-            border: '1px solid hsl(var(--border))',
-            borderRadius: '8px',
-            padding: '12px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          }}
-        >
-          <p style={{ margin: '0 0 4px 0', fontSize: '13px', fontWeight: '600' }}>
-            {payload[0].name}
-          </p>
-          <p
-            style={{
-              margin: 0,
-              fontSize: '14px',
-              color: payload[0].payload.color,
-              fontWeight: 'bold',
-            }}
-          >
+        <div className="bg-card border border-border rounded-lg p-3 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+          <p className="m-0 mb-1 text-[13px] font-semibold">{payload[0].name}</p>
+          <p className="m-0 text-sm font-bold" style={{ color: payload[0].payload.color }}>
             {payload[0].value} modules
           </p>
         </div>
@@ -54,32 +37,11 @@ function ConfidenceDistribution({ distribution }) {
 
   const CustomLegend = ({ payload }) => {
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px',
-          fontSize: '13px',
-        }}
-      >
+      <div className="flex flex-col gap-2 text-[13px]">
         {payload.map((entry, index) => (
-          <div
-            key={`legend-${index}`}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
-            <div
-              style={{
-                width: '16px',
-                height: '16px',
-                backgroundColor: entry.color,
-                borderRadius: '4px',
-              }}
-            />
-            <span style={{ color: 'hsl(var(--foreground))' }}>
+          <div key={`legend-${index}`} className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded" style={{ backgroundColor: entry.color }} />
+            <span className="text-foreground">
               {entry.value}: {entry.payload.value}
             </span>
           </div>
@@ -90,22 +52,14 @@ function ConfidenceDistribution({ distribution }) {
 
   if (data.length === 0) {
     return (
-      <div
-        style={{
-          height: '250px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'hsl(var(--muted-foreground))',
-        }}
-      >
+      <div className="h-[250px] flex items-center justify-center text-muted-foreground">
         No confidence ratings yet. Rate modules as you complete them!
       </div>
     );
   }
 
   return (
-    <div className="chart-container">
+    <div className="my-2 mx-0">
       <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie

@@ -4,10 +4,10 @@ import ProgressLineChart from './charts/ProgressLineChart';
 import ActivityHeatmap from './charts/ActivityHeatmap';
 import VelocityBarChart from './charts/VelocityBarChart';
 import ConfidenceDistribution from './charts/ConfidenceDistribution';
-import '../styles/charts.css';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 
 function PerformanceCharts({ modules }) {
-  const [timeRange, setTimeRange] = useState(30); // Default 30 days
+  const [timeRange, setTimeRange] = useState(30);
   const [progressData, setProgressData] = useState([]);
   const [velocityData, setVelocityData] = useState([]);
   const [confidenceData, setConfidenceData] = useState({
@@ -19,19 +19,15 @@ function PerformanceCharts({ modules }) {
   const [prediction, setPrediction] = useState(null);
 
   const loadChartData = useCallback(() => {
-    // Get progress over time data
     const progressHistory = PerformanceTracker.getRecentPerformance(timeRange);
     setProgressData(progressHistory);
 
-    // Get velocity data
     const velocity = PerformanceTracker.getWeeklyVelocity(8);
     setVelocityData(velocity);
 
-    // Get confidence distribution
     const confidence = PerformanceTracker.getConfidenceDistribution(modules);
     setConfidenceData(confidence);
 
-    // Get completion prediction
     const pred = PerformanceTracker.predictCompletionDate(modules, modules.length);
     setPrediction(pred);
   }, [timeRange, modules]);
@@ -40,8 +36,6 @@ function PerformanceCharts({ modules }) {
     if (!modules || modules.length === 0) return;
 
     try {
-      // Load data based on time range
-      // Note: Snapshots are now handled by ActivityTracker on user actions
       loadChartData();
     } catch (error) {
       console.error('Error loading performance data:', error);
@@ -53,67 +47,80 @@ function PerformanceCharts({ modules }) {
   };
 
   return (
-    <div className="performance-charts">
+    <div className="mt-6">
       {/* Time Range Selector */}
-      <div className="chart-controls">
-        <div className="time-range-buttons">
-          <button
-            className={`range-btn ${timeRange === 7 ? 'active' : ''}`}
-            onClick={() => handleTimeRangeChange(7)}
-          >
-            7 Days
-          </button>
-          <button
-            className={`range-btn ${timeRange === 30 ? 'active' : ''}`}
-            onClick={() => handleTimeRangeChange(30)}
-          >
-            30 Days
-          </button>
-          <button
-            className={`range-btn ${timeRange === 90 ? 'active' : ''}`}
-            onClick={() => handleTimeRangeChange(90)}
-          >
-            3 Months
-          </button>
+      <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+        <div className="flex gap-2 bg-muted p-1 rounded-lg">
+          {[7, 30, 90].map(range => (
+            <button
+              key={range}
+              className={`px-4 py-2 border rounded-md cursor-pointer text-sm font-medium transition-all duration-300 ${timeRange === range ? 'bg-primary text-primary-foreground border-primary shadow-[0_2px_6px_hsl(var(--primary)/0.3),inset_0_1px_0_hsl(var(--primary-foreground)/0.1)]' : 'border-transparent bg-transparent text-muted-foreground hover:bg-card hover:text-foreground hover:border-[hsl(var(--primary)/0.3)] hover:scale-105'}`}
+              onClick={() => handleTimeRangeChange(range)}
+            >
+              {range === 7 ? '7 Days' : range === 30 ? '30 Days' : '3 Months'}
+            </button>
+          ))}
         </div>
 
         {prediction && prediction !== 'Completed' && prediction !== 'Unknown' && (
-          <div className="completion-prediction">
-            <span className="prediction-label">Estimated Completion:</span>
-            <span className="prediction-date">{prediction}</span>
+          <div className="flex items-center gap-2 px-4 py-2 bg-muted rounded-lg border border-border">
+            <span className="text-[13px] text-foreground font-medium">Estimated Completion:</span>
+            <span className="text-sm font-bold text-[var(--color-progress-complete)]">
+              {prediction}
+            </span>
           </div>
         )}
       </div>
 
       {/* Charts Grid */}
-      <div className="charts-grid">
-        {/* Progress Over Time */}
-        <div className="chart-card">
-          <h3>Progress Over Time</h3>
-          <p className="chart-description">Your overall course completion percentage</p>
-          <ProgressLineChart data={progressData} />
-        </div>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-6 max-[1200px]:grid-cols-1 max-[768px]:gap-4">
+        <Card className="rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+          <CardHeader className="p-0 mb-4">
+            <CardTitle className="text-lg font-semibold m-0">Progress Over Time</CardTitle>
+            <CardDescription className="text-[13px] m-0 mt-1">
+              Your overall course completion percentage
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ProgressLineChart data={progressData} />
+          </CardContent>
+        </Card>
 
-        {/* Activity Heatmap */}
-        <div className="chart-card">
-          <h3>Activity Calendar</h3>
-          <p className="chart-description">Daily study activity heatmap</p>
-          <ActivityHeatmap days={timeRange} />
-        </div>
+        <Card className="rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+          <CardHeader className="p-0 mb-4">
+            <CardTitle className="text-lg font-semibold m-0">Activity Calendar</CardTitle>
+            <CardDescription className="text-[13px] m-0 mt-1">
+              Daily study activity heatmap
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ActivityHeatmap days={timeRange} />
+          </CardContent>
+        </Card>
 
-        {/* Weekly Velocity */}
-        <div className="chart-card">
-          <h3>Weekly Completion Rate</h3>
-          <p className="chart-description">Modules completed per week</p>
-          <VelocityBarChart data={velocityData} />
-        </div>
+        <Card className="rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+          <CardHeader className="p-0 mb-4">
+            <CardTitle className="text-lg font-semibold m-0">Weekly Completion Rate</CardTitle>
+            <CardDescription className="text-[13px] m-0 mt-1">
+              Modules completed per week
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <VelocityBarChart data={velocityData} />
+          </CardContent>
+        </Card>
 
-        {/* Confidence Distribution */}
-        <div className="chart-card">
-          <h3>Confidence Levels</h3>
-          <p className="chart-description">How confident you feel about each module</p>
-          <ConfidenceDistribution distribution={confidenceData} />
-        </div>
+        <Card className="rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+          <CardHeader className="p-0 mb-4">
+            <CardTitle className="text-lg font-semibold m-0">Confidence Levels</CardTitle>
+            <CardDescription className="text-[13px] m-0 mt-1">
+              How confident you feel about each module
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ConfidenceDistribution distribution={confidenceData} />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
