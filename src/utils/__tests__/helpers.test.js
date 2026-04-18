@@ -37,8 +37,6 @@ describe('helpers', () => {
     });
 
     it('does nothing when window is undefined', () => {
-      const originalWindow = global.window;
-      // Simulate SSR by temporarily removing window
       // jsdom always has window, so we just verify no error is thrown
       expect(() => openExternal('https://example.com')).not.toThrow();
     });
