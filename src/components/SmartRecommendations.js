@@ -3,7 +3,6 @@ import { format } from 'date-fns';
 import ProgressTracker from '../utils/progressTracker';
 import StreakTracker from '../utils/streakTracker';
 import GoalTracker from '../utils/goalTracker';
-import '../styles/dashboard.css';
 
 function buildRecommendations(modules) {
   const recommendations = [];
@@ -98,14 +97,12 @@ function buildRecommendations(modules) {
     }
   }
 
-  // Sort by priority and return top 3-4
   return recommendations.sort((a, b) => b.priority - a.priority).slice(0, 4);
 }
 
 function buildInsights(modules) {
   const insights = [];
 
-  // Study pattern insights
   const completedModules = modules.filter(m => ProgressTracker.getModuleProgress(m) === 100);
   const totalModules = modules.length;
   const completionRate = (completedModules.length / totalModules) * 100;
@@ -132,7 +129,6 @@ function buildInsights(modules) {
     });
   }
 
-  // Confidence insights
   const modulesNeedingReview = ProgressTracker.getModulesNeedingReview(modules);
   if (modulesNeedingReview.length > 5) {
     insights.push({
@@ -141,7 +137,6 @@ function buildInsights(modules) {
     });
   }
 
-  // Goal insights
   const goal = GoalTracker.getActiveGoal();
   if (goal) {
     const today = format(new Date(), 'yyyy-MM-dd');
@@ -169,16 +164,16 @@ function SmartRecommendations({ modules, onModuleSelect }) {
   }
 
   return (
-    <div className="smart-recommendations">
+    <div className="flex flex-col gap-4">
       {/* Insights */}
       {insights.length > 0 && (
-        <div className="insights-section">
-          <h3>Insights</h3>
-          <div className="insights-list">
+        <div className="pb-1 border-b border-border">
+          <h3 className="mb-2">Insights</h3>
+          <div className="flex flex-col gap-1.5">
             {insights.map((insight, index) => (
-              <div key={index} className="insight-item">
-                <span className="insight-icon">{insight.icon}</span>
-                <span className="insight-text">{insight.text}</span>
+              <div key={index} className="flex items-center gap-2 text-[13px]">
+                <span className="text-base">{insight.icon}</span>
+                <span>{insight.text}</span>
               </div>
             ))}
           </div>
@@ -186,22 +181,26 @@ function SmartRecommendations({ modules, onModuleSelect }) {
       )}
 
       {/* Recommendations */}
-      <div className="recommendations-section">
-        <h3>Recommended For You</h3>
-        <div className="recommendations-list">
+      <div>
+        <h3 className="mb-2">Recommended For You</h3>
+        <div className="flex flex-col gap-2.5">
           {recommendations.map((rec, index) => (
             <div
               key={index}
-              className={`recommendation-card ${rec.type}`}
+              className={`py-3.5 px-[18px] rounded-[14px] border bg-card flex items-center gap-4 transition-all duration-150 ease-[ease] ${rec.type === 'continue' ? 'border-[hsl(var(--primary-foreground)/0.9)] shadow-[0_0_0_1px_hsl(var(--primary-foreground)/0.6),0_18px_35px_rgba(0,0,0,0.7)] hover:translate-y-[-1px] hover:shadow-[0_0_0_1px_hsl(var(--primary-foreground)/0.9),0_22px_40px_rgba(0,0,0,0.8)]' : 'border-border hover:bg-muted hover:translate-y-[-1px]'}`}
               onClick={() => rec.module && onModuleSelect(rec.module)}
               style={{ cursor: rec.module ? 'pointer' : 'default' }}
             >
-              <div className="recommendation-icon">{rec.icon}</div>
-              <div className="recommendation-content">
-                <h4>{rec.title}</h4>
-                <p>{rec.description}</p>
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${rec.type === 'continue' ? 'bg-[hsl(var(--primary-foreground)/0.16)]' : 'bg-[hsl(var(--primary)/0.15)]'}`}
+              >
+                {rec.icon}
               </div>
-              {rec.module && <div className="recommendation-action">→</div>}
+              <div className="flex-1 flex flex-col gap-0.5">
+                <h4 className="m-0 text-[15px] font-semibold">{rec.title}</h4>
+                <p className="m-0 text-[13px] text-muted-foreground">{rec.description}</p>
+              </div>
+              {rec.module && <div className="text-lg opacity-80">→</div>}
             </div>
           ))}
         </div>

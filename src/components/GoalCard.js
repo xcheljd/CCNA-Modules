@@ -3,7 +3,6 @@ import GoalTracker from '../utils/goalTracker';
 import GoalModal from './GoalModal';
 import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon, CircularProgress } from './ui/Icons';
 import { ColorHelpers } from '@/utils/colorHelpers';
-import '../styles/dashboard.css';
 
 const GOAL_METRICS = [
   { icon: GridIcon, label: 'Modules', key: 'modulesCompleted' },
@@ -20,18 +19,18 @@ export function getProgressPercentage(current, target) {
 function GoalMetricCard({ icon: Icon, label, current, target }) {
   const pct = getProgressPercentage(current, target);
   return (
-    <div className="goal-metric-card">
-      <Icon className="goal-metric-icon" />
-      <div className="goal-metric-content">
-        <div className="goal-metric-header">
-          <span className="goal-metric-label">{label}</span>
-          <span className="goal-metric-value">
+    <div className="flex items-start gap-2.5 p-3 bg-card border border-border rounded-lg transition-all duration-150 ease-[ease] hover:border-ring hover:shadow-[0_2px_8px_hsl(var(--primary-foreground)/0.08)]">
+      <Icon className="w-6 h-6 shrink-0 text-primary mt-0.5" />
+      <div className="flex-1 flex flex-col gap-1.5 min-w-0">
+        <div className="flex justify-between items-center gap-2">
+          <span className="text-xs font-medium text-muted-foreground">{label}</span>
+          <span className="text-[13px] font-semibold text-foreground">
             {current}/{target}
           </span>
         </div>
-        <div className="goal-metric-bar">
+        <div className="w-full h-1.5 rounded-full bg-muted overflow-hidden">
           <div
-            className="goal-metric-fill"
+            className="h-full transition-[width] duration-150 ease-[ease]"
             style={{
               width: `${pct}%`,
               background: ColorHelpers.getProgressColor(pct),
@@ -88,15 +87,16 @@ function GoalCard({ modules }) {
 
   if (!goal) {
     return (
-      <div className="goal-card no-goal">
-        <div className="no-goal-content">
-          <div className="no-goal-icon">🎯</div>
-          <h3>No Active Goal</h3>
-          <p>Set a learning goal to track your progress and stay motivated!</p>
-          <button className="create-goal-btn" onClick={() => setShowModal(true)}>
-            Create Your First Goal
-          </button>
-        </div>
+      <div className="flex flex-col gap-4 items-center text-center">
+        <div className="text-4xl mb-2">🎯</div>
+        <h3 className="m-0">No Active Goal</h3>
+        <p className="m-0">Set a learning goal to track your progress and stay motivated!</p>
+        <button
+          className="mt-2 px-4 py-2 rounded-full border-none cursor-pointer bg-primary text-primary-foreground text-sm"
+          onClick={() => setShowModal(true)}
+        >
+          Create Your First Goal
+        </button>
         {showModal && <GoalModal onClose={() => setShowModal(false)} onCreate={handleCreateGoal} />}
       </div>
     );
@@ -105,29 +105,33 @@ function GoalCard({ modules }) {
   const daysRemaining = Math.ceil((new Date(goal.endDate) - new Date()) / (1000 * 60 * 60 * 24));
 
   return (
-    <div className="goal-card">
-      <div className="goal-header">
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-between items-center gap-4">
         <div>
-          <h3>{goal.type === 'weekly' ? 'Weekly' : 'Monthly'} Goal</h3>
-          <p className="goal-period">
-            {goal.startDate} to {goal.endDate} • {daysRemaining} days left
+          <h3 className="m-0">{goal.type === 'weekly' ? 'Weekly' : 'Monthly'} Goal</h3>
+          <p className="text-[13px] text-muted-foreground m-0">
+            {goal.startDate} to {goal.endDate} &bull; {daysRemaining} days left
           </p>
         </div>
-        <div className="goal-actions">
-          <button className="goal-action-btn" onClick={handleDeleteGoal} title="Delete goal">
+        <div>
+          <button
+            className="bg-transparent border-none cursor-pointer text-lg"
+            onClick={handleDeleteGoal}
+            title="Delete goal"
+          >
             🗑️
           </button>
         </div>
       </div>
 
-      <div className="goal-progress-ring">
+      <div className="w-[180px] mx-auto my-2 max-[600px]:w-[130px]">
         <CircularProgress
           percentage={completion}
           strokeColor={completion === 100 ? 'var(--color-progress-complete)' : 'hsl(var(--ring))'}
         />
       </div>
 
-      <div className="goal-metrics goal-metrics-grid">
+      <div className="grid grid-cols-2 gap-3 max-[600px]:grid-cols-1">
         {GOAL_METRICS.filter(m => goal.target[m.key] > 0).map(m => (
           <GoalMetricCard
             key={m.key}
@@ -140,9 +144,9 @@ function GoalCard({ modules }) {
       </div>
 
       {successRate > 0 && (
-        <div className="goal-stats">
-          <span className="stat-label">Success Rate:</span>
-          <span className="stat-value">{Math.round(successRate)}%</span>
+        <div className="mt-1 text-[13px]">
+          <span className="text-muted-foreground">Success Rate:</span>{' '}
+          <span className="font-semibold">{Math.round(successRate)}%</span>
         </div>
       )}
 

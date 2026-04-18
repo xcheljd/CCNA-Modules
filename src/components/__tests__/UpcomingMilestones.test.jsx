@@ -69,16 +69,21 @@ describe('UpcomingMilestones', () => {
 
     const { container } = render(<UpcomingMilestones modules={modules} />);
 
-    const markers = container.querySelectorAll('.milestone-marker');
-    // First two (25%, 50%) should have 'completed' class
-    expect(markers[0]).toHaveClass('completed');
-    expect(markers[1]).toHaveClass('completed');
-    // Last two (75%, 100%) should NOT have 'completed'
-    expect(markers[2]).not.toHaveClass('completed');
-    expect(markers[3]).not.toHaveClass('completed');
+    // Find milestone items by looking at divs with min-w-[120px]
+    const markers = container.querySelectorAll('[class*="min-w-"]');
+    expect(markers).toHaveLength(4);
+
+    // First two (25%, 50%) should have completed bg class
+    expect(markers[0].className).toContain('--primary');
+    expect(markers[0].className).toContain('0.1');
+    expect(markers[1].className).toContain('--primary');
+    expect(markers[1].className).toContain('0.1');
+    // Last two (75%, 100%) should NOT have completed bg class
+    expect(markers[2].className).not.toContain('0.1)');
+    expect(markers[3].className).not.toContain('0.1)');
   });
 
-  // VAL-MILESTONES-003: Identifies next milestone with `next` class
+  // VAL-MILESTONES-003: Identifies next milestone with border-primary class
   it('should identify next milestones with "modules to go" text', () => {
     // 3 of 10 completed = 30% → 25% done, 50%/75%/100% are next
     const modules = createModules(10);
@@ -89,8 +94,9 @@ describe('UpcomingMilestones', () => {
 
     const { container } = render(<UpcomingMilestones modules={modules} />);
 
-    // isNext is true for ALL milestones where overallProgress < target percent
-    const nextMarkers = container.querySelectorAll('.milestone-marker.next');
+    // isNext milestones have border-primary in their class
+    const markers = container.querySelectorAll('[class*="min-w-"]');
+    const nextMarkers = Array.from(markers).filter(m => m.className.includes('border-primary'));
     expect(nextMarkers.length).toBeGreaterThanOrEqual(1);
 
     // "modules to go" text should be visible for next milestones
@@ -117,8 +123,9 @@ describe('UpcomingMilestones', () => {
     expect(screen.getByText('modules remaining')).toBeInTheDocument();
     expect(screen.getByText('total needed')).toBeInTheDocument();
 
-    // Progress bar should exist
-    const progressBar = container.querySelector('.milestone-progress-fill');
+    // Progress bar should exist — it's a div inside the bg-muted bar
+    const progressContainer = container.querySelector('.h-1\\.5.rounded-full');
+    const progressBar = progressContainer ? progressContainer.querySelector('div') : null;
     expect(progressBar).toBeInTheDocument();
   });
 
@@ -148,7 +155,9 @@ describe('UpcomingMilestones', () => {
     expect(screen.getByText('Up Next')).toBeInTheDocument();
 
     // Should show exactly 5 items (first 5 incomplete)
-    const items = container.querySelectorAll('.upcoming-module-item');
+    // Upcoming module items are divs with "flex items-center gap-2.5" classes
+    const upcomingSection = screen.getByText('Up Next').parentElement;
+    const items = upcomingSection.querySelectorAll(':scope > .gap-2\\.5');
     expect(items).toHaveLength(5);
 
     // Check correct module titles
@@ -158,7 +167,8 @@ describe('UpcomingMilestones', () => {
     expect(screen.queryByText(/Day 8: Module 8/)).not.toBeInTheDocument();
 
     // Progress bars shown for partial modules (all 5 have partial progress)
-    const progressBars = container.querySelectorAll('.upcoming-progress-bar');
+    // Each upcoming module with progress > 0 has a h-1.5 bar
+    const progressBars = container.querySelectorAll('.flex-1.h-1\\.5');
     expect(progressBars).toHaveLength(5);
   });
 
@@ -178,11 +188,11 @@ describe('UpcomingMilestones', () => {
   it('should render without errors when modules array is empty', () => {
     const { container } = render(<UpcomingMilestones modules={[]} />);
 
-    // All milestones should be uncompleted (no 'completed' class)
-    const markers = container.querySelectorAll('.milestone-marker');
+    // All milestones should be uncompleted (no completed bg class with --primary 0.1)
+    const markers = container.querySelectorAll('[class*="min-w-"]');
     expect(markers).toHaveLength(4);
     markers.forEach(marker => {
-      expect(marker).not.toHaveClass('completed');
+      expect(marker.className).not.toContain('0.1)');
     });
 
     // No next milestone card
@@ -207,7 +217,9 @@ describe('UpcomingMilestones', () => {
 
     const { container } = render(<UpcomingMilestones modules={modules} />);
 
-    const progressFill = container.querySelector('.milestone-progress-fill');
+    // Find the progress bar inside the next milestone card
+    const progressContainer = container.querySelector('.h-1\\.5.rounded-full');
+    const progressFill = progressContainer ? progressContainer.querySelector('div') : null;
     // (10 - 2) / 10 * 100 = 80%
     expect(progressFill).toHaveStyle({ width: '80%' });
   });
@@ -240,7 +252,8 @@ describe('UpcomingMilestones', () => {
 
     const { container } = render(<UpcomingMilestones modules={modules} />);
 
-    const items = container.querySelectorAll('.upcoming-module-item');
+    const upcomingSection = screen.getByText('Up Next').parentElement;
+    const items = upcomingSection.querySelectorAll(':scope > .gap-2\\.5');
     expect(items).toHaveLength(2); // Only 2 incomplete modules
   });
 
@@ -259,9 +272,13 @@ describe('UpcomingMilestones', () => {
     const modules = createModules(10);
     const { container } = render(<UpcomingMilestones modules={modules} />);
 
-    const labels = Array.from(container.querySelectorAll('.milestone-percent')).map(
-      el => el.textContent
-    );
+    // Percent labels are in divs inside each milestone marker
+    const markers = container.querySelectorAll('[class*="min-w-"]');
+    const labels = Array.from(markers).map(marker => {
+      const percentDivs = marker.querySelectorAll('.text-xs');
+      // The first .text-xs is the percentage
+      return percentDivs[0] ? percentDivs[0].textContent : '';
+    });
     expect(labels).toEqual(['25%', '50%', '75%', '100%']);
   });
 });

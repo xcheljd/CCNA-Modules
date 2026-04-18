@@ -234,7 +234,8 @@ describe('SmartRecommendations', () => {
 
     render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
-    const recCards = document.querySelectorAll('.recommendation-card');
+    // Recommendation cards are divs with py-3.5 px-[18px] rounded-[14px] border bg-card
+    const recCards = document.querySelectorAll('.py-3\\.5');
     expect(recCards.length).toBeLessThanOrEqual(4);
   });
 
@@ -278,8 +279,8 @@ describe('SmartRecommendations', () => {
     render(<SmartRecommendations modules={modules} onModuleSelect={onModuleSelect} />);
 
     const nextTitle = screen.getByText('Continue Your Learning Path');
-    // Click the card (parent of the heading)
-    fireEvent.click(nextTitle.closest('.recommendation-card'));
+    // Click the card (closest parent with cursor:pointer style)
+    fireEvent.click(nextTitle.closest('[style*="cursor"]'));
 
     expect(onModuleSelect).toHaveBeenCalledTimes(1);
     expect(onModuleSelect).toHaveBeenCalledWith(modules[1]);
@@ -295,7 +296,8 @@ describe('SmartRecommendations', () => {
 
     render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
-    const cards = document.querySelectorAll('.recommendation-card');
+    // Recommendation cards are divs with py-3.5 class and inline cursor style
+    const cards = document.querySelectorAll('.py-3\\.5');
     cards.forEach(card => {
       expect(card.style.cursor).toBe('pointer');
     });
@@ -315,11 +317,12 @@ describe('SmartRecommendations', () => {
     render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
 
     // All recommendations in this scenario have modules
-    const cards = document.querySelectorAll('.recommendation-card');
+    const cards = document.querySelectorAll('.py-3\\.5');
     expect(cards.length).toBeGreaterThan(0);
     cards.forEach(card => {
-      // Cards with modules have pointer cursor
-      if (card.querySelector('.recommendation-action')) {
+      // Cards with modules have pointer cursor (and arrow → indicator)
+      const arrow = card.querySelector('.text-lg.opacity-80');
+      if (arrow) {
         expect(card.style.cursor).toBe('pointer');
       }
     });
@@ -625,8 +628,8 @@ describe('SmartRecommendations', () => {
     expect(screen.getByText('Insights')).toBeInTheDocument();
   });
 
-  // Additional: Renders recommendation-card with correct type CSS class
-  it('should apply correct type CSS class to each recommendation card', () => {
+  // Additional: Renders recommendation-card with correct continue styling
+  it('should apply continue-specific styling to continue recommendation card', () => {
     const modules = createModules(3);
     setupMocks({
       lastWatched: { module: modules[0] },
@@ -638,7 +641,11 @@ describe('SmartRecommendations', () => {
       <SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />
     );
 
-    const continueCard = container.querySelector('.recommendation-card.continue');
-    expect(continueCard).toBeInTheDocument();
+    // Continue card has a distinctive class containing primary-foreground and shadow
+    const recCards = container.querySelectorAll('.py-3\\.5');
+    const continueCard = Array.from(recCards).find(card =>
+      card.className.includes('primary-foreground') && card.className.includes('shadow')
+    );
+    expect(continueCard).toBeTruthy();
   });
 });

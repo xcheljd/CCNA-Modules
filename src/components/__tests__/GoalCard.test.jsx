@@ -298,8 +298,8 @@ describe('GoalCard', () => {
 
     const { container } = render(<GoalCard modules={mockModules} />);
 
-    // Find all metric fill bars
-    const fills = container.querySelectorAll('.goal-metric-fill');
+    // Find all metric fill bars - they are divs with inline style width
+    const fills = container.querySelectorAll('.h-full.transition-\\[width\\]');
     // First fill (Modules): 10/5 * 100 = 200, capped at 100
     expect(fills[0]).toHaveStyle({ width: '100%' });
   });
@@ -540,11 +540,12 @@ describe('GoalCard', () => {
 
     const { container } = render(<GoalCard modules={mockModules} />);
 
-    const metricBars = container.querySelectorAll('.goal-metric-bar');
+    // Metric bars are now divs with w-full h-1.5 rounded-full bg-muted
+    const metricBars = container.querySelectorAll('.h-1\\.5');
     expect(metricBars).toHaveLength(4); // All 4 metrics have non-zero targets
 
-    // Check fill widths
-    const fills = container.querySelectorAll('.goal-metric-fill');
+    // Check fill widths - fills are divs with h-full and inline style width
+    const fills = container.querySelectorAll('.h-full.transition-\\[width\\]');
     // Modules: 2/5 * 100 = 40%
     expect(fills[0]).toHaveStyle({ width: '40%' });
     // Videos: 10/20 * 100 = 50%
@@ -574,7 +575,7 @@ describe('GoalCard', () => {
 
     const { container } = render(<GoalCard modules={mockModules} />);
 
-    const fills = container.querySelectorAll('.goal-metric-fill');
+    const fills = container.querySelectorAll('.h-full.transition-\\[width\\]');
     // Modules: progress = 0 → 'hsl(var(--muted))'
     expect(fills[0]).toHaveStyle({ background: 'hsl(var(--muted))' });
     // Videos: progress = 100% → 'var(--color-progress-complete)'
