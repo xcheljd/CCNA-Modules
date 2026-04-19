@@ -3,6 +3,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import themes from '../../utils/themes';
 
 function ThemeTab() {
@@ -92,9 +94,9 @@ function ThemeTab() {
                   </div>
 
                   {isActive && (
-                    <div className="flex items-center justify-center w-5 h-5 bg-primary text-primary-foreground rounded-full text-xs font-bold">
+                    <Badge className="flex items-center justify-center w-5 h-5 bg-primary text-primary-foreground rounded-full p-0 border-0 text-xs">
                       <Check size={14} />
-                    </div>
+                    </Badge>
                   )}
                 </div>
               </div>
@@ -107,7 +109,8 @@ function ThemeTab() {
         })}
       </div>
 
-      <div className="mt-8 p-4 bg-muted/50 rounded-lg border-l-4 border-primary">
+      <Separator className="mt-8" />
+      <div className="p-4 bg-muted/50 rounded-lg border-l-4 border-primary">
         <p className="m-0 text-muted-foreground text-sm leading-relaxed">
           <strong>Note:</strong> Theme changes are applied immediately and saved automatically. You
           can switch themes anytime to find what works best for your study sessions.

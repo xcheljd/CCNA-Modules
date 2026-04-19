@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import StreakTracker from '../utils/streakTracker';
 
 function StudyStreak({ refreshKey }) {
@@ -144,12 +146,7 @@ function StudyStreak({ refreshKey }) {
               {streakInfo.currentStreak}/{nextMilestone.days} days
             </span>
           </div>
-          <div className="w-full h-2 rounded-full bg-muted overflow-hidden">
-            <div
-              className="h-full bg-primary"
-              style={{ width: `${Math.min(nextMilestone.progress, 100)}%` }}
-            />
-          </div>
+          <Progress value={Math.min(nextMilestone.progress, 100)} className="h-2" />
         </div>
       )}
 
@@ -161,14 +158,15 @@ function StudyStreak({ refreshKey }) {
             {milestones
               .filter(m => m.achieved)
               .map(milestone => (
-                <div
+                <Badge
                   key={milestone.days}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[hsl(var(--primary)/0.1)] text-primary text-xs"
+                  variant="outline"
+                  className="bg-[hsl(var(--primary)/0.1)] text-primary border-0"
                   title={milestone.name}
                 >
                   <span className="text-sm">🏆</span>
                   <span className="font-semibold">{milestone.days}d</span>
-                </div>
+                </Badge>
               ))}
           </div>
         </div>

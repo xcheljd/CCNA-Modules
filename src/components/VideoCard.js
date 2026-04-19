@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useToast } from '@/components/ui/toast';
+import { Checkbox } from '@/components/ui/checkbox';
 import { YOUTUBE_THUMBNAIL_BASE } from '@/utils/constants';
 
 function VideoCard({ video, moduleId, isCompleted, onMarkComplete }) {
@@ -85,11 +86,10 @@ function VideoCard({ video, moduleId, isCompleted, onMarkComplete }) {
           {isLoading ? 'Opening...' : 'Watch Video'}
         </button>
 
-        <label className="completion-checkbox flex items-center gap-2 cursor-pointer text-[13px] text-muted-foreground select-none">
-          <input
-            type="checkbox"
+        <label className="flex items-center gap-2 cursor-pointer text-[13px] text-muted-foreground select-none">
+          <Checkbox
             checked={isCompleted}
-            onChange={e => onMarkComplete(moduleId, video.id, e.target.checked)}
+            onCheckedChange={checked => onMarkComplete(moduleId, video.id, checked)}
           />
           <span className="flex-1">Mark as watched</span>
         </label>

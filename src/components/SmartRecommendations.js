@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { format } from 'date-fns';
+import { Separator } from '@/components/ui/separator';
 import ProgressTracker from '../utils/progressTracker';
 import StreakTracker from '../utils/streakTracker';
 import GoalTracker from '../utils/goalTracker';
@@ -167,7 +168,7 @@ function SmartRecommendations({ modules, onModuleSelect }) {
     <div className="flex flex-col gap-4">
       {/* Insights */}
       {insights.length > 0 && (
-        <div className="pb-1 border-b border-border">
+        <div className="pb-1">
           <h3 className="mb-2">Insights</h3>
           <div className="flex flex-col gap-1.5">
             {insights.map((insight, index) => (
@@ -177,6 +178,7 @@ function SmartRecommendations({ modules, onModuleSelect }) {
               </div>
             ))}
           </div>
+          <Separator className="mt-4" />
         </div>
       )}
 

@@ -11,6 +11,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Save, Download, Upload, Trash2, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import ProgressTracker, { isProgressKey } from '../../utils/progressTracker';
@@ -223,40 +224,43 @@ function DataManagementTab() {
         </div>
       </div>
 
-      <div className="border-2 border-destructive p-4 rounded-xl bg-destructive/8 shadow-[0_2px_8px_hsl(var(--destructive)/0.15)] transition-all hover:shadow-[0_4px_12px_hsl(var(--destructive)/0.2)]">
-        <h4 className="text-destructive font-semibold flex !items-center gap-2 m-0 mb-3">
-          <AlertTriangle size={20} className="shrink-0" />
-          Danger Zone
-        </h4>
-        <div className="mb-4 last:mb-0">
-          <Button
-            onClick={handleClear}
-            variant="destructive"
-            className={showClearConfirm ? 'confirm-active' : ''}
-          >
-            {showClearConfirm ? (
-              <>
-                <AlertTriangle size={16} />
-                Click Again to Confirm
-              </>
-            ) : (
-              <>
-                <Trash2 size={16} />
-                Clear All Progress
-              </>
-            )}
-          </Button>
-          {showClearConfirm && (
-            <Button onClick={() => setShowClearConfirm(false)} variant="outline">
-              Cancel
+      <Alert
+        variant="destructive"
+        className="border-2 p-4 shadow-[0_2px_8px_hsl(var(--destructive)/0.15)] transition-all hover:shadow-[0_4px_12px_hsl(var(--destructive)/0.2)]"
+      >
+        <AlertTriangle size={20} className="shrink-0" />
+        <AlertTitle className="text-destructive">Danger Zone</AlertTitle>
+        <AlertDescription>
+          <div className="mt-3">
+            <Button
+              onClick={handleClear}
+              variant="destructive"
+              className={showClearConfirm ? 'confirm-active' : ''}
+            >
+              {showClearConfirm ? (
+                <>
+                  <AlertTriangle size={16} />
+                  Click Again to Confirm
+                </>
+              ) : (
+                <>
+                  <Trash2 size={16} />
+                  Clear All Progress
+                </>
+              )}
             </Button>
-          )}
-          <p className="text-sm text-destructive font-semibold mt-2 mb-0 leading-relaxed">
-            This will permanently delete all your progress, confidence ratings, and study history.
-            This action cannot be undone!
-          </p>
-        </div>
-      </div>
+            {showClearConfirm && (
+              <Button onClick={() => setShowClearConfirm(false)} variant="outline">
+                Cancel
+              </Button>
+            )}
+            <p className="text-sm text-destructive font-semibold mt-2 mb-0 leading-relaxed">
+              This will permanently delete all your progress, confidence ratings, and study history.
+              This action cannot be undone!
+            </p>
+          </div>
+        </AlertDescription>
+      </Alert>
 
       <Dialog
         open={pendingImport !== null}

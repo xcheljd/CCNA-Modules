@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import SettingsManager from '../../utils/settingsManager';
@@ -182,26 +185,24 @@ function DashboardTab() {
 
             <div className="flex-1 flex flex-col gap-0 justify-center">
               <div className="flex items-center gap-3">
-                <div
-                  className={`section-checkbox ${section.enabled ? 'checked' : ''} ${!section.removable ? 'disabled' : ''}`}
-                  onClick={() => section.removable && handleToggle(section.id)}
-                  role="checkbox"
-                  aria-checked={section.enabled}
-                  aria-disabled={!section.removable}
-                  tabIndex={section.removable ? 0 : -1}
-                >
-                  {section.enabled && <span className="checkmark">✓</span>}
-                </div>
+                <Checkbox
+                  checked={section.enabled}
+                  onCheckedChange={() => {
+                    if (section.removable) handleToggle(section.id);
+                  }}
+                  disabled={!section.removable}
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2"
+                />
                 <h4 className="m-0 text-base text-foreground leading-normal">{section.title}</h4>
                 {!section.removable && (
-                  <span className="text-xs px-2.5 py-1 bg-primary text-primary-foreground rounded-xl font-semibold shadow-sm">
+                  <Badge variant="default" className="shadow-sm">
                     Required
-                  </span>
+                  </Badge>
                 )}
                 {section.conditional && (
-                  <span className="text-xs px-2.5 py-1 bg-accent text-white rounded-xl font-semibold shadow-sm">
+                  <Badge variant="secondary" className="bg-accent text-white shadow-sm">
                     Conditional
-                  </span>
+                  </Badge>
                 )}
               </div>
               <p className="text-muted-foreground text-[0.8125rem] m-0 leading-snug">
@@ -251,10 +252,12 @@ function DashboardTab() {
         </Button>
       </div>
 
-      <div className="py-4 px-5 bg-[rgba(33,150,243,0.08)] border-l-4 border-primary rounded-xl text-sm text-foreground shadow-sm leading-relaxed">
-        <strong>Note:</strong> Conditional sections only appear when relevant (for example, some
-        sections only show once you have enough progress data).
-      </div>
+      <Alert className="border-l-4 border-primary">
+        <AlertDescription>
+          <strong>Note:</strong> Conditional sections only appear when relevant (for example, some
+          sections only show once you have enough progress data).
+        </AlertDescription>
+      </Alert>
     </div>
   );
 }

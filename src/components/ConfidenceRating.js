@@ -1,4 +1,5 @@
 import React from 'react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 function ConfidenceRating({ confidence, onRate, compact = false }) {
   const ratings = [
@@ -69,11 +70,13 @@ function ConfidenceRating({ confidence, onRate, compact = false }) {
       </div>
 
       {confidence > 0 && (
-        <p className="m-0 text-xs text-muted-foreground p-2.5 bg-muted rounded-md border-l-3 border-l-primary">
-          {confidence <= 2 && '💡 This module is marked for review'}
-          {confidence === 3 && '👍 Keep practicing to improve your confidence'}
-          {confidence >= 4 && '🌟 Great job! You have strong confidence in this module'}
-        </p>
+        <Alert className="mt-3">
+          <AlertDescription>
+            {confidence <= 2 && '💡 This module is marked for review'}
+            {confidence === 3 && '👍 Keep practicing to improve your confidence'}
+            {confidence >= 4 && '🌟 Great job! You have strong confidence in this module'}
+          </AlertDescription>
+        </Alert>
       )}
     </div>
   );

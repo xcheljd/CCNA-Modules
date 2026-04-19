@@ -3,6 +3,7 @@ import LoadingScreen from './components/LoadingScreen';
 import WelcomeDialog from './components/WelcomeDialog';
 import YoutubeSigninDialog from './components/YoutubeSigninDialog';
 import { ToastProvider, useToast } from '@/components/ui/toast';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { LayoutDashboard, List } from 'lucide-react';
 import modules from './data/modules';
 import ProgressTracker from './utils/progressTracker';
@@ -365,17 +366,19 @@ function AppContent() {
       </header>
 
       {!resourcesAvailable && (
-        <div className="bg-[hsl(var(--destructive)/0.1)] text-destructive p-4 text-center border-b border-[hsl(var(--destructive)/0.2)]">
-          ⚠️ Resources folder not found. Some features may not work.
-          <a
-            href={RESOURCE_DOWNLOAD_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary ml-2.5"
-          >
-            Download resources from Jeremy's IT Lab
-          </a>
-        </div>
+        <Alert variant="destructive" className="rounded-none border-x-0 border-t-0">
+          <AlertDescription className="text-center">
+            ⚠️ Resources folder not found. Some features may not work.
+            <a
+              href={RESOURCE_DOWNLOAD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary ml-2.5"
+            >
+              Download resources from Jeremy's IT Lab
+            </a>
+          </AlertDescription>
+        </Alert>
       )}
 
       <main className="max-w-[1400px] mx-auto p-5 overflow-x-hidden">

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart, ExternalLink, Coffee, Lightbulb } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 import {
   YOUTUBE_CHANNEL_URL,
   JEREMYS_IT_LAB_URL,
@@ -15,9 +16,10 @@ import { openExternal } from '@/utils/helpers';
 function AboutTab() {
   return (
     <div className="p-2">
-      <div className="flex items-center gap-4 mb-6 pb-4 border-b-2 border-border">
+      <div className="flex items-center gap-4 mb-6 pb-4">
         <Heart className="text-primary shrink-0" size={32} />
         <h3 className="m-0 text-2xl font-semibold text-foreground">Course Credit</h3>
+        <Separator className="flex-1" />
       </div>
 
       <div className="flex flex-col gap-6">

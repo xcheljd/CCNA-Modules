@@ -392,11 +392,11 @@ describe('StudyStreak', () => {
     expect(screen.getByText(/Next: 7-Day Warrior/)).toBeInTheDocument();
     expect(screen.getByText('3/7 days')).toBeInTheDocument();
 
-    // Milestone fill is a div inside the rounded-full bar with inline style width
+    // Milestone fill uses shadcn Progress (Radix) with translateX indicator
     const milestoneBar = container.querySelector('.h-2.rounded-full');
     const milestoneFill = milestoneBar ? milestoneBar.querySelector('div') : null;
     expect(milestoneFill).toBeInTheDocument();
-    expect(milestoneFill).toHaveStyle({ width: '42.86%' });
+    expect(milestoneFill).toHaveStyle({ transform: 'translateX(-57.14%)' });
   });
 
   // VAL-STREAK-COMP-009: Hides next milestone when all achieved
@@ -540,8 +540,8 @@ describe('StudyStreak', () => {
 
     const milestoneBar = container.querySelector('.h-2.rounded-full');
     const milestoneFill = milestoneBar ? milestoneBar.querySelector('div') : null;
-    // Next milestone is 60-Day Dedication at 83.33%
-    expect(milestoneFill).toHaveStyle({ width: '83.33%' });
+    // Next milestone is 60-Day Dedication at 83.33%, translateX = -(100-83.33)% = -16.67%
+    expect(milestoneFill).toHaveStyle({ transform: 'translateX(-16.67%)' });
   });
 
   // Additional edge case: milestone with progress > 100 gets capped via Math.min
@@ -561,8 +561,8 @@ describe('StudyStreak', () => {
 
     const milestoneBar = container.querySelector('.h-2.rounded-full');
     const milestoneFill = milestoneBar ? milestoneBar.querySelector('div') : null;
-    // Math.min(114.29, 100) = 100
-    expect(milestoneFill).toHaveStyle({ width: '100%' });
+    // Math.min(114.29, 100) = 100, translateX = -(100-100)% = -0%
+    expect(milestoneFill).toHaveStyle({ transform: 'translateX(-0%)' });
   });
 
   // Additional edge case: calls getRecentActivity with argument 7

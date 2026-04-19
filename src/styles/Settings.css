@@ -106,48 +106,8 @@
   }
 
   /* ============================================================================
-   DASHBOARD TAB - Custom checkbox with appearance:none + ::after
+   DASHBOARD TAB - Custom checkbox (Replaced by shadcn Checkbox component)
    ============================================================================ */
-
-  .section-checkbox {
-    position: absolute;
-    left: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    border: 2px solid hsl(var(--border));
-    border-radius: 3px;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    user-select: none;
-  }
-
-  .section-checkbox:hover:not(.disabled) {
-    border-color: hsl(var(--primary-foreground));
-    box-shadow: 0 0 8px hsl(var(--primary-foreground) / 0.5);
-  }
-
-  .section-checkbox.checked {
-    background: hsl(var(--primary));
-    border-color: hsl(var(--primary));
-  }
-
-  .section-checkbox.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .section-checkbox .checkmark {
-    color: hsl(var(--primary-foreground));
-    font-size: 14px;
-    font-weight: bold;
-    line-height: 1;
-  }
 
   /* ============================================================================
    DASHBOARD TAB - Drag and drop states (toggled by JS event handlers)

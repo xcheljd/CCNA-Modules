@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import VideoCard from './VideoCard';
 import ConfidenceRating from './ConfidenceRating';
 import { useToast } from '@/components/ui/toast';
@@ -171,9 +173,11 @@ function ModuleDetail({
       <div className="grid grid-cols-[3fr_1fr] gap-8 max-md:grid-cols-1">
         <div>
           <h3 className="mb-2.5 text-foreground">Videos</h3>
-          <p className="text-muted-foreground text-sm mb-5 p-2.5 bg-muted border-l-3 border-l-primary rounded">
-            Videos will open in a distraction-free window. Check them off as you watch!
-          </p>
+          <Alert className="mb-5">
+            <AlertDescription>
+              Videos will open in a distraction-free window. Check them off as you watch!
+            </AlertDescription>
+          </Alert>
           {module.videos.map(video => (
             <VideoCard
               key={video.id}
@@ -204,11 +208,10 @@ function ModuleDetail({
                   Open Lab
                 </button>
               </div>
-              <label className="checkbox-label flex items-center gap-2 cursor-pointer text-sm">
-                <input
-                  type="checkbox"
+              <label className="flex items-center gap-2 cursor-pointer text-sm">
+                <Checkbox
                   checked={labCompletions[index] || false}
-                  onChange={() => handleLabToggle(index)}
+                  onCheckedChange={() => handleLabToggle(index)}
                 />
                 <span>
                   {labs.length > 1 ? `Mark lab ${index + 1} as completed` : 'Mark lab as completed'}
@@ -248,12 +251,8 @@ function ModuleDetail({
                   </button>
                 ))}
               </div>
-              <label className="checkbox-label flex items-center gap-2 cursor-pointer text-sm">
-                <input
-                  type="checkbox"
-                  checked={flashcardsAdded}
-                  onChange={handleFlashcardsToggle}
-                />
+              <label className="flex items-center gap-2 cursor-pointer text-sm">
+                <Checkbox checked={flashcardsAdded} onCheckedChange={handleFlashcardsToggle} />
                 <span>Mark as added to Anki</span>
               </label>
             </div>
