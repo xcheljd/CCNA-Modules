@@ -2,7 +2,7 @@ import React from 'react';
 
 function LoadingScreen({ status = 'Loading...', progress = 0 }) {
   return (
-    <div className="fixed inset-0 bg-loading flex justify-center items-center z-[9999] animate-[fadeIn_0.3s_ease-in]">
+    <div className="fixed inset-0 bg-loading flex justify-center items-center z-[40] animate-[fadeIn_0.3s_ease-in]">
       <div className="text-center text-loading-foreground">
         <div className="mb-[30px] flex justify-center">
           <div className="w-[100px] h-[100px] relative flex items-center justify-center bg-white/10 rounded-full backdrop-blur-[10px]">

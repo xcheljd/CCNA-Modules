@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useToast } from '@/components/ui/toast';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { YOUTUBE_THUMBNAIL_BASE } from '@/utils/constants';
 
@@ -78,13 +79,14 @@ function VideoCard({ video, moduleId, isCompleted, onMarkComplete }) {
 
       <div className="p-4 flex flex-col justify-evenly flex-1 items-center">
         <h4 className="m-0 text-base text-foreground leading-[1.3]">{video.title}</h4>
-        <button
+        <Button
+          variant="youtube"
+          className="watch-button max-w-[145px] px-5 py-2.5 pl-4 m-0 whitespace-nowrap max-md:text-[15px] max-md:p-3"
           onClick={openVideoWindow}
-          className="watch-button w-auto max-w-[145px] px-5 py-2.5 pl-4 bg-[#ff0000] text-white border-2 border-transparent rounded-md text-sm font-bold cursor-pointer transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] m-0 whitespace-nowrap inline-flex items-center gap-2 max-md:text-[15px] max-md:p-3 disabled:opacity-60 disabled:cursor-not-allowed"
           disabled={isLoading}
         >
           {isLoading ? 'Opening...' : 'Watch Video'}
-        </button>
+        </Button>
 
         <label className="flex items-center gap-2 cursor-pointer text-[13px] text-muted-foreground select-none">
           <Checkbox

@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { FolderSearch, RotateCcw, CheckCircle2, XCircle, Info } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 
@@ -15,6 +25,7 @@ function ResourcesPathTab() {
     isCustom: false,
   });
   const [loading, setLoading] = useState(true);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   useEffect(() => {
     loadResourcesInfo();
@@ -52,10 +63,9 @@ function ResourcesPathTab() {
   };
 
   const handleReset = async () => {
-    if (!window.confirm('Reset to default resources folder?')) return;
-
     if (!electronAPI) {
       info('Reset is only available in the desktop app');
+      setShowResetConfirm(false);
       return;
     }
 
@@ -65,6 +75,7 @@ function ResourcesPathTab() {
     } else {
       error(`Error: ${result.error}`);
     }
+    setShowResetConfirm(false);
   };
 
   if (loading) {
@@ -115,7 +126,7 @@ function ResourcesPathTab() {
             Browse for Folder
           </Button>
           {resourcesInfo.isCustom && (
-            <Button onClick={handleReset} variant="outline">
+            <Button onClick={() => setShowResetConfirm(true)} variant="outline">
               <RotateCcw size={16} />
               Reset to Default
             </Button>
@@ -133,6 +144,21 @@ function ResourcesPathTab() {
   └── ...`}
         </pre>
       </div>
+
+      <AlertDialog open={showResetConfirm} onOpenChange={setShowResetConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset Resources Path</AlertDialogTitle>
+            <AlertDialogDescription>
+              Reset to default resources folder? This will clear your custom path setting.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleReset}>Reset</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

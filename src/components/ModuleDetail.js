@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import VideoCard from './VideoCard';
@@ -137,31 +138,22 @@ function ModuleDetail({
     <div className={`module-detail p-5 ${animationClass}`}>
       <div className="mb-8">
         <div className="flex justify-between items-center mb-2.5 gap-2.5">
-          <button
-            onClick={onBack}
-            className="bg-transparent border border-border/50 text-accent text-sm font-semibold cursor-pointer px-4 py-2.5 rounded-lg transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] inline-flex items-center gap-2 relative hover:bg-[hsl(var(--accent)/0.1)] hover:border-[hsl(var(--accent)/0.6)] hover:text-accent hover:shadow-[0_0_0_1px_hsl(var(--accent)/0.2),0_2px_8px_hsl(var(--accent)/0.15)] hover:translate-x-[-2px] active:scale-[0.97] active:bg-[hsl(var(--accent)/0.15)] active:shadow-[inset_0_1px_3px_hsl(var(--accent)/0.2)]"
-          >
+          <Button variant="outline" className="gap-2" onClick={onBack}>
             <ChevronLeft size={18} strokeWidth={2.5} />
             Back to Modules
-          </button>
+          </Button>
           <div className="flex gap-2.5 items-center">
             {prevModule && (
-              <button
-                onClick={handlePrevModule}
-                className="bg-transparent border border-border/50 text-accent text-sm font-semibold cursor-pointer px-4 py-2.5 rounded-lg transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] inline-flex items-center gap-2 relative hover:bg-[hsl(var(--accent)/0.1)] hover:border-[hsl(var(--accent)/0.6)] hover:text-accent hover:shadow-[0_0_0_1px_hsl(var(--accent)/0.2),0_2px_8px_hsl(var(--accent)/0.15)] hover:translate-x-[-2px] active:scale-[0.97] active:bg-[hsl(var(--accent)/0.15)] active:shadow-[inset_0_1px_3px_hsl(var(--accent)/0.2)]"
-              >
+              <Button variant="outline" className="gap-2" onClick={handlePrevModule}>
                 <ChevronLeft size={18} strokeWidth={2.5} />
                 Previous
-              </button>
+              </Button>
             )}
             {nextModule && (
-              <button
-                onClick={handleNextModule}
-                className="bg-transparent border border-border/50 text-accent text-sm font-semibold cursor-pointer px-4 py-2.5 rounded-lg transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] inline-flex items-center gap-2 relative hover:bg-[hsl(var(--accent)/0.1)] hover:border-[hsl(var(--accent)/0.6)] hover:text-accent hover:shadow-[0_0_0_1px_hsl(var(--accent)/0.2),0_2px_8px_hsl(var(--accent)/0.15)] hover:translate-x-[2px] active:scale-[0.97] active:bg-[hsl(var(--accent)/0.15)] active:shadow-[inset_0_1px_3px_hsl(var(--accent)/0.2)]"
-              >
+              <Button variant="outline" className="gap-2" onClick={handleNextModule}>
                 Next
                 <ChevronRight size={18} strokeWidth={2.5} />
-              </button>
+              </Button>
             )}
           </div>
         </div>
@@ -201,12 +193,13 @@ function ModuleDetail({
                 <p className="text-sm text-muted-foreground mb-4">{labFile}</p>
               </div>
               <div className="flex justify-center mt-2 mb-2.5">
-                <button
+                <Button
+                  size="sm"
+                  className="w-[140px] font-semibold"
                   onClick={() => handleOpenLab(labFile)}
-                  className="w-[140px] px-4 py-2 bg-primary text-primary-foreground border border-primary-foreground/30 rounded-md cursor-pointer text-[13px] font-semibold mt-2 mb-2.5 whitespace-nowrap transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:border-primary-foreground hover:-translate-y-px hover:shadow-[0_2px_8px_hsl(var(--primary-foreground)/0.2)]"
                 >
                   Open Lab
-                </button>
+                </Button>
               </div>
               <label className="flex items-center gap-2 cursor-pointer text-sm">
                 <Checkbox
@@ -231,24 +224,21 @@ function ModuleDetail({
                 ))}
               </div>
               <div className="flex gap-2.5 mt-2 mb-2.5 justify-center flex-wrap">
-                <button
-                  onClick={handleOpenAnki}
-                  className="w-[140px] px-4 py-2 bg-primary text-primary-foreground border border-primary-foreground/30 rounded-md cursor-pointer text-[13px] font-semibold whitespace-nowrap transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:border-primary-foreground hover:-translate-y-px hover:shadow-[0_2px_8px_hsl(var(--primary-foreground)/0.2)]"
-                >
+                <Button size="sm" className="w-[140px] font-semibold" onClick={handleOpenAnki}>
                   Open Anki
-                </button>
+                </Button>
                 {flashcards.map((fc, index) => (
-                  <button
+                  <Button
                     key={`fc-btn-${index}`}
+                    variant={flashcardsAdded ? 'secondary' : 'default'}
+                    size="sm"
+                    className="font-semibold"
                     onClick={() => handleOpenFlashcards(fc)}
-                    className={`px-4 py-2 bg-primary text-primary-foreground border border-primary-foreground/30 rounded-md cursor-pointer text-[13px] font-semibold whitespace-nowrap transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:border-primary-foreground hover:-translate-y-px hover:shadow-[0_2px_8px_hsl(var(--primary-foreground)/0.2)] ${
-                      flashcardsAdded ? 'text-green-400' : ''
-                    }`}
                   >
                     {flashcardsAdded
                       ? '✓ Added to Deck'
                       : `Add${flashcards.length > 1 ? ` ${index + 1}` : ''}`}
-                  </button>
+                  </Button>
                 ))}
               </div>
               <label className="flex items-center gap-2 cursor-pointer text-sm">
@@ -265,12 +255,13 @@ function ModuleDetail({
                 <p className="text-sm text-muted-foreground mb-4">{module.resources.spreadsheet}</p>
               </div>
               <div className="flex justify-center mt-2 mb-2.5">
-                <button
+                <Button
+                  size="sm"
+                  className="w-[140px] font-semibold"
                   onClick={handleOpenSpreadsheet}
-                  className="w-[140px] px-4 py-2 bg-primary text-primary-foreground border border-primary-foreground/30 rounded-md cursor-pointer text-[13px] font-semibold whitespace-nowrap transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:border-primary-foreground hover:-translate-y-px hover:shadow-[0_2px_8px_hsl(var(--primary-foreground)/0.2)]"
                 >
                   Open Spreadsheet
-                </button>
+                </Button>
               </div>
             </div>
           )}

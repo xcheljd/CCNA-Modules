@@ -1,6 +1,7 @@
 import React from 'react';
 import { Heart, ExternalLink, Coffee, Lightbulb } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
 import {
   YOUTUBE_CHANNEL_URL,
   JEREMYS_IT_LAB_URL,
@@ -70,48 +71,54 @@ function AboutTab() {
             through his platforms:
           </p>
           <div className="flex gap-3 mt-4 flex-wrap">
-            <button
+            <Button
+              variant="outline"
+              className="justify-start gap-2 px-4 py-3"
               onClick={() => openExternal(YOUTUBE_CHANNEL_URL)}
-              className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
             >
               <ExternalLink size={16} className="shrink-0" />
               YouTube Channel
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="outline"
+              className="justify-start gap-2 px-4 py-3"
               onClick={() => openExternal(JEREMYS_IT_LAB_URL)}
-              className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
             >
               <ExternalLink size={16} className="shrink-0" />
               Website
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="outline"
+              className="justify-start gap-2 px-4 py-3"
               onClick={() => openExternal(COURSES_URL)}
-              className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
             >
               <ExternalLink size={16} className="shrink-0" />
               Premium Courses
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="outline"
+              className="justify-start gap-2 px-4 py-3"
               onClick={() => openExternal(DISCORD_URL)}
-              className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
             >
               <ExternalLink size={16} className="shrink-0" />
               Discord Community
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="outline"
+              className="justify-start gap-2 px-4 py-3"
               onClick={() => openExternal(TWITTER_URL)}
-              className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
             >
               <ExternalLink size={16} className="shrink-0" />
               Twitter
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="outline"
+              className="justify-start gap-2 px-4 py-3"
               onClick={() => openExternal(LINKEDIN_URL)}
-              className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
             >
               <ExternalLink size={16} className="shrink-0" />
               LinkedIn
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -125,18 +132,20 @@ function AboutTab() {
             Lab. If you find this tool helpful, consider supporting my development work:
           </p>
           <div className="flex gap-3 mt-4 flex-wrap">
-            <button
+            <Button
+              variant="outline"
+              className="justify-start gap-2 px-4 py-3"
               onClick={() => openExternal(PAYPAL_URL)}
-              className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
             >
               PayPal
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="outline"
+              className="justify-start gap-2 px-4 py-3"
               onClick={() => openExternal(VENMO_URL)}
-              className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
             >
               Venmo
-            </button>
+            </Button>
           </div>
           <p className="!mt-3 text-sm text-accent font-medium italic m-0">
             All support is greatly appreciated but completely optional!

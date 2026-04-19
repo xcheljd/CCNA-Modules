@@ -124,28 +124,32 @@ describe('Settings', () => {
 
     it('shows Sign out and calls signOutYoutube when already signed in', async () => {
       window.electronAPI.getYoutubeSigninStatus.mockResolvedValueOnce({ signedIn: true });
-      const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
       const user = userEvent.setup();
       await openYoutubeTab(user);
 
       const signOutBtn = await screen.findByRole('button', { name: /Sign out/ });
       await user.click(signOutBtn);
 
+      // Confirm in the AlertDialog
+      const confirmBtn = await screen.findByRole('button', { name: /sign out/i });
+      await user.click(confirmBtn);
+
       expect(window.electronAPI.signOutYoutube).toHaveBeenCalledTimes(1);
-      confirmSpy.mockRestore();
     });
 
     it('does not sign out when the user cancels the confirm dialog', async () => {
       window.electronAPI.getYoutubeSigninStatus.mockResolvedValueOnce({ signedIn: true });
-      const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
       const user = userEvent.setup();
       await openYoutubeTab(user);
 
       const signOutBtn = await screen.findByRole('button', { name: /Sign out/ });
       await user.click(signOutBtn);
 
+      // Cancel the AlertDialog
+      const cancelBtn = await screen.findByRole('button', { name: /cancel/i });
+      await user.click(cancelBtn);
+
       expect(window.electronAPI.signOutYoutube).not.toHaveBeenCalled();
-      confirmSpy.mockRestore();
     });
   });
 

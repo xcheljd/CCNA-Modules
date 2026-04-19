@@ -8,6 +8,7 @@ import SmartRecommendations from '../SmartRecommendations';
 import ProgressTracker from '../../utils/progressTracker';
 import ColorHelpers from '../../utils/colorHelpers';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon, CircularProgress } from '../ui/Icons';
 
 const sectionClass =
@@ -68,12 +69,9 @@ export const OverallProgressSection = ({ overallProgress, stats, onAction }) => 
               </div>
             </div>
           </div>
-          <button
-            className="w-full py-2.5 px-6 rounded-full border-none cursor-pointer bg-primary text-primary-foreground font-medium text-sm flex items-center justify-center gap-1.5 shadow-[0_4px_10px_hsl(var(--primary)/0.35)] transition-all duration-150 ease-[ease] hover:translate-y-[-1px] hover:shadow-[0_6px_14px_hsl(var(--primary)/0.45)]"
-            onClick={onAction}
-          >
+          <Button className="w-full rounded-full gap-1.5 font-medium" onClick={onAction}>
             {overallProgress > 0 ? '▶️ Continue Learning' : '📚 Start Learning'}
-          </button>
+          </Button>
         </div>
       </div>
     </CardContent>

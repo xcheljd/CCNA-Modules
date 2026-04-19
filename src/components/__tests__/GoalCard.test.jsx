@@ -19,11 +19,12 @@ jest.mock('../../utils/goalTracker', () => ({
 
 // Mock GoalModal as a simple component that shows "GoalModal"
 jest.mock('../GoalModal', () => {
-  return function MockGoalModal({ onClose, onCreate }) {
+  return function MockGoalModal({ open, onOpenChange, onCreate }) {
+    if (!open) return null;
     return (
       <div data-testid="goal-modal">
         <span>GoalModal</span>
-        <button data-testid="modal-close" onClick={onClose}>
+        <button data-testid="modal-close" onClick={() => onOpenChange(false)}>
           Close
         </button>
         <button
@@ -329,12 +330,10 @@ describe('GoalCard', () => {
   // =====================================================
   // VAL-GOALCARD-008: Deletes goal on trash button + confirm
   // =====================================================
-  it('should delete goal when trash button clicked and confirm returns true', async () => {
+  it('should delete goal when trash button clicked and confirm accepted', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const goal = createMockGoal();
     setupMocks({ goal, completion: 40 });
-
-    jest.spyOn(window, 'confirm').mockReturnValue(true);
 
     render(<GoalCard modules={mockModules} />);
 
@@ -342,26 +341,30 @@ describe('GoalCard', () => {
     const deleteButton = screen.getByTitle('Delete goal');
     await user.click(deleteButton);
 
-    expect(window.confirm).toHaveBeenCalledWith('Are you sure you want to delete this goal?');
+    // Confirm in the AlertDialog
+    const confirmBtn = screen.getByRole('button', { name: /delete/i });
+    await user.click(confirmBtn);
+
     expect(GoalTracker.deleteCurrentGoal).toHaveBeenCalledTimes(1);
   });
 
   // =====================================================
   // VAL-GOALCARD-009: Does not delete goal when confirm cancelled
   // =====================================================
-  it('should not delete goal when confirm returns false', async () => {
+  it('should not delete goal when confirm cancelled', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const goal = createMockGoal();
     setupMocks({ goal, completion: 40 });
-
-    jest.spyOn(window, 'confirm').mockReturnValue(false);
 
     render(<GoalCard modules={mockModules} />);
 
     const deleteButton = screen.getByTitle('Delete goal');
     await user.click(deleteButton);
 
-    expect(window.confirm).toHaveBeenCalled();
+    // Cancel the AlertDialog
+    const cancelBtn = screen.getByRole('button', { name: /cancel/i });
+    await user.click(cancelBtn);
+
     expect(GoalTracker.deleteCurrentGoal).not.toHaveBeenCalled();
   });
 

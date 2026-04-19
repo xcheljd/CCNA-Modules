@@ -1,4 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import GoalTracker from '../utils/goalTracker';
 import GoalModal from './GoalModal';
 import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon, CircularProgress } from './ui/Icons';
@@ -46,6 +57,7 @@ function GoalCard({ modules }) {
   const [goal, setGoal] = useState(null);
   const [completion, setCompletion] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [successRate, setSuccessRate] = useState(0);
 
   const loadGoalData = useCallback(() => {
@@ -79,10 +91,9 @@ function GoalCard({ modules }) {
   };
 
   const handleDeleteGoal = () => {
-    if (window.confirm('Are you sure you want to delete this goal?')) {
-      GoalTracker.deleteCurrentGoal();
-      loadGoalData();
-    }
+    GoalTracker.deleteCurrentGoal();
+    loadGoalData();
+    setShowDeleteConfirm(false);
   };
 
   if (!goal) {
@@ -91,13 +102,10 @@ function GoalCard({ modules }) {
         <div className="text-4xl mb-2">🎯</div>
         <h3 className="m-0">No Active Goal</h3>
         <p className="m-0">Set a learning goal to track your progress and stay motivated!</p>
-        <button
-          className="mt-2 px-4 py-2 rounded-full border-none cursor-pointer bg-primary text-primary-foreground text-sm"
-          onClick={() => setShowModal(true)}
-        >
+        <Button className="mt-2 rounded-full" onClick={() => setShowModal(true)}>
           Create Your First Goal
-        </button>
-        {showModal && <GoalModal onClose={() => setShowModal(false)} onCreate={handleCreateGoal} />}
+        </Button>
+        <GoalModal open={showModal} onOpenChange={setShowModal} onCreate={handleCreateGoal} />
       </div>
     );
   }
@@ -114,13 +122,15 @@ function GoalCard({ modules }) {
           </p>
         </div>
         <div>
-          <button
-            className="bg-transparent border-none cursor-pointer text-lg"
-            onClick={handleDeleteGoal}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-lg"
+            onClick={() => setShowDeleteConfirm(true)}
             title="Delete goal"
           >
             🗑️
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -150,7 +160,22 @@ function GoalCard({ modules }) {
         </div>
       )}
 
-      {showModal && <GoalModal onClose={() => setShowModal(false)} onCreate={handleCreateGoal} />}
+      <GoalModal open={showModal} onOpenChange={setShowModal} onCreate={handleCreateGoal} />
+
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Goal</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this goal? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteGoal}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -1,7 +1,23 @@
 import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import GoalTracker from '../utils/goalTracker';
 
-function GoalModal({ onClose, onCreate }) {
+function GoalModal({ open, onOpenChange, onCreate }) {
   const [selectedPreset, setSelectedPreset] = useState('moderate');
   const [type, setType] = useState('weekly');
   const presets = GoalTracker.getPresets();
@@ -16,29 +32,31 @@ function GoalModal({ onClose, onCreate }) {
   };
 
   return (
-    <div
-      className="fixed inset-0 bg-foreground/50 flex items-center justify-center z-50"
-      onClick={onClose}
-    >
-      <div
-        className="bg-card rounded-xl p-6 max-w-lg w-full mx-4 shadow-lg max-h-[80vh] overflow-y-auto"
-        onClick={e => e.stopPropagation()}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        className="data-[state=open]:animate-[blurBounceIn_0.4s_cubic-bezier(0.34,1.56,0.64,1)] data-[state=closed]:animate-out data-[state=closed]:fade-out-0 sm:rounded-xl max-h-[80vh] overflow-y-auto"
       >
-        <h2 className="text-xl font-semibold text-foreground mb-4">Create Learning Goal</h2>
+        <DialogHeader>
+          <DialogTitle className="text-xl">Create Learning Goal</DialogTitle>
+          <DialogDescription className="sr-only">
+            Choose a duration and preset for your learning goal
+          </DialogDescription>
+        </DialogHeader>
 
-        <div className="mb-4">
+        <div className="mb-2">
           <label className="block text-sm font-medium text-muted-foreground mb-1">Duration</label>
-          <select
-            value={type}
-            onChange={e => setType(e.target.value)}
-            className="w-full p-2 bg-card border border-border rounded-md text-foreground"
-          >
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-          </select>
+          <Select value={type} onValueChange={setType}>
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="weekly">Weekly</SelectItem>
+              <SelectItem value="monthly">Monthly</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 mb-4">
+        <div className="grid grid-cols-1 gap-3">
           {Object.entries(presets).map(([key, preset]) => (
             <div
               key={key}
@@ -48,6 +66,15 @@ function GoalModal({ onClose, onCreate }) {
                   : 'border-border hover:border-ring'
               }`}
               onClick={() => setSelectedPreset(key)}
+              role="radio"
+              aria-checked={selectedPreset === key}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setSelectedPreset(key);
+                }
+              }}
             >
               <h4 className="text-foreground font-semibold m-0 mb-1">{preset.name}</h4>
               <p className="text-sm text-muted-foreground m-0 mb-2">{preset.description}</p>
@@ -63,22 +90,14 @@ function GoalModal({ onClose, onCreate }) {
           ))}
         </div>
 
-        <div className="flex gap-3 justify-end">
-          <button
-            className="px-4 py-2 bg-muted text-foreground border border-border rounded-lg cursor-pointer text-sm font-medium transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:bg-muted/80"
-            onClick={onClose}
-          >
+        <DialogFooter>
+          <Button variant="secondary" onClick={() => onOpenChange(false)}>
             Cancel
-          </button>
-          <button
-            className="px-4 py-2 bg-primary text-primary-foreground border border-primary rounded-lg cursor-pointer text-sm font-medium transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:opacity-90"
-            onClick={handleCreate}
-          >
-            Create Goal
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+          <Button onClick={handleCreate}>Create Goal</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

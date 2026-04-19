@@ -643,8 +643,8 @@ describe('SmartRecommendations', () => {
 
     // Continue card has a distinctive class containing primary-foreground and shadow
     const recCards = container.querySelectorAll('.py-3\\.5');
-    const continueCard = Array.from(recCards).find(card =>
-      card.className.includes('primary-foreground') && card.className.includes('shadow')
+    const continueCard = Array.from(recCards).find(
+      card => card.className.includes('primary-foreground') && card.className.includes('shadow')
     );
     expect(continueCard).toBeTruthy();
   });

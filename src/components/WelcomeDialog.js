@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { ExternalLink, Coffee, Lightbulb, Play } from 'lucide-react';
 import {
   YOUTUBE_CHANNEL_URL,
@@ -73,48 +74,54 @@ function WelcomeDialog({ open, onOpenChange }) {
               through his platforms:
             </p>
             <div className="flex gap-3 mt-4 flex-wrap">
-              <button
+              <Button
+                variant="outline"
+                className="justify-start gap-2 px-4 py-3"
                 onClick={() => openExternal(YOUTUBE_CHANNEL_URL)}
-                className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
               >
                 <ExternalLink size={16} className="shrink-0" />
                 YouTube Channel
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="outline"
+                className="justify-start gap-2 px-4 py-3"
                 onClick={() => openExternal(JEREMYS_IT_LAB_URL)}
-                className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
               >
                 <ExternalLink size={16} className="shrink-0" />
                 Website
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="outline"
+                className="justify-start gap-2 px-4 py-3"
                 onClick={() => openExternal(COURSES_URL)}
-                className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
               >
                 <ExternalLink size={16} className="shrink-0" />
                 Premium Courses
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="outline"
+                className="justify-start gap-2 px-4 py-3"
                 onClick={() => openExternal(DISCORD_URL)}
-                className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
               >
                 <ExternalLink size={16} className="shrink-0" />
                 Discord Community
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="outline"
+                className="justify-start gap-2 px-4 py-3"
                 onClick={() => openExternal(TWITTER_URL)}
-                className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
               >
                 <ExternalLink size={16} className="shrink-0" />
                 Twitter
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="outline"
+                className="justify-start gap-2 px-4 py-3"
                 onClick={() => openExternal(LINKEDIN_URL)}
-                className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
               >
                 <ExternalLink size={16} className="shrink-0" />
                 LinkedIn
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -128,18 +135,20 @@ function WelcomeDialog({ open, onOpenChange }) {
               IT Lab. If you find this tool helpful, consider supporting my development work:
             </p>
             <div className="flex gap-3 mt-4 flex-wrap">
-              <button
+              <Button
+                variant="outline"
+                className="justify-start gap-2 px-4 py-3"
                 onClick={() => openExternal(PAYPAL_URL)}
-                className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
               >
                 PayPal
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="outline"
+                className="justify-start gap-2 px-4 py-3"
                 onClick={() => openExternal(VENMO_URL)}
-                className="flex items-center gap-2 px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm font-medium transition-all cursor-pointer font-[inherit] text-left hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
               >
                 Venmo
-              </button>
+              </Button>
             </div>
             <p className="!mt-3 text-sm text-accent font-medium italic m-0">
               All support is greatly appreciated but completely optional!
@@ -148,13 +157,14 @@ function WelcomeDialog({ open, onOpenChange }) {
         </div>
 
         <div className="flex justify-center mt-6 pt-6 border-t border-border">
-          <button
+          <Button
+            size="lg"
+            className="gap-2 py-3.5 px-10 text-base font-semibold"
             onClick={handleGetStarted}
-            className="flex items-center gap-2 py-3.5 px-10 bg-primary text-primary-foreground border-none rounded-lg text-base font-semibold cursor-pointer transition-all shadow-[0_2px_8px_hsl(var(--primary)/0.3)] hover:bg-primary/90 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.4)] active:translate-y-0 active:shadow-[0_2px_4px_hsl(var(--primary)/0.2)]"
           >
             <Play size={16} className="shrink-0" />
             Get Started
-          </button>
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

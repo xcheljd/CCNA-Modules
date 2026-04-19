@@ -5,9 +5,10 @@ import ActivityHeatmap from './charts/ActivityHeatmap';
 import VelocityBarChart from './charts/VelocityBarChart';
 import ConfidenceDistribution from './charts/ConfidenceDistribution';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 function PerformanceCharts({ modules }) {
-  const [timeRange, setTimeRange] = useState(30);
+  const [timeRange, setTimeRange] = useState(7);
   const [progressData, setProgressData] = useState([]);
   const [velocityData, setVelocityData] = useState([]);
   const [confidenceData, setConfidenceData] = useState({
@@ -50,17 +51,24 @@ function PerformanceCharts({ modules }) {
     <div className="mt-6">
       {/* Time Range Selector */}
       <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
-        <div className="flex gap-2 bg-muted p-1 rounded-lg">
-          {[7, 30, 90].map(range => (
-            <button
-              key={range}
-              className={`px-4 py-2 border rounded-md cursor-pointer text-sm font-medium transition-all duration-300 ${timeRange === range ? 'bg-primary text-primary-foreground border-primary shadow-[0_2px_6px_hsl(var(--primary)/0.3),inset_0_1px_0_hsl(var(--primary-foreground)/0.1)]' : 'border-transparent bg-transparent text-muted-foreground hover:bg-card hover:text-foreground hover:border-[hsl(var(--primary)/0.3)] hover:scale-105'}`}
-              onClick={() => handleTimeRangeChange(range)}
-            >
-              {range === 7 ? '7 Days' : range === 30 ? '30 Days' : '3 Months'}
-            </button>
-          ))}
-        </div>
+        <ToggleGroup
+          type="single"
+          value={String(timeRange)}
+          onValueChange={value => {
+            if (value) handleTimeRangeChange(Number(value));
+          }}
+          className="bg-muted p-1 rounded-lg"
+        >
+          <ToggleGroupItem value="7" size="sm">
+            7 Days
+          </ToggleGroupItem>
+          <ToggleGroupItem value="30" size="sm">
+            30 Days
+          </ToggleGroupItem>
+          <ToggleGroupItem value="90" size="sm">
+            3 Months
+          </ToggleGroupItem>
+        </ToggleGroup>
 
         {prediction && prediction !== 'Completed' && prediction !== 'Unknown' && (
           <div className="flex items-center gap-2 px-4 py-2 bg-muted rounded-lg border border-border">

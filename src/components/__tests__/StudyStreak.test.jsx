@@ -610,7 +610,9 @@ describe('StudyStreak', () => {
     const { container } = render(<StudyStreak />);
 
     // Badges are now inline-flex items with rounded-full class and title attributes
-    const badges = container.querySelectorAll('[title="7-Day Warrior"], [title="2-Week Champion"], [title="Monthly Master"]');
+    const badges = container.querySelectorAll(
+      '[title="7-Day Warrior"], [title="2-Week Champion"], [title="Monthly Master"]'
+    );
     expect(badges).toHaveLength(3);
 
     // Each badge should have a trophy emoji and day label

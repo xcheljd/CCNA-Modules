@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 function ConfidenceRating({ confidence, onRate, compact = false }) {
@@ -31,13 +32,9 @@ function ConfidenceRating({ confidence, onRate, compact = false }) {
           How confident are you with this module?
         </h4>
         {confidence > 0 && (
-          <button
-            className="bg-transparent border-none text-muted-foreground text-sm cursor-pointer px-2 py-1 rounded transition-all duration-150 ease hover:bg-muted hover:text-foreground"
-            onClick={() => onRate(0)}
-            title="Clear rating"
-          >
+          <Button variant="ghost" size="sm" onClick={() => onRate(0)} title="Clear rating">
             Clear
-          </button>
+          </Button>
         )}
       </div>
 

@@ -90,10 +90,9 @@ describe('PerformanceCharts', () => {
     expect(screen.getByText('30 Days')).toBeInTheDocument();
     expect(screen.getByText('3 Months')).toBeInTheDocument();
 
-    // 30 Days should have active styling by default
-    const buttons = screen.getAllByRole('button');
-    const thirtyDayBtn = buttons.find(btn => btn.textContent === '30 Days');
-    expect(thirtyDayBtn).toHaveClass('bg-primary');
+    // 7 Days should be active by default
+    const sevenDayBtn = screen.getByRole('radio', { name: '7 Days' });
+    expect(sevenDayBtn).toHaveAttribute('data-state', 'on');
   });
 
   // VAL-PERFCHARTS-002: Switches active time range on click
@@ -102,15 +101,14 @@ describe('PerformanceCharts', () => {
     const modules = createModules(5);
     render(<PerformanceCharts modules={modules} />);
 
-    // Click 7 Days button
-    await user.click(screen.getByText('7 Days'));
+    // Click 30 Days button
+    await user.click(screen.getByText('30 Days'));
 
-    const buttons = screen.getAllByRole('button');
-    const sevenDayBtn = buttons.find(btn => btn.textContent === '7 Days');
-    const thirtyDayBtn = buttons.find(btn => btn.textContent === '30 Days');
+    const sevenDayBtn = screen.getByRole('radio', { name: '7 Days' });
+    const thirtyDayBtn = screen.getByRole('radio', { name: '30 Days' });
 
-    expect(sevenDayBtn).toHaveClass('bg-primary');
-    expect(thirtyDayBtn).not.toHaveClass('bg-primary');
+    expect(thirtyDayBtn).toHaveAttribute('data-state', 'on');
+    expect(sevenDayBtn).toHaveAttribute('data-state', 'off');
   });
 
   // VAL-PERFCHARTS-003: Re-loads data when time range changes
@@ -119,12 +117,12 @@ describe('PerformanceCharts', () => {
     const modules = createModules(5);
     render(<PerformanceCharts modules={modules} />);
 
-    // Initial load with default 30 days
-    expect(PerformanceTracker.getRecentPerformance).toHaveBeenCalledWith(30);
-
-    // Click 7 Days
-    await user.click(screen.getByText('7 Days'));
+    // Initial load with default 7 days
     expect(PerformanceTracker.getRecentPerformance).toHaveBeenCalledWith(7);
+
+    // Click 30 Days
+    await user.click(screen.getByText('30 Days'));
+    expect(PerformanceTracker.getRecentPerformance).toHaveBeenCalledWith(30);
 
     // Click 3 Months
     await user.click(screen.getByText('3 Months'));
@@ -194,7 +192,7 @@ describe('PerformanceCharts', () => {
 
     // Check ActivityHeatmap receives days (= timeRange, default 30)
     const heatmap = screen.getByTestId('activity-heatmap');
-    expect(heatmap.textContent).toBe('30');
+    expect(heatmap.textContent).toBe('7');
   });
 
   // VAL-PERFCHARTS-008: Handles null/empty modules gracefully
@@ -239,12 +237,12 @@ describe('PerformanceCharts', () => {
     const modules = createModules(5);
     render(<PerformanceCharts modules={modules} />);
 
-    // Default: 30
-    expect(screen.getByTestId('activity-heatmap').textContent).toBe('30');
-
-    // Switch to 7 Days
-    await user.click(screen.getByText('7 Days'));
+    // Default: 7
     expect(screen.getByTestId('activity-heatmap').textContent).toBe('7');
+
+    // Switch to 30 Days
+    await user.click(screen.getByText('30 Days'));
+    expect(screen.getByTestId('activity-heatmap').textContent).toBe('30');
 
     // Switch to 3 Months
     await user.click(screen.getByText('3 Months'));

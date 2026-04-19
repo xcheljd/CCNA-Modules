@@ -3,6 +3,16 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import SettingsManager from '../../utils/settingsManager';
@@ -13,6 +23,7 @@ function DashboardTab() {
   const [sections, setSections] = useState([]);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   useEffect(() => {
     loadDashboardConfig();
@@ -99,11 +110,10 @@ function DashboardTab() {
   };
 
   const handleReset = () => {
-    if (!window.confirm('Reset dashboard to default configuration?')) return;
-
     const defaultConfig = getDefaultDashboardConfig();
     SettingsManager.saveDashboardConfig(defaultConfig);
     loadDashboardConfig();
+    setShowResetConfirm(false);
   };
 
   const handleDragStart = (e, index) => {
@@ -211,24 +221,30 @@ function DashboardTab() {
             </div>
 
             <div className="flex flex-row gap-2 self-center pt-1">
-              <button
-                className="move-btn w-8 h-8 flex items-center justify-center bg-muted border-[1.5px] border-border rounded-md cursor-pointer transition-all text-foreground"
+              <Button
+                variant="ghost"
+                size="icon"
+                className="move-btn w-8 h-8"
                 onClick={() => handleMoveUp(index)}
                 disabled={index === 0}
                 aria-label="Move up"
               >
                 <ChevronUp size={18} />
-              </button>
-              <button
-                className="move-btn w-8 h-8 flex items-center justify-center bg-muted border-[1.5px] border-border rounded-md cursor-pointer transition-all text-foreground"
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="move-btn w-8 h-8"
                 onClick={() => handleMoveDown(index)}
                 disabled={index === sections.length - 1}
                 aria-label="Move down"
               >
                 <ChevronDown size={18} />
-              </button>
-              <button
-                className="drag-handle !w-4 !min-w-4 !max-w-4 h-8 flex items-center justify-center bg-muted border-[1.5px] border-border rounded-md cursor-grab transition-all text-muted-foreground p-0 shrink-0"
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="drag-handle !w-4 !min-w-4 !max-w-4 h-8 p-0 cursor-grab shrink-0"
                 aria-label="Drag to reorder"
               >
                 <div className="grid grid-cols-2 grid-rows-3 gap-[3px] w-auto h-auto">
@@ -239,7 +255,7 @@ function DashboardTab() {
                   <div className="w-[3px] h-[3px] bg-muted-foreground rounded-full" />
                   <div className="w-[3px] h-[3px] bg-muted-foreground rounded-full" />
                 </div>
-              </button>
+              </Button>
             </div>
           </div>
         ))}
@@ -247,7 +263,7 @@ function DashboardTab() {
 
       <div className="flex gap-3 mb-4 flex-wrap">
         <Button onClick={saveDashboardConfig}>Save Configuration</Button>
-        <Button onClick={handleReset} variant="outline">
+        <Button onClick={() => setShowResetConfirm(true)} variant="outline">
           Reset to Defaults
         </Button>
       </div>
@@ -258,6 +274,21 @@ function DashboardTab() {
           sections only show once you have enough progress data).
         </AlertDescription>
       </Alert>
+
+      <AlertDialog open={showResetConfirm} onOpenChange={setShowResetConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset Dashboard</AlertDialogTitle>
+            <AlertDialogDescription>
+              Reset dashboard to default configuration? Your customizations will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleReset}>Reset</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

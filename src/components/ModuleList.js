@@ -5,6 +5,8 @@ import ProgressTracker from '../utils/progressTracker';
 import { asArray } from '@/utils/helpers';
 import { ColorHelpers } from '@/utils/colorHelpers';
 import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon } from './ui/Icons';
+import { Button } from '@/components/ui/button';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import '../styles/modules.css';
 
 function ModuleList({ modules, onModuleSelect }) {
@@ -97,19 +99,18 @@ function ModuleList({ modules, onModuleSelect }) {
           filterConfidence={filterConfidence}
           onConfidenceFilterChange={setFilterConfidence}
         />
-        <div className="flex gap-1 bg-card rounded-lg p-1 border border-border">
-          <button
-            className={`view-toggle-btn px-3 py-2 bg-transparent border-none rounded-md cursor-pointer text-muted-foreground transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] flex items-center justify-center hover:bg-muted hover:text-foreground ${viewMode === 'grid' ? 'active' : ''}`}
-            onClick={() => handleViewModeChange('grid')}
-            aria-label="Grid view"
-          >
+        <ToggleGroup
+          type="single"
+          value={viewMode}
+          onValueChange={value => {
+            if (value) handleViewModeChange(value);
+          }}
+          className="bg-card rounded-lg p-1 border border-border"
+        >
+          <ToggleGroupItem value="grid" aria-label="Grid view">
             <GridIcon />
-          </button>
-          <button
-            className={`view-toggle-btn px-3 py-2 bg-transparent border-none rounded-md cursor-pointer text-muted-foreground transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] flex items-center justify-center hover:bg-muted hover:text-foreground ${viewMode === 'list' ? 'active' : ''}`}
-            onClick={() => handleViewModeChange('list')}
-            aria-label="List view"
-          >
+          </ToggleGroupItem>
+          <ToggleGroupItem value="list" aria-label="List view">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="8" y1="6" x2="21" y2="6" />
               <line x1="8" y1="12" x2="21" y2="12" />
@@ -118,36 +119,27 @@ function ModuleList({ modules, onModuleSelect }) {
               <line x1="3" y1="12" x2="3.01" y2="12" />
               <line x1="3" y1="18" x2="3.01" y2="18" />
             </svg>
-          </button>
-        </div>
+          </ToggleGroupItem>
+        </ToggleGroup>
       </div>
 
       {filteredModules.length === 0 && (
         <div className="text-center py-15 px-5 text-muted-foreground">
           <p className="text-lg mb-5">No modules found matching your criteria.</p>
           {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="px-5 py-2.5 mx-2 text-[15px] bg-primary text-primary-foreground border-none rounded-lg cursor-pointer transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)]"
-            >
+            <Button className="mx-2 text-[15px]" onClick={() => setSearchQuery('')}>
               Clear search
-            </button>
+            </Button>
           )}
           {filterStatus !== 'all' && (
-            <button
-              onClick={() => setFilterStatus('all')}
-              className="px-5 py-2.5 mx-2 text-[15px] bg-primary text-primary-foreground border-none rounded-lg cursor-pointer transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)]"
-            >
+            <Button className="mx-2 text-[15px]" onClick={() => setFilterStatus('all')}>
               Clear status filter
-            </button>
+            </Button>
           )}
           {filterConfidence !== 'all' && (
-            <button
-              onClick={() => setFilterConfidence('all')}
-              className="px-5 py-2.5 mx-2 text-[15px] bg-primary text-primary-foreground border-none rounded-lg cursor-pointer transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:-translate-y-0.5 hover:shadow-[0_4px_12px_hsl(var(--primary)/0.3)]"
-            >
+            <Button className="mx-2 text-[15px]" onClick={() => setFilterConfidence('all')}>
               Clear confidence filter
-            </button>
+            </Button>
           )}
         </div>
       )}

@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { LogIn, LogOut, CheckCircle2, Circle } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 
 function YoutubeTab() {
   const { error, success } = useToast();
   const [signedIn, setSignedIn] = useState(null);
+  const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
 
   useEffect(() => {
     window.electronAPI.getYoutubeSigninStatus().then(result => {
@@ -25,19 +36,13 @@ function YoutubeTab() {
   };
 
   const handleSignOut = async () => {
-    if (
-      !window.confirm(
-        'Sign out of YouTube? Any open video windows will close and you will lose ad-free playback + resume state until you sign in again.'
-      )
-    ) {
-      return;
-    }
     const result = await window.electronAPI.signOutYoutube();
     if (result?.success) {
       success('Signed out of YouTube');
     } else if (result?.error) {
       error(`Sign-out failed: ${result.error}`);
     }
+    setShowSignOutConfirm(false);
   };
 
   if (signedIn === null) {
@@ -92,7 +97,7 @@ function YoutubeTab() {
 
         <div className="flex gap-3 mt-4 mb-2 flex-wrap">
           {signedIn ? (
-            <Button onClick={handleSignOut} variant="outline">
+            <Button onClick={() => setShowSignOutConfirm(true)} variant="outline">
               <LogOut size={16} />
               Sign out
             </Button>
@@ -104,6 +109,22 @@ function YoutubeTab() {
           )}
         </div>
       </div>
+
+      <AlertDialog open={showSignOutConfirm} onOpenChange={setShowSignOutConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Sign out of YouTube</AlertDialogTitle>
+            <AlertDialogDescription>
+              Any open video windows will close and you will lose ad-free playback and resume state
+              until you sign in again.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleSignOut}>Sign out</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
