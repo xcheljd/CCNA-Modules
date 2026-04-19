@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import VideoCard from './VideoCard';
 import ConfidenceRating from './ConfidenceRating';
 import { useToast } from '@/components/ui/toast';
@@ -136,25 +137,28 @@ function ModuleDetail({
         <div className="flex justify-between items-center mb-2.5 gap-2.5">
           <button
             onClick={onBack}
-            className="back-button bg-transparent border border-border/50 text-accent text-sm font-semibold cursor-pointer px-4 py-2.5 rounded-lg transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] inline-flex items-center gap-2 relative"
+            className="bg-transparent border border-border/50 text-accent text-sm font-semibold cursor-pointer px-4 py-2.5 rounded-lg transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] inline-flex items-center gap-2 relative hover:bg-[hsl(var(--accent)/0.1)] hover:border-[hsl(var(--accent)/0.6)] hover:text-accent hover:shadow-[0_0_0_1px_hsl(var(--accent)/0.2),0_2px_8px_hsl(var(--accent)/0.15)] hover:translate-x-[-2px] active:scale-[0.97] active:bg-[hsl(var(--accent)/0.15)] active:shadow-[inset_0_1px_3px_hsl(var(--accent)/0.2)]"
           >
+            <ChevronLeft size={18} strokeWidth={2.5} />
             Back to Modules
           </button>
           <div className="flex gap-2.5 items-center">
             {prevModule && (
               <button
                 onClick={handlePrevModule}
-                className="prev-button bg-transparent border border-border/50 text-accent text-sm font-semibold cursor-pointer px-4 py-2.5 rounded-lg transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] inline-flex items-center gap-2 relative"
+                className="bg-transparent border border-border/50 text-accent text-sm font-semibold cursor-pointer px-4 py-2.5 rounded-lg transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] inline-flex items-center gap-2 relative hover:bg-[hsl(var(--accent)/0.1)] hover:border-[hsl(var(--accent)/0.6)] hover:text-accent hover:shadow-[0_0_0_1px_hsl(var(--accent)/0.2),0_2px_8px_hsl(var(--accent)/0.15)] hover:translate-x-[-2px] active:scale-[0.97] active:bg-[hsl(var(--accent)/0.15)] active:shadow-[inset_0_1px_3px_hsl(var(--accent)/0.2)]"
               >
+                <ChevronLeft size={18} strokeWidth={2.5} />
                 Previous
               </button>
             )}
             {nextModule && (
               <button
                 onClick={handleNextModule}
-                className="next-button bg-transparent border border-border/50 text-accent text-sm font-semibold cursor-pointer px-4 py-2.5 rounded-lg transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] inline-flex items-center gap-2 relative"
+                className="bg-transparent border border-border/50 text-accent text-sm font-semibold cursor-pointer px-4 py-2.5 rounded-lg transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] inline-flex items-center gap-2 relative hover:bg-[hsl(var(--accent)/0.1)] hover:border-[hsl(var(--accent)/0.6)] hover:text-accent hover:shadow-[0_0_0_1px_hsl(var(--accent)/0.2),0_2px_8px_hsl(var(--accent)/0.15)] hover:translate-x-[2px] active:scale-[0.97] active:bg-[hsl(var(--accent)/0.15)] active:shadow-[inset_0_1px_3px_hsl(var(--accent)/0.2)]"
               >
                 Next
+                <ChevronRight size={18} strokeWidth={2.5} />
               </button>
             )}
           </div>

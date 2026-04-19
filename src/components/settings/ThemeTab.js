@@ -50,56 +50,65 @@ function ThemeTab() {
   };
 
   return (
-    <div className="settings-tab-content">
-      <h3>Theme</h3>
-      <p className="tab-description">
+    <div>
+      <h3 className="mt-0 mb-2 text-foreground">Theme</h3>
+      <p className="text-muted-foreground mb-4">
         Choose a color theme that suits your preference and study environment.
       </p>
 
-      <div className="theme-list">
-        {orderedThemes.map(theme => (
-          <div
-            key={theme.id}
-            className={`theme-list-item ${currentTheme === theme.id ? 'active' : ''}`}
-            onClick={() => handleThemeChange(theme.id)}
-          >
-            <div className="theme-content">
-              <div className="theme-name-section">
-                <span className="theme-name">{theme.name}</span>
-              </div>
-
-              <div className="theme-preview-compact">
-                <span className="theme-icon">{theme.icon}</span>
-                <div className="color-swatches-compact">
-                  <div
-                    className="color-swatch-compact"
-                    style={{ backgroundColor: `hsl(${theme.colors.primary})` }}
-                  />
-                  <div
-                    className="color-swatch-compact"
-                    style={{ backgroundColor: `hsl(${theme.colors.secondary})` }}
-                  />
-                  <div
-                    className="color-swatch-compact"
-                    style={{ backgroundColor: `hsl(${theme.colors.accent})` }}
-                  />
+      <div className="flex flex-col gap-3 mt-6">
+        {orderedThemes.map(theme => {
+          const isActive = currentTheme === theme.id;
+          return (
+            <div
+              key={theme.id}
+              className={`flex flex-col px-5 py-4 border rounded-lg bg-card cursor-pointer transition-all min-h-[80px] ${
+                isActive
+                  ? 'border-primary bg-primary/10 border-l-4'
+                  : 'border-border hover:border-primary hover:bg-accent/5 hover:translate-x-0.5'
+              }`}
+              onClick={() => handleThemeChange(theme.id)}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3 flex-1">
+                  <span className="font-semibold text-base text-foreground">{theme.name}</span>
                 </div>
 
-                {currentTheme === theme.id && (
-                  <div className="theme-active-indicator">
-                    <Check size={14} />
+                <div className="flex items-center gap-3 shrink-0">
+                  <span className="text-xl opacity-80">{theme.icon}</span>
+                  <div className="flex gap-1">
+                    <div
+                      className="w-5 h-5 rounded border border-border"
+                      style={{ backgroundColor: `hsl(${theme.colors.primary})` }}
+                    />
+                    <div
+                      className="w-5 h-5 rounded border border-border"
+                      style={{ backgroundColor: `hsl(${theme.colors.secondary})` }}
+                    />
+                    <div
+                      className="w-5 h-5 rounded border border-border"
+                      style={{ backgroundColor: `hsl(${theme.colors.accent})` }}
+                    />
                   </div>
-                )}
+
+                  {isActive && (
+                    <div className="flex items-center justify-center w-5 h-5 bg-primary text-primary-foreground rounded-full text-xs font-bold">
+                      <Check size={14} />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-1 text-sm text-muted-foreground leading-snug">
+                {theme.description}
               </div>
             </div>
-
-            <div className="theme-description">{theme.description}</div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      <div className="theme-note">
-        <p>
+      <div className="mt-8 p-4 bg-muted/50 rounded-lg border-l-4 border-primary">
+        <p className="m-0 text-muted-foreground text-sm leading-relaxed">
           <strong>Note:</strong> Theme changes are applied immediately and saved automatically. You
           can switch themes anytime to find what works best for your study sessions.
         </p>

@@ -69,59 +69,8 @@
   }
 
   /* ============================================================================
-   NAVIGATION BUTTONS - Pseudo-element arrows
+   NAVIGATION BUTTONS - Hover/active states
    ============================================================================ */
-
-  .back-button::before,
-  .prev-button::before {
-    content: '←';
-    font-size: 18px;
-    transition: transform 0.15s ease;
-  }
-
-  .next-button::after {
-    content: '→';
-    font-size: 18px;
-    transition: transform 0.15s ease;
-  }
-
-  .back-button:hover,
-  .prev-button:hover {
-    background: hsl(var(--accent) / 0.1);
-    border-color: hsl(var(--accent) / 0.6);
-    color: hsl(var(--accent));
-    box-shadow:
-      0 0 0 1px hsl(var(--accent) / 0.2),
-      0 2px 8px hsl(var(--accent) / 0.15);
-    transform: translateX(-2px);
-  }
-
-  .next-button:hover {
-    background: hsl(var(--accent) / 0.1);
-    border-color: hsl(var(--accent) / 0.6);
-    color: hsl(var(--accent));
-    box-shadow:
-      0 0 0 1px hsl(var(--accent) / 0.2),
-      0 2px 8px hsl(var(--accent) / 0.15);
-    transform: translateX(2px);
-  }
-
-  .back-button:hover::before,
-  .prev-button:hover::before {
-    transform: translateX(-3px);
-  }
-
-  .next-button:hover::after {
-    transform: translateX(3px);
-  }
-
-  .back-button:active,
-  .prev-button:active,
-  .next-button:active {
-    transform: scale(0.97);
-    background: hsl(var(--accent) / 0.15);
-    box-shadow: inset 0 1px 3px hsl(var(--accent) / 0.2);
-  }
 
   /* ============================================================================
    CHECKBOX - Custom appearance with ::after checkmark

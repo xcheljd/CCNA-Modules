@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { LogIn, ShieldCheck, Sparkles } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
+import '../styles/Settings.css';
 
 function YoutubeSigninDialog({ open, onOpenChange }) {
   const { error } = useToast();
@@ -27,18 +28,18 @@ function YoutubeSigninDialog({ open, onOpenChange }) {
           <DialogTitle>Sign in to YouTube (optional)</DialogTitle>
         </DialogHeader>
 
-        <div className="welcome-content">
-          <p className="about-intro">
+        <div className="welcome-content flex flex-col gap-6 max-h-[60vh] overflow-y-auto pr-2">
+          <p className="text-base leading-relaxed text-foreground m-0">
             If you have a Google account, you can optionally sign in to YouTube for a better viewing
             experience. This is entirely optional — the app works fully without it.
           </p>
 
-          <div className="instructor-info">
-            <h4>
+          <div className="bg-card border border-border rounded-xl p-5 transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+            <h4 className="m-0 mb-3 text-lg font-semibold text-foreground flex items-center gap-2">
               <Sparkles size={18} />
               What you get
             </h4>
-            <ul>
+            <ul className="m-0 pl-5">
               <li>
                 <strong>Ad-free playback</strong> — if your Google account has YouTube Premium,
                 videos play without ads.
@@ -54,12 +55,12 @@ function YoutubeSigninDialog({ open, onOpenChange }) {
             </ul>
           </div>
 
-          <div className="instructor-info">
-            <h4>
+          <div className="bg-card border border-border rounded-xl p-5 transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+            <h4 className="m-0 mb-3 text-lg font-semibold text-foreground flex items-center gap-2">
               <ShieldCheck size={18} />
               Your privacy
             </h4>
-            <ul>
+            <ul className="m-0 pl-5">
               <li>
                 CCNA-Modules <strong>never sees</strong> your email, password, or any Google account
                 data. Sign-in happens directly with Google in a separate window.
@@ -76,7 +77,7 @@ function YoutubeSigninDialog({ open, onOpenChange }) {
           </div>
         </div>
 
-        <div className="welcome-actions welcome-actions-pair">
+        <div className="flex justify-center mt-6 pt-6 border-t border-border gap-3 flex-wrap">
           <Button variant="outline" onClick={markSeen}>
             Maybe later
           </Button>

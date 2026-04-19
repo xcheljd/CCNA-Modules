@@ -68,40 +68,48 @@ function ResourcesPathTab() {
   };
 
   if (loading) {
-    return <div className="tab-loading">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-[200px] text-muted-foreground">
+        Loading...
+      </div>
+    );
   }
 
   return (
-    <div className="settings-tab-content">
-      <h3>Resources Folder Path</h3>
-      <p className="tab-description">
+    <div>
+      <h3 className="mt-0 mb-2 text-foreground">Resources Folder Path</h3>
+      <p className="text-muted-foreground mb-4">
         Select the folder containing your CCNA lab files (.pkt) and flashcard decks (.apkg).
       </p>
 
-      <div className="path-display">
-        <label>Current Path:</label>
-        <Input value={resourcesInfo.currentPath} readOnly className="path-input" />
-        <div className="path-status">
+      <div className="mb-4 bg-card border border-border rounded-xl p-4 transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+        <label className="block font-semibold mb-2 text-foreground text-sm">Current Path:</label>
+        <Input
+          value={resourcesInfo.currentPath}
+          readOnly
+          className="mb-2 !h-12 !flex !items-center !px-4 !py-3 !text-[0.9375rem] !leading-normal !text-left !font-[Segoe_UI,system-ui,-apple-system,sans-serif] !bg-background !border-[1.5px] !border-border !rounded-lg !transition-all !text-foreground hover:!border-primary hover:!shadow-[0_0_0_3px_rgba(33,150,243,0.1)] focus:!border-primary focus:!shadow-[0_0_0_3px_rgba(33,150,243,0.15)] focus:!outline-none"
+        />
+        <div className="flex gap-3 text-sm flex-wrap">
           {resourcesInfo.exists ? (
-            <span className="status-success">
+            <span className="flex items-center gap-1 text-[var(--color-progress-complete)] font-medium">
               <CheckCircle2 size={16} />
               Folder exists
             </span>
           ) : (
-            <span className="status-error">
+            <span className="flex items-center gap-1 text-destructive font-medium">
               <XCircle size={16} />
               Folder not found
             </span>
           )}
           {resourcesInfo.isCustom && (
-            <span className="status-info">
+            <span className="flex items-center gap-1 text-primary font-medium">
               <Info size={16} />
               Custom path
             </span>
           )}
         </div>
 
-        <div className="path-actions">
+        <div className="flex gap-3 mt-4 mb-2 flex-wrap">
           <Button onClick={handleSelectFolder}>
             <FolderSearch size={16} />
             Browse for Folder
@@ -115,9 +123,9 @@ function ResourcesPathTab() {
         </div>
       </div>
 
-      <div className="path-help">
-        <h4>Expected folder structure:</h4>
-        <pre className="folder-structure">
+      <div>
+        <h4 className="text-sm mb-2 text-foreground font-semibold">Expected folder structure:</h4>
+        <pre className="bg-muted/50 p-4 rounded-xl font-mono text-sm overflow-x-auto text-foreground border border-border leading-relaxed">
           {`resources/
   ├── Day 1 - Network Devices - Lab.pkt
   ├── Day 1 - Network Devices - Flashcards.apkg

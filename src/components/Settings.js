@@ -36,18 +36,29 @@ function Settings({ open, onOpenChange }) {
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs defaultValue="resources" className="settings-container">
-          <TabsList className="settings-tabs">
+        <Tabs
+          defaultValue="resources"
+          className="flex flex-col min-h-[600px] max-h-[calc(90vh-150px)] mt-1"
+        >
+          <TabsList className="flex flex-wrap gap-1 bg-muted/30 p-1 rounded-xl mb-4">
             {tabs.map(({ id, label, Icon }) => (
-              <TabsTrigger key={id} value={id} className="settings-tab">
-                <Icon className="tab-icon" size={20} />
+              <TabsTrigger
+                key={id}
+                value={id}
+                className="settings-tab flex items-center justify-center gap-2 flex-auto min-w-0 px-3.5 py-2.5 bg-transparent border-none rounded-lg cursor-pointer transition-all duration-300 text-muted-foreground font-medium relative whitespace-nowrap hover:bg-muted/60 hover:text-foreground hover:-translate-y-px"
+              >
+                <Icon className="shrink-0" size={20} />
                 <span className="tab-label">{label}</span>
               </TabsTrigger>
             ))}
           </TabsList>
 
           {tabs.map(({ id, Component }) => (
-            <TabsContent key={id} value={id} className="settings-content">
+            <TabsContent
+              key={id}
+              value={id}
+              className="flex-1 overflow-y-auto pr-2 pb-4 pt-0 animate-[fadeInSubtle_0.3s_ease-in]"
+            >
               <Component />
             </TabsContent>
           ))}

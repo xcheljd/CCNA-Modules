@@ -41,17 +41,21 @@ function YoutubeTab() {
   };
 
   if (signedIn === null) {
-    return <div className="tab-loading">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-[200px] text-muted-foreground">
+        Loading...
+      </div>
+    );
   }
 
   return (
-    <div className="settings-tab-content">
-      <h3>YouTube Account</h3>
-      <p className="tab-description">
+    <div>
+      <h3 className="mt-0 mb-2 text-foreground">YouTube Account</h3>
+      <p className="text-muted-foreground mb-4">
         Sign in with your Google account for a better viewing experience. Entirely optional — the
         app works fully without it.
       </p>
-      <ul className="tab-description-list">
+      <ul className="text-muted-foreground m-0 mb-4 pl-5 flex flex-col gap-1.5 list-disc">
         <li>
           <strong>Ad-free playback</strong> if your Google account has YouTube Premium.
         </li>
@@ -63,30 +67,30 @@ function YoutubeTab() {
           normally.
         </li>
       </ul>
-      <p className="tab-description">
+      <p className="text-muted-foreground mb-4">
         CCNA-Modules <strong>never sees</strong> your email, password, or any Google account data —
         sign-in happens directly with Google in a separate window. No OAuth tokens or credentials
         are stored by the app; session cookies are handled by Chromium in your local user-data
         folder and can be wiped anytime with <strong>Sign out</strong>.
       </p>
 
-      <div className="path-display">
-        <label>Status:</label>
-        <div className="path-status">
+      <div className="mb-4 bg-card border border-border rounded-xl p-4 transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+        <label className="block font-semibold mb-2 text-foreground text-sm">Status:</label>
+        <div className="flex gap-3 text-sm flex-wrap">
           {signedIn ? (
-            <span className="status-success">
+            <span className="flex items-center gap-1 text-[var(--color-progress-complete)] font-medium">
               <CheckCircle2 size={16} />
               Signed in
             </span>
           ) : (
-            <span className="status-info">
+            <span className="flex items-center gap-1 text-primary font-medium">
               <Circle size={16} />
               Not signed in
             </span>
           )}
         </div>
 
-        <div className="path-actions">
+        <div className="flex gap-3 mt-4 mb-2 flex-wrap">
           {signedIn ? (
             <Button onClick={handleSignOut} variant="outline">
               <LogOut size={16} />
