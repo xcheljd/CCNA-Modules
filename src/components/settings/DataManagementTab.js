@@ -188,7 +188,7 @@ function DataManagementTab() {
         Manage your progress data, create backups, and import from previous sessions.
       </p>
 
-      <div className="mb-5 p-4 bg-card border border-border rounded-xl transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+      <div className="mb-5 p-4 bg-card border border-border rounded-xl transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
         <h4 className="mt-0 mb-3 text-foreground font-semibold text-base">Save &amp; Backup</h4>
         <div className="mb-4 last:mb-0">
           <Button onClick={handleSave} variant="outline">
@@ -211,7 +211,7 @@ function DataManagementTab() {
         </div>
       </div>
 
-      <div className="mb-5 p-4 bg-card border border-border rounded-xl transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+      <div className="mb-5 p-4 bg-card border border-border rounded-xl transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
         <h4 className="mt-0 mb-3 text-foreground font-semibold text-base">Restore</h4>
         <div className="mb-4 last:mb-0">
           <Button onClick={handleImport} variant="outline">

@@ -162,8 +162,8 @@ function ModuleList({ modules, onModuleSelect }) {
               key={module.id}
               className={`module-card bg-card border border-border rounded-xl p-5 cursor-pointer transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] animate-[fadeInUp_0.4s_ease-out_backwards] ${
                 viewMode === 'grid'
-                  ? 'min-h-[220px] flex flex-col hover:shadow-[0_4px_12px_hsl(var(--primary-foreground)/0.12)] hover:-translate-y-1 hover:border-primary'
-                  : 'flex flex-col min-h-[120px] relative overflow-hidden mb-0 hover:translate-x-1 hover:shadow-[0_1px_6px_hsl(var(--primary-foreground)/0.08)]'
+                  ? 'min-h-[220px] flex flex-col hover:shadow-[0_4px_12px_hsl(var(--primary-foreground)/0.12)] hover:border-primary'
+                  : 'flex flex-col min-h-[120px] relative overflow-hidden mb-0 hover:shadow-[0_1px_6px_hsl(var(--primary-foreground)/0.08)] hover:border-primary'
               }`}
               onClick={() => onModuleSelect(module)}
             >

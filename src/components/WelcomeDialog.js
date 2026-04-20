@@ -36,7 +36,7 @@ function WelcomeDialog({ open, onOpenChange }) {
             Jeremy&apos;s IT Lab.
           </p>
 
-          <div className="bg-card border border-border rounded-xl p-5 transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+          <div className="bg-card border border-border rounded-xl p-5 transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
             <h4 className="m-0 mb-3 text-lg font-semibold text-foreground">About the Instructor</h4>
             <p className="m-0 leading-relaxed text-muted-foreground">
               Jeremy McDowell provides comprehensive, high-quality networking education through his
@@ -45,7 +45,7 @@ function WelcomeDialog({ open, onOpenChange }) {
             </p>
           </div>
 
-          <div className="bg-card border border-border rounded-xl p-5 border-l-4 border-l-[var(--color-confidence-okay,#ffc107)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+          <div className="bg-card border border-border rounded-xl p-5 border-l-4 border-l-[var(--color-confidence-okay,#ffc107)] transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
             <h4 className="m-0 mb-3 text-lg font-semibold text-foreground flex items-center gap-2">
               <Lightbulb size={18} />
               Why This Tool Exists
@@ -65,7 +65,7 @@ function WelcomeDialog({ open, onOpenChange }) {
             </p>
           </div>
 
-          <div className="bg-card border border-border rounded-xl p-5 transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+          <div className="bg-card border border-border rounded-xl p-5 transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
             <h4 className="m-0 mb-3 text-lg font-semibold text-foreground">
               Support Jeremy&apos;s Work
             </h4>
@@ -125,7 +125,7 @@ function WelcomeDialog({ open, onOpenChange }) {
             </div>
           </div>
 
-          <div className="bg-card border border-border rounded-xl p-5 border-l-4 border-l-accent transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+          <div className="bg-card border border-border rounded-xl p-5 border-l-4 border-l-accent transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
             <h4 className="m-0 mb-3 text-lg font-semibold text-foreground flex items-center gap-2">
               <Coffee size={18} />
               Support This App

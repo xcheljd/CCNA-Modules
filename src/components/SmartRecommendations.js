@@ -189,7 +189,7 @@ function SmartRecommendations({ modules, onModuleSelect }) {
           {recommendations.map((rec, index) => (
             <div
               key={index}
-              className={`py-3.5 px-[18px] rounded-[14px] border bg-card flex items-center gap-4 transition-all duration-150 ease-[ease] ${rec.type === 'continue' ? 'border-[hsl(var(--primary-foreground)/0.9)] shadow-[0_0_0_1px_hsl(var(--primary-foreground)/0.6),0_18px_35px_rgba(0,0,0,0.7)] hover:translate-y-[-1px] hover:shadow-[0_0_0_1px_hsl(var(--primary-foreground)/0.9),0_22px_40px_rgba(0,0,0,0.8)]' : 'border-border hover:bg-muted hover:translate-y-[-1px]'}`}
+              className={`py-3.5 px-[18px] rounded-[14px] border bg-card flex items-center gap-4 transition-all duration-150 ease-[ease] ${rec.type === 'continue' ? 'border-[hsl(var(--primary-foreground)/0.9)] shadow-[0_0_0_1px_hsl(var(--primary-foreground)/0.6),0_18px_35px_rgba(0,0,0,0.7)] hover:shadow-[0_0_0_1px_hsl(var(--primary-foreground)/0.9),0_22px_40px_rgba(0,0,0,0.8)]' : 'border-border hover:bg-muted'}`}
               onClick={() => rec.module && onModuleSelect(rec.module)}
               style={{ cursor: rec.module ? 'pointer' : 'default' }}
             >

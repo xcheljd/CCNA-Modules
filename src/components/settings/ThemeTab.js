@@ -67,7 +67,7 @@ function ThemeTab() {
               className={`flex flex-col px-5 py-4 border rounded-lg bg-card cursor-pointer transition-all min-h-[80px] ${
                 isActive
                   ? 'border-primary bg-primary/10 border-l-4'
-                  : 'border-border hover:border-primary hover:bg-accent/5 hover:translate-x-0.5'
+                  : 'border-border hover:border-primary hover:bg-accent/5'
               }`}
               onClick={() => handleThemeChange(theme.id)}
             >

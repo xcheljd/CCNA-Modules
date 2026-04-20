@@ -35,7 +35,7 @@ function VideoCard({ video, moduleId, isCompleted, onMarkComplete }) {
 
   return (
     <div
-      className={`video-card bg-card rounded-xl overflow-hidden border border-border transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] mb-3 flex flex-row h-[140px] max-md:flex-col max-md:h-auto hover:shadow-[0_2px_6px_hsl(var(--primary-foreground)/0.1)] hover:-translate-y-0.5 ${
+      className={`video-card bg-card rounded-xl overflow-hidden border border-border transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] mb-3 flex flex-row h-[140px] max-md:flex-col max-md:h-auto hover:shadow-[0_2px_6px_hsl(var(--primary-foreground)/0.1)] ${
         hasError ? 'video-error' : ''
       }`}
     >

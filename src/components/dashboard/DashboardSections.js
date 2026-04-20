@@ -98,7 +98,7 @@ export const ModulesNeedingReviewSection = ({ modules, onModuleSelect }) => {
             return (
               <div
                 key={module.id}
-                className="p-3 px-3.5 rounded-[10px] border border-border bg-card cursor-pointer transition-all duration-150 ease-[ease] hover:bg-muted hover:translate-y-[-1px] hover:shadow-[0_1px_4px_hsl(var(--primary-foreground)/0.08)]"
+                className="p-3 px-3.5 rounded-[10px] border border-border bg-card cursor-pointer transition-all duration-150 ease-[ease] hover:bg-muted hover:shadow-[0_1px_4px_hsl(var(--primary-foreground)/0.08)]"
                 onClick={() => onModuleSelect(module)}
               >
                 <h4 className="m-0 mb-1 text-sm">

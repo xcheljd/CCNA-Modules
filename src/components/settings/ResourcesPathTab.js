@@ -93,12 +93,12 @@ function ResourcesPathTab() {
         Select the folder containing your CCNA lab files (.pkt) and flashcard decks (.apkg).
       </p>
 
-      <div className="mb-4 bg-card border border-border rounded-xl p-4 transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+      <div className="mb-4 bg-card border border-border rounded-xl p-4 transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
         <label className="block font-semibold mb-2 text-foreground text-sm">Current Path:</label>
         <Input
           value={resourcesInfo.currentPath}
           readOnly
-          className="mb-2 !h-12 !flex !items-center !px-4 !py-3 !text-[0.9375rem] !leading-normal !text-left !font-[Segoe_UI,system-ui,-apple-system,sans-serif] !bg-background !border-[1.5px] !border-border !rounded-lg !transition-all !text-foreground hover:!border-primary hover:!shadow-[0_0_0_3px_rgba(33,150,243,0.1)] focus:!border-primary focus:!shadow-[0_0_0_3px_rgba(33,150,243,0.15)] focus:!outline-none"
+          className="mb-2 !h-12 !flex !items-center !px-4 !py-3 !text-[0.9375rem] !leading-normal !text-left !font-[Segoe_UI,system-ui,-apple-system,sans-serif] !bg-background !border-[1.5px] !border-border !rounded-lg !transition-all !text-foreground hover:!border-primary hover:!shadow-[0_0_0_3px_hsl(var(--primary)/0.1)] focus:!border-primary focus:!shadow-[0_0_0_3px_hsl(var(--primary)/0.15)] focus:!outline-none"
         />
         <div className="flex gap-3 text-sm flex-wrap">
           {resourcesInfo.exists ? (

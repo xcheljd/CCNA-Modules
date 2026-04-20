@@ -33,7 +33,7 @@ function ActivityHeatmap({ days = 30 }) {
               {week.map(day => (
                 <div
                   key={day.date}
-                  className={`heatmap-cell w-7 h-7 rounded flex items-center justify-center cursor-pointer transition-all duration-200 border border-transparent hover:scale-115 hover:border-primary hover:z-10 max-[768px]:w-6 max-[768px]:h-6 ${getIntensityClass(day.activitiesCompleted)}`}
+                  className={`heatmap-cell w-7 h-7 rounded flex items-center justify-center cursor-pointer transition-all duration-200 border border-transparent hover:border-primary hover:z-10 max-[768px]:w-6 max-[768px]:h-6 ${getIntensityClass(day.activitiesCompleted)}`}
                   title={`${formatDate(day.date)}: ${day.activitiesCompleted} activities`}
                 >
                   <span className="cell-count text-[13px] font-black text-foreground relative z-10 max-[768px]:text-[9px]">

@@ -19,7 +19,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-muted hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         youtube:
-          "bg-[#ff0000] text-white border-2 border-transparent shadow-xs hover:bg-[#cc0000] hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:shadow-xs font-bold",
+          "bg-[#ff0000] text-white border-2 border-transparent shadow-xs hover:bg-[#cc0000] hover:shadow-md active:shadow-xs font-bold",
       },
       size: {
         default: "h-10 px-4 py-2",

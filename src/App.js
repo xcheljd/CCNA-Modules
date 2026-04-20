@@ -322,7 +322,7 @@ function AppContent() {
                 <div className="mb-[30px] text-center">
                   <Button
                     size="lg"
-                    className="rounded-[30px] px-10 py-4 text-lg shadow-[0_4px_12px_hsl(var(--primary)/0.3)] hover:translate-y-[-2px] hover:shadow-[0_6px_16px_hsl(var(--primary)/0.4)]"
+                    className="rounded-[30px] px-10 py-4 text-lg shadow-[0_4px_12px_hsl(var(--primary)/0.3)] hover:shadow-[0_6px_16px_hsl(var(--primary)/0.4)]"
                     onClick={handleContinueWatching}
                   >
                     ▶ Continue Watching

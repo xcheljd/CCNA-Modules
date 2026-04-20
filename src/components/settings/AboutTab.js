@@ -31,7 +31,7 @@ function AboutTab() {
           Jeremy&apos;s IT Lab.
         </p>
 
-        <div className="bg-card border border-border rounded-xl p-5 transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+        <div className="bg-card border border-border rounded-xl p-5 transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
           <h4 className="m-0 mb-3 text-lg font-semibold text-foreground flex items-center gap-2">
             About the Instructor
           </h4>
@@ -42,7 +42,7 @@ function AboutTab() {
           </p>
         </div>
 
-        <div className="bg-card border border-border rounded-xl p-5 border-l-4 border-l-[var(--color-confidence-okay,#ffc107)] transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+        <div className="bg-card border border-border rounded-xl p-5 border-l-4 border-l-[var(--color-confidence-okay,#ffc107)] transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
           <h4 className="m-0 mb-3 text-lg font-semibold text-foreground flex items-center gap-2">
             <Lightbulb size={18} />
             Why This Tool Exists
@@ -62,7 +62,7 @@ function AboutTab() {
           </p>
         </div>
 
-        <div className="bg-card border border-border rounded-xl p-5 transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+        <div className="bg-card border border-border rounded-xl p-5 transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
           <h4 className="m-0 mb-3 text-lg font-semibold text-foreground flex items-center gap-2">
             Support Jeremy&apos;s Work
           </h4>
@@ -122,7 +122,7 @@ function AboutTab() {
           </div>
         </div>
 
-        <div className="bg-card border border-border rounded-xl p-5 border-l-4 border-l-accent transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+        <div className="bg-card border border-border rounded-xl p-5 border-l-4 border-l-accent transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
           <h4 className="m-0 mb-3 text-lg font-semibold text-foreground flex items-center gap-2">
             <Coffee size={18} />
             Support This App

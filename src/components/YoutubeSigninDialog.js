@@ -34,7 +34,7 @@ function YoutubeSigninDialog({ open, onOpenChange }) {
             experience. This is entirely optional — the app works fully without it.
           </p>
 
-          <div className="bg-card border border-border rounded-xl p-5 transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+          <div className="bg-card border border-border rounded-xl p-5 transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
             <h4 className="m-0 mb-3 text-lg font-semibold text-foreground flex items-center gap-2">
               <Sparkles size={18} />
               What you get
@@ -55,7 +55,7 @@ function YoutubeSigninDialog({ open, onOpenChange }) {
             </ul>
           </div>
 
-          <div className="bg-card border border-border rounded-xl p-5 transition-all hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+          <div className="bg-card border border-border rounded-xl p-5 transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
             <h4 className="m-0 mb-3 text-lg font-semibold text-foreground flex items-center gap-2">
               <ShieldCheck size={18} />
               Your privacy

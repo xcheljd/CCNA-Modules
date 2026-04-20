@@ -45,7 +45,7 @@ function Settings({ open, onOpenChange }) {
               <TabsTrigger
                 key={id}
                 value={id}
-                className="settings-tab flex items-center justify-center gap-2 flex-auto min-w-0 px-3.5 py-2.5 bg-transparent border-none rounded-lg cursor-pointer transition-all duration-300 text-muted-foreground font-medium relative whitespace-nowrap hover:bg-muted/60 hover:text-foreground hover:-translate-y-px"
+                className="settings-tab flex items-center justify-center gap-2 flex-auto min-w-0 px-3.5 py-2.5 bg-transparent border-none rounded-lg cursor-pointer transition-all duration-300 text-muted-foreground font-medium relative whitespace-nowrap hover:bg-muted/60 hover:text-foreground"
               >
                 <Icon className="shrink-0" size={20} />
                 <span className="tab-label">{label}</span>
