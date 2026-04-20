@@ -415,3 +415,14 @@
     opacity: 0;
   }
 }
+
+@keyframes loadingPulse {
+  0%, 100% {
+    transform: scaleX(0.3);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}

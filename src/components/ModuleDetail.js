@@ -165,11 +165,6 @@ function ModuleDetail({
       <div className="grid grid-cols-[3fr_1fr] gap-8 max-md:grid-cols-1">
         <div>
           <h3 className="mb-2.5 text-foreground">Videos</h3>
-          <Alert className="mb-5">
-            <AlertDescription>
-              Videos will open in a distraction-free window. Check them off as you watch!
-            </AlertDescription>
-          </Alert>
           {module.videos.map(video => (
             <VideoCard
               key={video.id}
@@ -179,10 +174,15 @@ function ModuleDetail({
               onMarkComplete={handleVideoComplete}
             />
           ))}
+          <Alert className="mt-5">
+            <AlertDescription>
+              Videos will open in a distraction-free window. Check them off as you watch!
+            </AlertDescription>
+          </Alert>
         </div>
 
         <div>
-          <h3 className="mb-5 text-foreground">Resources</h3>
+          <h3 className="mb-2.5 text-foreground">Resources</h3>
 
           {labs.map((labFile, index) => (
             <div className="bg-card border border-border rounded-xl p-5 mb-4" key={`lab-${index}`}>

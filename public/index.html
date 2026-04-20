@@ -7,61 +7,140 @@
       // Polyfill Node.js 'global' for webpack 5 runtime in Electron renderer
       if (typeof global === 'undefined') window.global = window;
     </script>
+    <!--
+      Apply saved theme CSS variables BEFORE any CSS paints.
+      Must run in <head> before the <style> block so the loading screen
+      uses the correct colors on the very first paint.
+    -->
+    <script>
+      (function() {
+        var themes = {
+          ayuLight: { primary:'37 100% 60%', primaryForeground:'0 0% 98%', background:'210 11% 96%', foreground:'210 4% 38%', card:'210 17% 98%', cardForeground:'210 4% 38%', popover:'210 17% 98%', popoverForeground:'210 4% 38%', secondary:'210 11% 96%', secondaryForeground:'210 4% 38%', muted:'210 11% 96%', mutedForeground:'210 8% 56%', accent:'23 95% 61%', accentForeground:'0 0% 98%', destructive:'0 73% 61%', destructiveForeground:'0 0% 98%', border:'210 11% 90%', input:'210 11% 90%', ring:'37 100% 60%', header:'210 17% 98%', headerForeground:'210 4% 38%', loading:'37 100% 60%', loadingForeground:'0 0% 98%', sidebar:'210 17% 98%', sidebarForeground:'210 4% 38%' },
+          ayuDark: { primary:'40 100% 70%', primaryForeground:'216 19% 16%', background:'216 19% 16%', foreground:'40 11% 78%', card:'220 19% 14%', cardForeground:'40 11% 78%', popover:'220 19% 14%', popoverForeground:'40 11% 78%', secondary:'218 20% 12%', secondaryForeground:'40 11% 78%', muted:'218 20% 12%', mutedForeground:'216 11% 49%', accent:'191 73% 63%', accentForeground:'216 19% 16%', destructive:'0 100% 70%', destructiveForeground:'0 0% 98%', border:'216 15% 26%', input:'218 20% 12%', ring:'40 100% 70%', header:'220 19% 14%', headerForeground:'40 11% 78%', loading:'40 100% 70%', loadingForeground:'216 19% 16%', sidebar:'220 19% 14%', sidebarForeground:'40 11% 78%' },
+          ocean: { primary:'200 100% 45%', primaryForeground:'0 0% 98%', background:'220 30% 8%', foreground:'0 0% 85%', card:'220 25% 12%', cardForeground:'0 0% 80%', popover:'220 25% 12%', popoverForeground:'0 0% 80%', secondary:'220 20% 18%', secondaryForeground:'0 0% 70%', muted:'220 15% 22%', mutedForeground:'0 0% 65%', accent:'195 80% 55%', accentForeground:'0 0% 100%', destructive:'0 62% 50%', destructiveForeground:'0 0% 98%', border:'220 15% 28%', input:'220 15% 20%', ring:'200 100% 45%', header:'220 25% 12%', headerForeground:'0 0% 85%', loading:'200 100% 45%', loadingForeground:'0 0% 98%', sidebar:'220 25% 12%', sidebarForeground:'0 0% 80%' },
+          neon: { primary:'189 87% 45%', primaryForeground:'0 0% 5%', background:'256 40% 6%', foreground:'189 70% 80%', card:'256 40% 4%', cardForeground:'189 60% 75%', popover:'256 40% 4%', popoverForeground:'189 60% 75%', secondary:'256 40% 8%', secondaryForeground:'189 70% 75%', muted:'256 40% 10%', mutedForeground:'189 40% 55%', accent:'189 87% 45%', accentForeground:'0 0% 5%', destructive:'16 98% 63%', destructiveForeground:'0 0% 100%', border:'189 70% 30%', input:'256 40% 10%', ring:'189 87% 48%', header:'256 40% 4%', headerForeground:'189 70% 80%', loading:'189 87% 45%', loadingForeground:'0 0% 5%', sidebar:'256 40% 4%', sidebarForeground:'189 60% 75%' },
+          nord: { primary:'213 32% 52%', primaryForeground:'218 27% 94%', background:'220 16% 22%', foreground:'219 28% 88%', card:'222 16% 28%', cardForeground:'219 28% 88%', popover:'222 16% 28%', popoverForeground:'219 28% 88%', secondary:'220 17% 32%', secondaryForeground:'219 28% 88%', muted:'220 17% 32%', mutedForeground:'229 10% 55%', accent:'193 43% 67%', accentForeground:'220 16% 22%', destructive:'354 42% 56%', destructiveForeground:'218 27% 94%', border:'220 16% 36%', input:'220 17% 32%', ring:'210 34% 63%', header:'222 16% 28%', headerForeground:'219 28% 88%', loading:'213 32% 52%', loadingForeground:'218 27% 94%', sidebar:'222 16% 28%', sidebarForeground:'219 28% 88%' },
+          rosePine: { primary:'4 54% 67%', primaryForeground:'249 22% 12%', background:'249 22% 12%', foreground:'245 50% 91%', card:'246 24% 15%', cardForeground:'245 50% 91%', popover:'246 24% 15%', popoverForeground:'245 50% 91%', secondary:'248 25% 18%', secondaryForeground:'245 50% 91%', muted:'248 25% 18%', mutedForeground:'257 9% 61%', accent:'267 57% 78%', accentForeground:'249 22% 12%', destructive:'343 76% 68%', destructiveForeground:'245 50% 91%', border:'248 15% 28%', input:'248 25% 18%', ring:'267 57% 78%', header:'246 24% 15%', headerForeground:'245 50% 91%', loading:'4 54% 67%', loadingForeground:'249 22% 12%', sidebar:'246 24% 15%', sidebarForeground:'245 50% 91%' },
+          mocha: { primary:'267 84% 81%', primaryForeground:'240 21% 15%', background:'240 21% 15%', foreground:'227 68% 88%', card:'237 16% 23%', cardForeground:'227 68% 88%', popover:'237 16% 23%', popoverForeground:'227 68% 88%', secondary:'235 12% 32%', secondaryForeground:'227 68% 88%', muted:'233 12% 39%', mutedForeground:'229 10% 48%', accent:'217 92% 76%', accentForeground:'240 21% 15%', destructive:'343 81% 75%', destructiveForeground:'227 68% 88%', border:'233 12% 39%', input:'235 12% 32%', ring:'267 84% 81%', header:'237 16% 23%', headerForeground:'227 68% 88%', loading:'267 84% 81%', loadingForeground:'240 21% 15%', sidebar:'237 16% 23%', sidebarForeground:'227 68% 88%' },
+          gruvboxDark: { primary:'25 99% 55%', primaryForeground:'0 0% 98%', background:'0 0% 16%', foreground:'39 43% 80%', card:'20 4% 22%', cardForeground:'39 43% 80%', popover:'20 4% 22%', popoverForeground:'39 43% 80%', secondary:'15 6% 29%', secondaryForeground:'39 43% 80%', muted:'21 9% 37%', mutedForeground:'36 15% 59%', accent:'104 41% 64%', accentForeground:'0 0% 16%', destructive:'4 95% 59%', destructiveForeground:'0 0% 98%', border:'21 9% 37%', input:'15 6% 29%', ring:'25 99% 55%', header:'20 4% 22%', headerForeground:'39 43% 80%', loading:'25 99% 55%', loadingForeground:'0 0% 98%', sidebar:'20 4% 22%', sidebarForeground:'39 43% 80%' },
+          gruvboxLight: { primary:'20 93% 44%', primaryForeground:'0 0% 98%', background:'48 87% 88%', foreground:'20 4% 22%', card:'49 56% 91%', cardForeground:'20 4% 22%', popover:'49 56% 91%', popoverForeground:'20 4% 22%', secondary:'39 43% 80%', secondaryForeground:'20 4% 22%', muted:'40 38% 73%', mutedForeground:'22 11% 44%', accent:'125 25% 51%', accentForeground:'0 0% 98%', destructive:'2 75% 46%', destructiveForeground:'0 0% 98%', border:'40 38% 73%', input:'39 43% 80%', ring:'20 93% 44%', header:'49 56% 91%', headerForeground:'20 4% 22%', loading:'20 93% 44%', loadingForeground:'0 0% 98%', sidebar:'39 43% 80%', sidebarForeground:'20 4% 22%' },
+          spacegray: { primary:'206 24% 63%', primaryForeground:'0 0% 98%', background:'214 14% 20%', foreground:'214 16% 78%', card:'209 15% 25%', cardForeground:'214 16% 78%', popover:'209 15% 25%', popoverForeground:'214 16% 78%', secondary:'207 13% 36%', secondaryForeground:'214 16% 78%', muted:'207 11% 45%', mutedForeground:'214 11% 69%', accent:'178 20% 65%', accentForeground:'214 14% 20%', destructive:'354 42% 56%', destructiveForeground:'0 0% 98%', border:'207 13% 36%', input:'207 13% 36%', ring:'206 24% 63%', header:'209 15% 25%', headerForeground:'214 16% 78%', loading:'206 24% 63%', loadingForeground:'0 0% 98%', sidebar:'209 15% 25%', sidebarForeground:'214 16% 78%' },
+          spacegrayLight: { primary:'206 24% 63%', primaryForeground:'0 0% 98%', background:'218 27% 95%', foreground:'207 13% 36%', card:'225 18% 90%', cardForeground:'207 13% 36%', popover:'225 18% 90%', popoverForeground:'207 13% 36%', secondary:'214 16% 78%', secondaryForeground:'207 13% 36%', muted:'214 11% 69%', mutedForeground:'207 11% 45%', accent:'178 20% 65%', accentForeground:'0 0% 98%', destructive:'354 42% 56%', destructiveForeground:'0 0% 98%', border:'214 16% 78%', input:'214 16% 78%', ring:'206 24% 63%', header:'218 27% 95%', headerForeground:'207 13% 36%', loading:'206 24% 63%', loadingForeground:'0 0% 98%', sidebar:'225 18% 90%', sidebarForeground:'207 13% 36%' },
+          spacegrayOceanic: { primary:'210 50% 60%', primaryForeground:'0 0% 98%', background:'203 30% 15%', foreground:'214 16% 78%', card:'209 15% 25%', cardForeground:'214 16% 78%', popover:'209 15% 25%', popoverForeground:'214 16% 78%', secondary:'207 13% 36%', secondaryForeground:'214 16% 78%', muted:'207 11% 45%', mutedForeground:'214 11% 69%', accent:'180 35% 53%', accentForeground:'0 0% 98%', destructive:'356 79% 65%', destructiveForeground:'0 0% 98%', border:'207 13% 36%', input:'207 13% 36%', ring:'210 50% 60%', header:'209 15% 25%', headerForeground:'214 16% 78%', loading:'210 50% 60%', loadingForeground:'0 0% 98%', sidebar:'209 15% 25%', sidebarForeground:'214 16% 78%' },
+          dark: { primary:'212 100% 68%', primaryForeground:'215 28% 7%', background:'215 28% 7%', foreground:'213 31% 91%', card:'213 17% 12%', cardForeground:'213 31% 91%', popover:'213 17% 12%', popoverForeground:'213 31% 91%', secondary:'213 12% 21%', secondaryForeground:'213 31% 91%', muted:'213 12% 21%', mutedForeground:'213 11% 46%', accent:'217 92% 58%', accentForeground:'0 0% 100%', destructive:'2 93% 64%', destructiveForeground:'0 0% 100%', border:'213 12% 21%', input:'213 12% 21%', ring:'212 100% 68%', header:'213 17% 12%', headerForeground:'213 31% 91%', loading:'212 100% 68%', loadingForeground:'215 28% 7%', sidebar:'213 17% 12%', sidebarForeground:'213 31% 91%' },
+          light: { primary:'212 93% 45%', primaryForeground:'0 0% 100%', background:'0 0% 100%', foreground:'210 11% 17%', card:'210 22% 97%', cardForeground:'210 11% 17%', popover:'210 22% 97%', popoverForeground:'210 11% 17%', secondary:'213 23% 94%', secondaryForeground:'210 11% 17%', muted:'213 23% 94%', mutedForeground:'213 11% 46%', accent:'212 93% 45%', accentForeground:'0 0% 100%', destructive:'356 72% 47%', destructiveForeground:'0 0% 100%', border:'213 14% 86%', input:'213 14% 86%', ring:'212 93% 45%', header:'212 93% 45%', headerForeground:'0 0% 100%', loading:'212 93% 45%', loadingForeground:'0 0% 100%', sidebar:'210 22% 97%', sidebarForeground:'210 11% 17%' }
+        };
+        try {
+          var s = localStorage.getItem('app-theme');
+          if (s && themes[s]) {
+            var c = themes[s], r = document.documentElement.style;
+            var map = {
+              primary:'--primary', primaryForeground:'--primary-foreground',
+              background:'--background', foreground:'--foreground',
+              card:'--card', cardForeground:'--card-foreground',
+              popover:'--popover', popoverForeground:'--popover-foreground',
+              secondary:'--secondary', secondaryForeground:'--secondary-foreground',
+              muted:'--muted', mutedForeground:'--muted-foreground',
+              accent:'--accent', accentForeground:'--accent-foreground',
+              destructive:'--destructive', destructiveForeground:'--destructive-foreground',
+              border:'--border', input:'--input', ring:'--ring',
+              header:'--header', headerForeground:'--header-foreground',
+              loading:'--loading', loadingForeground:'--loading-foreground',
+              sidebar:'--sidebar', sidebarForeground:'--sidebar-foreground'
+            };
+            for (var k in map) { if (c[k]) r.setProperty(map[k], c[k]); }
+          }
+        } catch(e) {}
+      })();
+    </script>
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self'<% if (!isProduction) { %> 'unsafe-eval'<% } %>; style-src 'self' 'unsafe-inline'; img-src 'self' https://img.youtube.com data:; connect-src 'self';"
     />
     <title>CCNA Modules</title>
     <style>
-      /* Inline loading screen for instant display */
+      /* Loading screen uses CSS vars set by the theme script above */
       #initial-loader {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: hsl(var(--loading, 212 93% 45%));
+        color: hsl(var(--loading-foreground, 0 0% 100%));
         display: flex;
         justify-content: center;
         align-items: center;
         z-index: 9999;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
       }
-      #initial-loader .content {
-        text-align: center;
-        color: white;
-      }
-      #initial-loader .spinner {
-        width: 50px;
-        height: 50px;
-        border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid white;
+      #initial-loader .content { text-align: center; }
+      #initial-loader .icon-wrap {
+        width: 100px; height: 100px;
+        margin: 0 auto 30px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.1);
         border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 20px auto;
+        backdrop-filter: blur(10px);
       }
+      #initial-loader .network-lines {
+        width: 60px; height: 60px;
+        position: relative;
+      }
+      #initial-loader .network-lines span {
+        position: absolute;
+        background: white;
+        border-radius: 2px;
+        width: 100%;
+        height: 4px;
+        left: 0;
+      }
+      #initial-loader .network-lines span:nth-child(1) { top: 10px; animation: pulse1 1.5s ease-in-out infinite; }
+      #initial-loader .network-lines span:nth-child(2) { top: 28px; animation: pulse2 1.5s ease-in-out infinite; }
+      #initial-loader .network-lines span:nth-child(3) { top: 46px; animation: pulse3 1.5s ease-in-out infinite; }
       @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      @keyframes pulse1 {
+        0%, 100% { opacity: 0.3; transform: scaleX(0.8); }
+        50% { opacity: 1; transform: scaleX(1); }
+      }
+      @keyframes pulse2 {
+        0%, 100% { opacity: 0.3; transform: scaleX(0.8); }
+        50% { opacity: 1; transform: scaleX(1); }
+      }
+      @keyframes pulse3 {
+        0%, 100% { opacity: 0.3; transform: scaleX(0.8); }
+        50% { opacity: 1; transform: scaleX(1); }
+      }
+      @keyframes loadingPulse {
+        0%, 100% { transform: scaleX(0.3); opacity: 0.4; }
+        50% { transform: scaleX(1); opacity: 1; }
       }
     </style>
   </head>
   <body>
     <div id="root">
-      <!-- Initial loading screen (removed when React loads) -->
       <div id="initial-loader">
         <div class="content">
-          <h1 style="font-size: 32px; margin-bottom: 20px">CCNA 200-301 Course</h1>
-          <div class="spinner"></div>
-          <p style="font-size: 16px; opacity: 0.9">Loading modules...</p>
+          <div class="icon-wrap">
+            <div class="network-lines">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <h1 style="font-size: 32px; margin-bottom: 40px; font-weight: 600; text-shadow: 0 2px 10px rgba(0,0,0,0.2)">CCNA 200-301 Course</h1>
+          <div style="width: 200px; margin: 0 auto">
+            <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden">
+              <div style="width: 100%; height: 100%; background: white; border-radius: 2px; animation: loadingPulse 2s ease-in-out infinite"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <!-- Portal container for modals and dialogs -->
     <div id="portal-root"></div>
   </body>
 </html>
