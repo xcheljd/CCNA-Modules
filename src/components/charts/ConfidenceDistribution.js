@@ -1,54 +1,39 @@
 import React from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell } from 'recharts';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from '@/components/ui/chart';
+
+const chartConfig = {
+  needsReview: {
+    label: 'Needs Review (1-2★)',
+    color: 'var(--color-confidence-low)',
+  },
+  moderate: {
+    label: 'Moderate (3★)',
+    color: 'var(--color-confidence-medium)',
+  },
+  confident: {
+    label: 'Confident (4-5★)',
+    color: 'var(--color-confidence-high)',
+  },
+  notRated: {
+    label: 'Not Rated',
+    color: 'var(--color-confidence-none)',
+  },
+};
 
 function ConfidenceDistribution({ distribution }) {
   const data = [
-    {
-      name: 'Needs Review (1-2★)',
-      value: distribution.needsReview,
-      color: 'var(--color-confidence-low)',
-    },
-    {
-      name: 'Moderate (3★)',
-      value: distribution.moderate,
-      color: 'var(--color-confidence-medium)',
-    },
-    {
-      name: 'Confident (4-5★)',
-      value: distribution.confident,
-      color: 'var(--color-confidence-high)',
-    },
-    { name: 'Not Rated', value: distribution.notRated, color: 'var(--color-confidence-none)' },
+    { name: 'Needs Review (1-2★)', value: distribution.needsReview, key: 'needsReview', fill: 'var(--color-confidence-low)' },
+    { name: 'Moderate (3★)', value: distribution.moderate, key: 'moderate', fill: 'var(--color-confidence-medium)' },
+    { name: 'Confident (4-5★)', value: distribution.confident, key: 'confident', fill: 'var(--color-confidence-high)' },
+    { name: 'Not Rated', value: distribution.notRated, key: 'notRated', fill: 'var(--color-confidence-none)' },
   ].filter(item => item.value > 0);
-
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-card border border-border rounded-lg p-3 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
-          <p className="m-0 mb-1 text-[13px] font-semibold">{payload[0].name}</p>
-          <p className="m-0 text-sm font-bold" style={{ color: payload[0].payload.color }}>
-            {payload[0].value} modules
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const CustomLegend = ({ payload }) => {
-    return (
-      <div className="flex flex-col gap-2 text-[13px]">
-        {payload.map((entry, index) => (
-          <div key={`legend-${index}`} className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded" style={{ backgroundColor: entry.color }} />
-            <span className="text-foreground">
-              {entry.value}: {entry.payload.value}
-            </span>
-          </div>
-        ))}
-      </div>
-    );
-  };
 
   if (data.length === 0) {
     return (
@@ -58,36 +43,42 @@ function ConfidenceDistribution({ distribution }) {
     );
   }
 
+  const total = data.reduce((a, b) => a + b.value, 0);
+
   return (
-    <div className="my-2 mx-0">
-      <ResponsiveContainer width="100%" height={250}>
-        <PieChart>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            label={entry =>
-              `${((entry.value / data.reduce((a, b) => a + b.value, 0)) * 100).toFixed(0)}%`
-            }
-            outerRadius={80}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
-            ))}
-          </Pie>
-          <Tooltip content={<CustomTooltip />} />
-          <Legend
-            content={<CustomLegend />}
-            verticalAlign="middle"
-            align="right"
-            layout="vertical"
-          />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+    <ChartContainer config={chartConfig} className="my-2 mx-0 h-[250px] w-full">
+      <PieChart>
+        <Pie
+          data={data}
+          cx="50%"
+          cy="50%"
+          labelLine={false}
+          label={entry =>
+            `${((entry.value / total) * 100).toFixed(0)}%`
+          }
+          outerRadius={80}
+          dataKey="value"
+          nameKey="key"
+        >
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={entry.fill} />
+          ))}
+        </Pie>
+        <ChartTooltip
+          content={
+            <ChartTooltipContent
+              formatter={(value, name) => [`${value} modules`]}
+            />
+          }
+        />
+        <ChartLegend
+          content={<ChartLegendContent nameKey="key" />}
+          verticalAlign="middle"
+          align="right"
+          layout="vertical"
+        />
+      </PieChart>
+    </ChartContainer>
   );
 }
 

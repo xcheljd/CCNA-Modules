@@ -7,6 +7,7 @@ import { ColorHelpers } from '@/utils/colorHelpers';
 import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon } from './ui/Icons';
 import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Badge } from '@/components/ui/badge';
 import '../styles/modules.css';
 
 function ModuleList({ modules, onModuleSelect }) {
@@ -173,9 +174,7 @@ function ModuleList({ modules, onModuleSelect }) {
                     : 'flex flex-col items-start gap-1.5 mb-0 min-w-[140px] shrink-0'
                 }`}
               >
-                <span className="bg-primary text-primary-foreground px-3 py-1 rounded-xl text-sm font-semibold">
-                  Day {module.day}
-                </span>
+                <Badge>Day {module.day}</Badge>
                 <span
                   className={`font-semibold text-muted-foreground ${
                     viewMode === 'list' ? 'text-[15px] ml-auto' : ''
