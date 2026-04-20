@@ -1,6 +1,21 @@
 // Jest setup file
 import '@testing-library/jest-dom';
 
+// Mock window.matchMedia (required by Sonner)
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+
 // Mock electronAPI matching preload.js exactly
 global.window.electronAPI = {
   openVideoWindow: jest.fn().mockResolvedValue({ success: true }),

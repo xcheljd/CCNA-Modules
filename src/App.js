@@ -247,7 +247,7 @@ function AppContent() {
 
   return (
     <div className="min-h-screen w-full bg-background text-foreground transition-[background,color] duration-250 ease-[ease]">
-      <header className="bg-header text-header-foreground p-5 shadow-[0_1px_4px_hsl(var(--header-foreground)/0.1)] sticky top-0 z-[100]">
+      <header className="bg-header text-header-foreground p-5 shadow-[0_1px_4px_hsl(var(--header-foreground)/0.1)] sticky top-0 z-[45]">
         <div className="max-w-[1200px] mx-auto flex justify-between items-center gap-8">
           <div className="flex items-center gap-4">
             <h1 className="m-0 text-[28px] text-header-foreground">CCNA 200-301 Course</h1>

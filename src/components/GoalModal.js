@@ -34,7 +34,7 @@ function GoalModal({ open, onOpenChange, onCreate }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="data-[state=open]:animate-[blurBounceIn_0.4s_cubic-bezier(0.34,1.56,0.64,1)] data-[state=closed]:animate-out data-[state=closed]:fade-out-0 sm:rounded-xl max-h-[80vh] overflow-y-auto"
+        className="max-w-3xl data-[state=open]:animate-[blurBounceIn_0.4s_cubic-bezier(0.34,1.56,0.64,1)] sm:rounded-xl max-h-[80vh] overflow-y-auto"
       >
         <DialogHeader>
           <DialogTitle className="text-xl">Create Learning Goal</DialogTitle>
