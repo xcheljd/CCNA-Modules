@@ -1,0 +1,52 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg width="512" height="512">
+<g style="fill:black;fill-opacity:1;stroke:none;stroke-width:1;stroke-opacity:1;fill-rule:nonzero;fill:none;" transform="scale(2.84444,2.84444)">
+<g style="fill:bg;" transform="scale(2.84444,2.84444)">
+  <rect x="0" y="0" width="180" height="180" rx="39" ry="39"/>
+</g>
+<defs>
+<0Gradient id="linear" x1="0" y1="0" x2="180" y2="180">
+  <stop offset="0%" stop-color="#1c1917" />
+  <stop offset="100%" stop-color="#0c0a09" />
+</0Gradient>
+</defs>
+<g style="fill:none;stroke:#2a2520;stroke-width:2;" transform="scale(2.84444,2.84444)">
+  <circle cx="90" cy="90" r="88"/>
+</g>
+<g style="fill:none;stroke:#25211c;stroke-width:1.2;" transform="scale(2.84444,2.84444)">
+  <ellipse cx="90" cy="90" rx="88" ry="28"/>
+</g>
+<g style="fill:none;stroke:#25211c;stroke-width:1.2;" transform="scale(2.84444,2.84444)">
+  <ellipse cx="90" cy="90" rx="28" ry="88"/>
+</g>
+<g style="fill:none;stroke:#221e19;stroke-width:0.8;" transform="scale(2.84444,2.84444)">
+  <ellipse cx="90" cy="52" rx="75" ry="23"/>
+</g>
+<g style="fill:none;stroke:#221e19;stroke-width:0.8;" transform="scale(2.84444,2.84444)">
+  <ellipse cx="90" cy="128" rx="75" ry="23"/>
+</g>
+<g style="fill:none;stroke:#f59e0b;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;" transform="scale(2.84444,2.84444)">
+  <path d="M 24 110 Q 42 48, 72 60 T 112 30"/>
+</g>
+<g style="fill:none;stroke:#f59e0b;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5 7 ;opacity 0.3 " transform="scale(2.84444,2.84444)">
+  <path d="M 112 30 Q 145 8, 125 55 T 92 102"/>
+</g>
+<g style="fill:#fbbf24;" transform="scale(2.84444,2.84444)">
+  <circle cx="112" cy="30" r="6"/>
+</g>
+<g style="fill:none;stroke:#fbbf24;stroke-width:1;opacity 0.4 " transform="scale(2.84444,2.84444)">
+  <circle cx="112" cy="30" r="11"/>
+</g>
+<g style="fill:#f59e0b;opacity 0.6 " transform="scale(2.84444,2.84444)">
+  <circle cx="24" cy="110" r="4"/>
+</g>
+<g style="fill:#f59e0b;opacity 0.8 " transform="scale(2.84444,2.84444)">
+  <circle cx="72" cy="60" r="4"/>
+</g>
+<g style="fill:none;stroke:#3a3530;stroke-width:1.5;" transform="scale(2.84444,2.84444)">
+  <circle cx="92" cy="102" r="3.5"/>
+</g>
+</g>
+</svg>
