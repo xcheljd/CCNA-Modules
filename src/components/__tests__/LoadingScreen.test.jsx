@@ -15,6 +15,8 @@ describe('LoadingScreen', () => {
 
   it('should render the pulsing progress bar', () => {
     const { container } = render(<LoadingScreen />);
-    expect(container.querySelector('.animate-\\[loadingPulse_2s_ease-in-out_infinite\\]')).toBeInTheDocument();
+    expect(
+      container.querySelector('.animate-\\[loadingPulse_2s_ease-in-out_infinite\\]')
+    ).toBeInTheDocument();
   });
 });

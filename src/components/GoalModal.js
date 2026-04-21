@@ -33,9 +33,7 @@ function GoalModal({ open, onOpenChange, onCreate }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="max-w-3xl data-[state=open]:animate-[blurBounceIn_0.4s_cubic-bezier(0.34,1.56,0.64,1)] sm:rounded-xl max-h-[80vh] overflow-y-auto"
-      >
+      <DialogContent className="max-w-3xl data-[state=open]:animate-[blurBounceIn_0.4s_cubic-bezier(0.34,1.56,0.64,1)] sm:rounded-xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl">Create Learning Goal</DialogTitle>
           <DialogDescription className="sr-only">
@@ -69,7 +67,7 @@ function GoalModal({ open, onOpenChange, onCreate }) {
               role="radio"
               aria-checked={selectedPreset === key}
               tabIndex={0}
-              onKeyDown={(e) => {
+              onKeyDown={e => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
                   setSelectedPreset(key);

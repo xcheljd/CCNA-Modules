@@ -12,12 +12,12 @@ import { Button } from '@/components/ui/button';
 import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon, CircularProgress } from '../ui/Icons';
 
 const sectionClass =
-  'bg-card rounded-2xl p-6 border border-border shadow-[0_4px_12px_hsl(var(--primary-foreground)/0.1)] animate-[fadeInSubtle_0.4s_ease-out_backwards]';
+  'bg-card rounded-2xl p-3 border border-border shadow-[0_4px_12px_hsl(var(--primary-foreground)/0.1)] animate-[fadeInSubtle_0.4s_ease-out_backwards]';
 
 // Overall Progress Section
 export const OverallProgressSection = ({ overallProgress, stats, onAction }) => (
   <Card className={sectionClass}>
-    <CardHeader className="p-0 mb-4">
+    <CardHeader className="p-0 mb-3">
       <CardTitle className="text-[22px] font-semibold tracking-[0.02em] m-0">
         Overall Progress
       </CardTitle>
@@ -84,7 +84,7 @@ export const ModulesNeedingReviewSection = ({ modules, onModuleSelect }) => {
 
   return (
     <Card className={sectionClass}>
-      <CardHeader className="p-0 mb-4">
+      <CardHeader className="p-0 mb-3">
         <CardTitle className="text-[22px] font-semibold tracking-[0.02em] m-0">
           Modules Needing Review
         </CardTitle>
@@ -125,7 +125,7 @@ export const ModulesNeedingReviewSection = ({ modules, onModuleSelect }) => {
 // Wrapper components for existing components
 export const StudyStreakSection = ({ refreshKey }) => (
   <Card className={sectionClass}>
-    <CardHeader className="p-0 mb-4">
+    <CardHeader className="p-0 mb-3">
       <CardTitle className="text-[22px] font-semibold tracking-[0.02em] m-0">
         Study Streak
       </CardTitle>
@@ -138,7 +138,7 @@ export const StudyStreakSection = ({ refreshKey }) => (
 
 export const LearningGoalsSection = ({ modules }) => (
   <Card className={sectionClass}>
-    <CardHeader className="p-0 mb-4">
+    <CardHeader className="p-0 mb-3">
       <CardTitle className="text-[22px] font-semibold tracking-[0.02em] m-0">
         Your Learning Goals
       </CardTitle>
@@ -151,7 +151,7 @@ export const LearningGoalsSection = ({ modules }) => (
 
 export const SmartRecommendationsSection = ({ modules, onModuleSelect }) => (
   <Card className={sectionClass}>
-    <CardHeader className="p-0 mb-4">
+    <CardHeader className="p-0 mb-3">
       <CardTitle className="text-[22px] font-semibold tracking-[0.02em] m-0">
         Smart Recommendations
       </CardTitle>
@@ -164,7 +164,7 @@ export const SmartRecommendationsSection = ({ modules, onModuleSelect }) => (
 
 export const UpcomingMilestonesSection = ({ modules }) => (
   <Card className={sectionClass}>
-    <CardHeader className="p-0 mb-4">
+    <CardHeader className="p-0 mb-3">
       <CardTitle className="text-[22px] font-semibold tracking-[0.02em] m-0">
         Upcoming Milestones
       </CardTitle>
@@ -177,7 +177,7 @@ export const UpcomingMilestonesSection = ({ modules }) => (
 
 export const PerformanceChartsSection = ({ modules }) => (
   <Card className={sectionClass}>
-    <CardHeader className="p-0 mb-4">
+    <CardHeader className="p-0 mb-3">
       <CardTitle className="text-[22px] font-semibold tracking-[0.02em] m-0">
         Performance Analytics
       </CardTitle>

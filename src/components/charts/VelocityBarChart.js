@@ -1,10 +1,6 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '@/components/ui/chart';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 
 const chartConfig = {
   modulesCompleted: {
@@ -26,11 +22,7 @@ function VelocityBarChart({ data }) {
     <ChartContainer config={chartConfig} className="my-2 mx-0 h-[250px] w-full">
       <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-        <XAxis
-          dataKey="week"
-          stroke="hsl(var(--muted-foreground))"
-          style={{ fontSize: '12px' }}
-        />
+        <XAxis dataKey="week" stroke="hsl(var(--muted-foreground))" style={{ fontSize: '12px' }} />
         <YAxis
           stroke="hsl(var(--muted-foreground))"
           style={{ fontSize: '12px' }}
@@ -42,7 +34,7 @@ function VelocityBarChart({ data }) {
               labelFormatter={(_, payload) => {
                 if (payload?.length) return `Week of ${payload[0].payload.week}`;
               }}
-              formatter={(value) => [`${value} modules completed`]}
+              formatter={value => [`${value} modules completed`]}
             />
           }
         />

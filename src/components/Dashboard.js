@@ -143,7 +143,7 @@ function Dashboard({ modules, onModuleSelect }) {
   const rendered = new Set();
 
   return (
-    <div className="dashboard">
+    <div className="dashboard p-5 pt-5">
       {sectionsToRender.map((section, idx) => {
         if (rendered.has(section.id)) return null;
 

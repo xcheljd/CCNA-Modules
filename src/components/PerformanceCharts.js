@@ -48,9 +48,9 @@ function PerformanceCharts({ modules }) {
   };
 
   return (
-    <div className="mt-6">
+    <div className="mt-3">
       {/* Time Range Selector */}
-      <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+      <div className="flex justify-between items-center mb-3 flex-wrap gap-4">
         <ToggleGroup
           type="single"
           value={String(timeRange)}
@@ -81,8 +81,8 @@ function PerformanceCharts({ modules }) {
       </div>
 
       {/* Charts Grid */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-6 max-[1200px]:grid-cols-1 max-[768px]:gap-4">
-        <Card className="rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-3 max-[1200px]:grid-cols-1 max-[768px]:gap-4">
+        <Card className="rounded-2xl p-3 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
           <CardHeader className="p-0 mb-4">
             <CardTitle className="text-lg font-semibold m-0">Progress Over Time</CardTitle>
             <CardDescription className="text-[13px] m-0 mt-1">
@@ -94,7 +94,7 @@ function PerformanceCharts({ modules }) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+        <Card className="rounded-2xl p-3 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
           <CardHeader className="p-0 mb-4">
             <CardTitle className="text-lg font-semibold m-0">Activity Calendar</CardTitle>
             <CardDescription className="text-[13px] m-0 mt-1">
@@ -106,7 +106,7 @@ function PerformanceCharts({ modules }) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+        <Card className="rounded-2xl p-3 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
           <CardHeader className="p-0 mb-4">
             <CardTitle className="text-lg font-semibold m-0">Weekly Completion Rate</CardTitle>
             <CardDescription className="text-[13px] m-0 mt-1">
@@ -118,7 +118,7 @@ function PerformanceCharts({ modules }) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+        <Card className="rounded-2xl p-3 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
           <CardHeader className="p-0 mb-4">
             <CardTitle className="text-lg font-semibold m-0">Confidence Levels</CardTitle>
             <CardDescription className="text-[13px] m-0 mt-1">

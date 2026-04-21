@@ -21,7 +21,7 @@ function SearchBar({
   onConfidenceFilterChange,
 }) {
   return (
-    <div className="flex flex-col items-stretch gap-4 mb-6 md:flex-row md:flex-wrap md:items-center">
+    <div className="flex flex-col items-stretch gap-4 md:flex-row md:flex-wrap md:items-center">
       <div className="relative flex-1 min-w-[250px] max-w-none md:max-w-[500px]">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
         <Input

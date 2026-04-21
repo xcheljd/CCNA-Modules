@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { LayoutDashboard, List, Settings as SettingsIcon } from 'lucide-react';
+import { Settings as SettingsIcon } from 'lucide-react';
 import modules from './data/modules';
 import ProgressTracker from './utils/progressTracker';
 import ActivityTracker from './utils/activityTracker';
@@ -247,48 +247,59 @@ function AppContent() {
 
   return (
     <div className="min-h-screen w-full bg-background text-foreground transition-[background,color] duration-250 ease-[ease]">
-      <header className="bg-header text-header-foreground p-5 shadow-[0_1px_4px_hsl(var(--header-foreground)/0.1)] sticky top-0 z-[45]">
-        <div className="max-w-[1200px] mx-auto flex justify-between items-center gap-8">
-          <div className="flex items-center gap-4">
-            <h1 className="m-0 text-[28px] text-header-foreground">CCNA 200-301 Course</h1>
-            <ToggleGroup
-              type="single"
-              value={currentView}
-              onValueChange={value => {
-                if (value) setCurrentView(value);
-              }}
-              className="bg-[hsl(var(--header-foreground)/0.1)] rounded-md p-1"
-            >
-              <ToggleGroupItem
-                value="dashboard"
-                aria-label="Dashboard view"
-                className="p-2 text-header-foreground opacity-70 data-[state=on]:bg-header-foreground data-[state=on]:text-header data-[state=on]:border-header-foreground data-[state=on]:opacity-100 data-[state=on]:shadow-[0_2px_6px_hsl(var(--header-foreground)/0.3),inset_0_1px_0_hsl(var(--header)/0.1)] hover:opacity-100 hover:bg-[hsl(var(--header-foreground)/0.15)]"
+      <header className="bg-header text-header-foreground px-5 py-2.5 shadow-[0_1px_4px_hsl(var(--header-foreground)/0.1)] sticky top-0 z-[45]">
+        <div className="max-w-[1200px] mx-auto flex justify-between items-center gap-6">
+          <div className="flex items-center gap-3">
+            <h1 className="m-0 text-[20px] font-semibold text-header-foreground">
+              CCNA 200-301 Course
+            </h1>
+            <div className="relative flex items-center bg-[hsl(var(--header-foreground)/0.1)] rounded-md p-1">
+              <div
+                className="absolute top-1 left-1 h-[calc(100%-8px)] rounded-sm bg-header-foreground shadow-[0_2px_6px_hsl(var(--header-foreground)/0.3),inset_0_1px_0_hsl(var(--header)/0.1)] transition-transform duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+                style={{
+                  width: 'calc((100% - 8px) / 2)',
+                  transform: `translateX(calc(${{ dashboard: 0, list: 1, detail: 1 }[currentView]} * 100%))`,
+                }}
+              />
+              <ToggleGroup
+                type="single"
+                value={currentView === 'detail' ? 'list' : currentView}
+                onValueChange={value => {
+                  if (value) setCurrentView(value);
+                }}
+                className="gap-0 grid grid-cols-2"
               >
-                <LayoutDashboard size={20} />
-              </ToggleGroupItem>
-              <ToggleGroupItem
-                value="list"
-                aria-label="Modules view"
-                className="p-2 text-header-foreground opacity-70 data-[state=on]:bg-header-foreground data-[state=on]:text-header data-[state=on]:border-header-foreground data-[state=on]:opacity-100 data-[state=on]:shadow-[0_2px_6px_hsl(var(--header-foreground)/0.3),inset_0_1px_0_hsl(var(--header)/0.1)] hover:opacity-100 hover:bg-[hsl(var(--header-foreground)/0.15)]"
-              >
-                <List size={20} />
-              </ToggleGroupItem>
-            </ToggleGroup>
+                <ToggleGroupItem
+                  value="dashboard"
+                  aria-label="Dashboard view"
+                  className="relative z-[1] px-3 py-1.5 text-[13px] font-medium rounded-sm border-0 bg-transparent text-header-foreground opacity-70 hover:opacity-100 hover:bg-[hsl(var(--header-foreground)/0.15)] data-[state=on]:bg-transparent data-[state=on]:text-header data-[state=on]:opacity-100 data-[state=on]:shadow-none data-[state=on]:border-0 data-[state=on]:hover:bg-transparent"
+                >
+                  Dashboard
+                </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="list"
+                  aria-label="Modules view"
+                  className="relative z-[1] px-3 py-1.5 text-[13px] font-medium rounded-sm border-0 bg-transparent text-header-foreground opacity-70 hover:opacity-100 hover:bg-[hsl(var(--header-foreground)/0.15)] data-[state=on]:bg-transparent data-[state=on]:text-header data-[state=on]:opacity-100 data-[state=on]:shadow-none data-[state=on]:border-0 data-[state=on]:hover:bg-transparent"
+                >
+                  Modules
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
           </div>
 
-          <div className="flex items-center gap-5 z-[1]">
-            <div className="flex items-center gap-[15px] text-header-foreground">
-              <span>Overall Progress: {Math.round(overallProgress)}%</span>
-              <Progress value={overallProgress} className="w-[200px] h-2.5" />
+          <div className="flex items-center gap-4 z-[1]">
+            <div className="flex items-center gap-[15px] text-[13px] text-header-foreground">
+              <span>Progress: {Math.round(overallProgress)}%</span>
+              <Progress value={overallProgress} className="w-[160px] h-2" />
             </div>
             <Button
               variant="ghost"
               size="icon"
-              className="p-2 text-header-foreground opacity-80 hover:opacity-100 hover:bg-[hsl(var(--header-foreground)/0.15)]"
+              className="p-2 text-header-foreground opacity-80 hover:opacity-100 hover:bg-[hsl(var(--header-foreground)/0.15)] [&_svg]:size-[18px]"
               onClick={() => setSettingsOpen(true)}
               aria-label="Settings"
             >
-              <SettingsIcon size={22} />
+              <SettingsIcon />
             </Button>
           </div>
         </div>
@@ -310,7 +321,7 @@ function AppContent() {
         </Alert>
       )}
 
-      <main className="max-w-[1400px] mx-auto p-5 overflow-x-hidden">
+      <main className="max-w-[1400px] mx-auto px-5 pt-0 pb-5 overflow-x-clip">
         <Suspense fallback={<LazyLoadingFallback />}>
           {currentView === 'dashboard' && (
             <Dashboard modules={modules} onModuleSelect={handleModuleSelect} />

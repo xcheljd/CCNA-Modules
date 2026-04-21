@@ -29,10 +29,30 @@ const chartConfig = {
 
 function ConfidenceDistribution({ distribution }) {
   const data = [
-    { name: 'Needs Review (1-2★)', value: distribution.needsReview, key: 'needsReview', fill: 'var(--color-confidence-low)' },
-    { name: 'Moderate (3★)', value: distribution.moderate, key: 'moderate', fill: 'var(--color-confidence-medium)' },
-    { name: 'Confident (4-5★)', value: distribution.confident, key: 'confident', fill: 'var(--color-confidence-high)' },
-    { name: 'Not Rated', value: distribution.notRated, key: 'notRated', fill: 'var(--color-confidence-none)' },
+    {
+      name: 'Needs Review (1-2★)',
+      value: distribution.needsReview,
+      key: 'needsReview',
+      fill: 'var(--color-confidence-low)',
+    },
+    {
+      name: 'Moderate (3★)',
+      value: distribution.moderate,
+      key: 'moderate',
+      fill: 'var(--color-confidence-medium)',
+    },
+    {
+      name: 'Confident (4-5★)',
+      value: distribution.confident,
+      key: 'confident',
+      fill: 'var(--color-confidence-high)',
+    },
+    {
+      name: 'Not Rated',
+      value: distribution.notRated,
+      key: 'notRated',
+      fill: 'var(--color-confidence-none)',
+    },
   ].filter(item => item.value > 0);
 
   if (data.length === 0) {
@@ -53,9 +73,7 @@ function ConfidenceDistribution({ distribution }) {
           cx="50%"
           cy="50%"
           labelLine={false}
-          label={entry =>
-            `${((entry.value / total) * 100).toFixed(0)}%`
-          }
+          label={entry => `${((entry.value / total) * 100).toFixed(0)}%`}
           outerRadius={80}
           dataKey="value"
           nameKey="key"
@@ -65,11 +83,7 @@ function ConfidenceDistribution({ distribution }) {
           ))}
         </Pie>
         <ChartTooltip
-          content={
-            <ChartTooltipContent
-              formatter={(value, name) => [`${value} modules`]}
-            />
-          }
+          content={<ChartTooltipContent formatter={(value, name) => [`${value} modules`]} />}
         />
         <ChartLegend
           content={<ChartLegendContent nameKey="key" />}

@@ -135,8 +135,8 @@ function ModuleDetail({
   };
 
   return (
-    <div className={`module-detail p-5 ${animationClass}`}>
-      <div className="mb-8">
+    <div className={`module-detail px-5 pt-5 pb-5 ${animationClass}`}>
+      <div className="mb-4">
         <div className="flex justify-between items-center mb-2.5 gap-2.5">
           <Button variant="outline" className="gap-2" onClick={onBack}>
             <ChevronLeft size={18} strokeWidth={2.5} />
@@ -162,7 +162,7 @@ function ModuleDetail({
         </h2>
       </div>
 
-      <div className="grid grid-cols-[3fr_1fr] gap-8 max-md:grid-cols-1">
+      <div className="grid grid-cols-[3fr_1fr] gap-5 max-md:grid-cols-1">
         <div>
           <h3 className="mb-2.5 text-foreground">Videos</h3>
           {module.videos.map(video => (
@@ -185,7 +185,10 @@ function ModuleDetail({
           <h3 className="mb-2.5 text-foreground">Resources</h3>
 
           {labs.map((labFile, index) => (
-            <div className="bg-card border border-border rounded-xl p-5 mb-4" key={`lab-${index}`}>
+            <div
+              className="bg-card border border-border rounded-xl px-4 py-3 mb-3"
+              key={`lab-${index}`}
+            >
               <div className="mb-1">
                 <h4 className="mb-1 text-foreground">
                   Packet Tracer Lab{labs.length > 1 ? ` ${index + 1}` : ''}
@@ -214,7 +217,7 @@ function ModuleDetail({
           ))}
 
           {flashcards.length > 0 && (
-            <div className="bg-card border border-border rounded-xl p-5 mb-4">
+            <div className="bg-card border border-border rounded-xl px-4 py-3 mb-3">
               <div className="mb-1">
                 <h4 className="mb-1 text-foreground">Anki Flashcards</h4>
                 {flashcards.map((fc, index) => (
@@ -249,7 +252,7 @@ function ModuleDetail({
           )}
 
           {module.resources?.spreadsheet && (
-            <div className="bg-card border border-border rounded-xl p-5 mb-4">
+            <div className="bg-card border border-border rounded-xl px-4 py-3 mb-3">
               <div className="mb-1">
                 <h4 className="mb-1 text-foreground">Excel Spreadsheet</h4>
                 <p className="text-sm text-muted-foreground mb-4">{module.resources.spreadsheet}</p>

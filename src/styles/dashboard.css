@@ -7,13 +7,13 @@
   .dashboard {
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 12px;
   }
 
   .dashboard-grid-pair {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
-    gap: 24px;
+    gap: 12px;
   }
 
   @media (max-width: 900px) {

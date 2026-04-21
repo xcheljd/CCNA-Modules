@@ -417,7 +417,8 @@
 }
 
 @keyframes loadingPulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scaleX(0.3);
     opacity: 0.4;
   }

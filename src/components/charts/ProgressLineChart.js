@@ -1,16 +1,6 @@
 import React from 'react';
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-} from 'recharts';
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '@/components/ui/chart';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 
 const chartConfig = {
   overallProgress: {
@@ -53,7 +43,7 @@ function ProgressLineChart({ data }) {
               labelFormatter={(_, payload) => {
                 if (payload?.length) return payload[0].payload.date;
               }}
-              formatter={(value) => [`${value.toFixed(1)}%`, 'Progress']}
+              formatter={value => [`${value.toFixed(1)}%`, 'Progress']}
             />
           }
         />
