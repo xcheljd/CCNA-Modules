@@ -4,7 +4,7 @@
 <svg width="512" height="512">
 <g style="fill:black;fill-opacity:1;stroke:none;stroke-width:1;stroke-opacity:1;fill-rule:nonzero;fill:none;" transform="scale(2.84444,2.84444)">
 <g style="fill:#14120f;" transform="scale(2.84444,2.84444)">
-  <rect x="0" y="0" width="180" height="180" rx="39" ry="39"/>
+  <rect x="-10" y="-10" width="200" height="200"/>
 </g>
 <g style="fill:none;stroke:#2a2520;stroke-width:2;" transform="scale(2.84444,2.84444)">
   <circle cx="90" cy="90" r="88"/>
