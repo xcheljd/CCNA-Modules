@@ -8,6 +8,7 @@ import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon } from './ui/Icons';
 import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Badge } from '@/components/ui/badge';
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import '../styles/modules.css';
 
 function ModuleList({ modules, onModuleSelect }) {
@@ -15,7 +16,9 @@ function ModuleList({ modules, onModuleSelect }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterConfidence, setFilterConfidence] = useState('all');
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  const [viewMode, setViewMode] = useState(() => {
+    return localStorage.getItem('module-view-mode') || 'grid';
+  }); // 'grid', 'list', or 'table'
   const [isSwitchingView, setIsSwitchingView] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -83,6 +86,7 @@ function ModuleList({ modules, onModuleSelect }) {
     setIsSwitchingView(true);
     setTimeout(() => {
       setViewMode(newMode);
+      localStorage.setItem('module-view-mode', newMode);
       setTimeout(() => {
         setIsSwitchingView(false);
       }, 20);
@@ -90,8 +94,8 @@ function ModuleList({ modules, onModuleSelect }) {
   };
 
   return (
-    <div className="p-5">
-      <div className="flex justify-between items-start mb-5 gap-5">
+    <div className="px-5 pt-3 pb-5">
+      <div className="sticky top-[68px] z-40 bg-background flex justify-between items-start mb-3 gap-5 -mx-5 px-5 py-2">
         <SearchBar
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
@@ -100,28 +104,57 @@ function ModuleList({ modules, onModuleSelect }) {
           filterConfidence={filterConfidence}
           onConfidenceFilterChange={setFilterConfidence}
         />
-        <ToggleGroup
-          type="single"
-          value={viewMode}
-          onValueChange={value => {
-            if (value) handleViewModeChange(value);
-          }}
-          className="bg-card rounded-lg p-1 border border-border"
-        >
-          <ToggleGroupItem value="grid" aria-label="Grid view">
-            <GridIcon />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="list" aria-label="List view">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="8" y1="6" x2="21" y2="6" />
-              <line x1="8" y1="12" x2="21" y2="12" />
-              <line x1="8" y1="18" x2="21" y2="18" />
-              <line x1="3" y1="6" x2="3.01" y2="6" />
-              <line x1="3" y1="12" x2="3.01" y2="12" />
-              <line x1="3" y1="18" x2="3.01" y2="18" />
-            </svg>
-          </ToggleGroupItem>
-        </ToggleGroup>
+        <div className="relative flex items-center bg-card rounded-lg border border-border p-[3px] h-10">
+          <div
+            className="absolute top-[3px] left-[3px] h-[calc(100%-6px)] rounded-md bg-primary shadow-[0_1px_3px_hsl(var(--primary)/0.3)] transition-transform duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+            style={{
+              width: 'calc((100% - 6px) / 3)',
+              transform: `translateX(calc(${({ grid: 0, list: 1, table: 2 })[viewMode]} * 100%))`,
+            }}
+          />
+          <ToggleGroup
+            type="single"
+            value={viewMode}
+            onValueChange={value => {
+              if (value) handleViewModeChange(value);
+            }}
+            className="gap-0"
+          >
+            <ToggleGroupItem
+              value="grid"
+              aria-label="Grid view"
+              className="relative z-[1] h-9 w-9 p-2 rounded-md border-0 bg-transparent text-muted-foreground hover:text-foreground data-[state=on]:bg-transparent data-[state=on]:text-primary-foreground data-[state=on]:shadow-none data-[state=on]:hover:bg-transparent"
+            >
+              <GridIcon />
+            </ToggleGroupItem>
+            <ToggleGroupItem
+              value="list"
+              aria-label="List view"
+              className="relative z-[1] h-9 w-9 p-2 rounded-md border-0 bg-transparent text-muted-foreground hover:text-foreground data-[state=on]:bg-transparent data-[state=on]:text-primary-foreground data-[state=on]:shadow-none data-[state=on]:hover:bg-transparent"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="8" y1="6" x2="21" y2="6" />
+                <line x1="8" y1="12" x2="21" y2="12" />
+                <line x1="8" y1="18" x2="21" y2="18" />
+                <line x1="3" y1="6" x2="3.01" y2="6" />
+                <line x1="3" y1="12" x2="3.01" y2="12" />
+                <line x1="3" y1="18" x2="3.01" y2="18" />
+              </svg>
+            </ToggleGroupItem>
+            <ToggleGroupItem
+              value="table"
+              aria-label="Table view"
+              className="relative z-[1] h-9 w-9 p-2 rounded-md border-0 bg-transparent text-muted-foreground hover:text-foreground data-[state=on]:bg-transparent data-[state=on]:text-primary-foreground data-[state=on]:shadow-none data-[state=on]:hover:bg-transparent"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <line x1="3" y1="9" x2="21" y2="9" />
+                <line x1="3" y1="15" x2="21" y2="15" />
+                <line x1="9" y1="3" x2="9" y2="21" />
+              </svg>
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
       </div>
 
       {filteredModules.length === 0 && (
@@ -145,11 +178,83 @@ function ModuleList({ modules, onModuleSelect }) {
         </div>
       )}
 
+      {viewMode === 'table' ? (
+        <div className={`transition-opacity duration-150 ease ${isSwitchingView ? 'opacity-0' : ''}`}>
+          <Table className="bg-card border border-border rounded-xl overflow-hidden">
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="w-[80px] text-center h-9 px-3">Day</TableHead>
+                <TableHead className="h-9 px-3">Title</TableHead>
+                <TableHead className="w-[60px] text-center h-9 px-3">
+                  <VideoIcon className="w-4 h-4 mx-auto text-primary [stroke-width:2]" />
+                </TableHead>
+                <TableHead className="w-[60px] text-center h-9 px-3">
+                  <LabIcon className="w-4 h-4 mx-auto text-primary [stroke-width:2]" />
+                </TableHead>
+                <TableHead className="w-[60px] text-center h-9 px-3">
+                  <FlashcardsIcon className="w-4 h-4 mx-auto text-primary [stroke-width:2]" />
+                </TableHead>
+                <TableHead className="w-[120px] text-center h-9 px-3">Confidence</TableHead>
+                <TableHead className="w-[100px] text-right h-9 px-3">Progress</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredModules.map(module => {
+                const progress = moduleProgress[module.id] || 0;
+                const progressColor = ColorHelpers.getProgressColor(progress);
+                const confidence = ProgressTracker.getModuleConfidence(module.id);
+                const labs = asArray(module.resources.lab);
+                const fcs = asArray(module.resources.flashcards);
+
+                return (
+                  <TableRow
+                    key={module.id}
+                    className="cursor-pointer animate-[fadeInUp_0.4s_ease-out_backwards] [&>td]:py-2 [&>td]:px-3"
+                    onClick={() => onModuleSelect(module)}
+                  >
+                    <TableCell className="text-center font-medium whitespace-nowrap">
+                      <Badge className="whitespace-nowrap">Day {module.day}</Badge>
+                    </TableCell>
+                    <TableCell className="font-medium text-foreground">
+                      {module.title}
+                    </TableCell>
+                    <TableCell className="text-center text-muted-foreground">
+                      {module.videos.length}
+                    </TableCell>
+                    <TableCell className="text-center text-muted-foreground">
+                      {labs.length > 0 ? labs.length : '-'}
+                    </TableCell>
+                    <TableCell className="text-center text-muted-foreground">
+                      {fcs.length > 0 ? fcs.length : '-'}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <ConfidenceRating moduleId={module.id} confidence={confidence} compact={true} />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <span className="text-[13px] font-semibold text-muted-foreground w-8 text-right">
+                          {Math.round(progress)}%
+                        </span>
+                        <div className="w-16 h-1.5 bg-muted rounded overflow-hidden">
+                          <div
+                            className="h-full rounded transition-[width] duration-350 ease"
+                            style={{ width: `${progress}%`, backgroundColor: progressColor }}
+                          />
+                        </div>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
       <div
-        className={`modules-container grid gap-5 transition-opacity duration-150 ease ${
+        className={`modules-container grid transition-opacity duration-150 ease ${
           viewMode === 'grid'
-            ? 'grid-cols-[repeat(auto-fill,minmax(280px,1fr))]'
-            : 'grid-cols-1 gap-3'
+            ? 'grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3'
+            : 'grid-cols-1 list-view'
         } ${isSwitchingView ? 'opacity-0' : ''}`}
       >
         {filteredModules.map(module => {
@@ -160,101 +265,117 @@ function ModuleList({ modules, onModuleSelect }) {
           return (
             <div
               key={module.id}
-              className={`module-card bg-card border border-border rounded-xl p-5 cursor-pointer transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] animate-[fadeInUp_0.4s_ease-out_backwards] ${
+              className={`module-card bg-card border border-border rounded-xl cursor-pointer transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] animate-[fadeInUp_0.4s_ease-out_backwards] ${
                 viewMode === 'grid'
-                  ? 'min-h-[220px] flex flex-col hover:shadow-[0_4px_12px_hsl(var(--primary-foreground)/0.12)] hover:border-primary'
-                  : 'flex flex-col min-h-[120px] relative overflow-hidden mb-0 hover:shadow-[0_1px_6px_hsl(var(--primary-foreground)/0.08)] hover:border-primary'
+                  ? 'p-5 min-h-[220px] flex flex-col hover:shadow-[0_4px_12px_hsl(var(--primary-foreground)/0.12)] hover:border-primary'
+                  : 'px-3 py-2.5 flex items-center gap-3 hover:shadow-[0_1px_6px_hsl(var(--primary-foreground)/0.08)] hover:border-primary'
               }`}
               onClick={() => onModuleSelect(module)}
             >
-              <div
-                className={`module-header ${
-                  viewMode === 'grid'
-                    ? 'flex justify-between items-center mb-2.5'
-                    : 'flex flex-col items-start gap-1.5 mb-0 min-w-[140px] shrink-0'
-                }`}
-              >
-                <Badge>Day {module.day}</Badge>
-                <span
-                  className={`font-semibold text-muted-foreground ${
-                    viewMode === 'list' ? 'text-[15px] ml-auto' : ''
-                  }`}
-                >
-                  {Math.round(progress)}%
-                </span>
-              </div>
+              {viewMode === 'grid' ? (
+                <>
+                  <div className="flex justify-between items-center mb-2.5">
+                    <Badge>Day {module.day}</Badge>
+                    <span className="font-semibold text-muted-foreground">
+                      {Math.round(progress)}%
+                    </span>
+                  </div>
 
-              <div className="flex items-center justify-between my-2.5">
-                <h3
-                  className={`m-0 flex-1 ${
-                    viewMode === 'grid'
-                      ? 'text-lg text-foreground my-2.5'
-                      : 'text-[17px] font-semibold text-foreground leading-[1.3] line-clamp-2 overflow-hidden'
-                  }`}
-                >
-                  {module.title}
-                </h3>
-                <ConfidenceRating moduleId={module.id} confidence={confidence} compact={true} />
-              </div>
+                  <div className="flex items-center justify-between my-2.5">
+                    <h3 className="m-0 flex-1 text-lg text-foreground my-2.5">
+                      {module.title}
+                    </h3>
+                    <ConfidenceRating moduleId={module.id} confidence={confidence} compact={true} />
+                  </div>
 
-              <div
-                className={`flex ${
-                  viewMode === 'grid'
-                    ? 'gap-2 text-sm text-muted-foreground mb-4'
-                    : 'flex-row gap-3 text-[13px] text-muted-foreground mb-0 shrink-0 items-center'
-                }`}
-              >
-                <div
-                  className={`flex items-center justify-center gap-1.5 px-2.5 py-2 bg-muted/50 rounded-lg ${
-                    viewMode === 'list' ? '' : ''
-                  }`}
-                >
-                  <VideoIcon className="w-[18px] h-[18px] text-primary shrink-0 [stroke-width:2]" />
-                  <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">
-                    {module.videos.length}
+                  <div className="flex gap-2 text-sm text-muted-foreground mb-4">
+                    <div className="flex items-center justify-center gap-1.5 px-2.5 py-2 bg-muted/50 rounded-lg">
+                      <VideoIcon className="w-[18px] h-[18px] text-primary shrink-0 [stroke-width:2]" />
+                      <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">
+                        {module.videos.length}
+                      </span>
+                    </div>
+                    {(() => {
+                      const labs = asArray(module.resources.lab);
+                      return labs.length > 0 ? (
+                        <div className="flex items-center justify-center gap-1.5 px-2.5 py-2 bg-muted/50 rounded-lg">
+                          <LabIcon className="w-[18px] h-[18px] text-primary shrink-0 [stroke-width:2]" />
+                          <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">
+                            {labs.length} Lab{labs.length > 1 ? 's' : ''}
+                          </span>
+                        </div>
+                      ) : null;
+                    })()}
+                    {(() => {
+                      const fcs = asArray(module.resources.flashcards);
+                      return fcs.length > 0 ? (
+                        <div className="flex items-center justify-center gap-1.5 px-2.5 py-2 bg-muted/50 rounded-lg">
+                          <FlashcardsIcon className="w-[18px] h-[18px] text-primary shrink-0 [stroke-width:2]" />
+                          <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">
+                            {fcs.length} Card{fcs.length > 1 ? 's' : ''}
+                          </span>
+                        </div>
+                      ) : null;
+                    })()}
+                  </div>
+
+                  <div className="bg-muted rounded overflow-hidden w-full h-2 mt-auto">
+                    <div
+                      className="h-full rounded transition-[width] duration-350 ease"
+                      style={{
+                        width: `${progress}%`,
+                        backgroundColor: progressColor,
+                      }}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Badge className="shrink-0">Day {module.day}</Badge>
+                  <h3 className="m-0 text-[15px] font-semibold text-foreground leading-snug truncate flex-1 min-w-0">
+                    {module.title}
+                  </h3>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="flex items-center justify-center gap-0.5 px-1.5 py-0.5 bg-muted/50 rounded">
+                      <VideoIcon className="w-3.5 h-3.5 text-primary shrink-0 [stroke-width:2]" />
+                      <span className="text-[10px] font-semibold text-foreground">{module.videos.length}</span>
+                    </div>
+                    {(() => {
+                      const labs = asArray(module.resources.lab);
+                      return labs.length > 0 ? (
+                        <div className="flex items-center justify-center gap-0.5 px-1.5 py-0.5 bg-muted/50 rounded">
+                          <LabIcon className="w-3.5 h-3.5 text-primary shrink-0 [stroke-width:2]" />
+                          <span className="text-[10px] font-semibold text-foreground">{labs.length}</span>
+                        </div>
+                      ) : null;
+                    })()}
+                    {(() => {
+                      const fcs = asArray(module.resources.flashcards);
+                      return fcs.length > 0 ? (
+                        <div className="flex items-center justify-center gap-0.5 px-1.5 py-0.5 bg-muted/50 rounded">
+                          <FlashcardsIcon className="w-3.5 h-3.5 text-primary shrink-0 [stroke-width:2]" />
+                          <span className="text-[10px] font-semibold text-foreground">{fcs.length}</span>
+                        </div>
+                      ) : null;
+                    })()}
+                  </div>
+                  <ConfidenceRating moduleId={module.id} confidence={confidence} compact={true} />
+                  <span className="text-[13px] font-semibold text-muted-foreground w-8 text-right shrink-0">
+                    {Math.round(progress)}%
                   </span>
-                </div>
-                {(() => {
-                  const labs = asArray(module.resources.lab);
-                  return labs.length > 0 ? (
-                    <div className="flex items-center justify-center gap-1.5 px-2.5 py-2 bg-muted/50 rounded-lg">
-                      <LabIcon className="w-[18px] h-[18px] text-primary shrink-0 [stroke-width:2]" />
-                      <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">
-                        {labs.length} Lab{labs.length > 1 ? 's' : ''}
-                      </span>
-                    </div>
-                  ) : null;
-                })()}
-                {(() => {
-                  const fcs = asArray(module.resources.flashcards);
-                  return fcs.length > 0 ? (
-                    <div className="flex items-center justify-center gap-1.5 px-2.5 py-2 bg-muted/50 rounded-lg">
-                      <FlashcardsIcon className="w-[18px] h-[18px] text-primary shrink-0 [stroke-width:2]" />
-                      <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">
-                        {fcs.length} Card{fcs.length > 1 ? 's' : ''}
-                      </span>
-                    </div>
-                  ) : null;
-                })()}
-              </div>
-
-              <div
-                className={`bg-muted rounded overflow-hidden ${
-                  viewMode === 'grid' ? 'w-full h-2 mt-auto' : 'shrink-0 w-[156px] h-2 ml-auto'
-                }`}
-              >
-                <div
-                  className="h-full rounded transition-[width] duration-350 ease"
-                  style={{
-                    width: `${progress}%`,
-                    backgroundColor: progressColor,
-                  }}
-                />
-              </div>
+                  <div className="w-20 h-1.5 bg-muted rounded overflow-hidden shrink-0">
+                    <div
+                      className="h-full rounded transition-[width] duration-350 ease"
+                      style={{ width: `${progress}%`, backgroundColor: progressColor }}
+                    />
+                  </div>
+                </>
+              )}
             </div>
           );
         })}
       </div>
+      )}
     </div>
   );
 }
