@@ -217,7 +217,7 @@ describe('Sheet', () => {
 
   // SheetContent with custom className
   it('should apply className to SheetContent', () => {
-    const { container } = render(
+    render(
       <Sheet open>
         <SheetContent className="custom-class">
           <p>Content</p>

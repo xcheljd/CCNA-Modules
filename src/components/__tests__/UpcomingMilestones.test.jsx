@@ -250,7 +250,7 @@ describe('UpcomingMilestones', () => {
       return idx === 0 ? 100 : 0;
     });
 
-    const { container } = render(<UpcomingMilestones modules={modules} />);
+    render(<UpcomingMilestones modules={modules} />);
 
     const upcomingSection = screen.getByText('Up Next').parentElement;
     const items = upcomingSection.querySelectorAll(':scope > .gap-2\\.5');

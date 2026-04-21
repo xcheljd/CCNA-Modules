@@ -83,7 +83,7 @@ function ConfidenceDistribution({ distribution }) {
           ))}
         </Pie>
         <ChartTooltip
-          content={<ChartTooltipContent formatter={(value, name) => [`${value} modules`]} />}
+          content={<ChartTooltipContent formatter={(value, _name) => [`${value} modules`]} />}
         />
         <ChartLegend
           content={<ChartLegendContent nameKey="key" />}

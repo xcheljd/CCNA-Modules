@@ -597,11 +597,9 @@ describe('GoalCard', () => {
   });
 
   it('should open GoalModal from active goal state via delete cancel then create', async () => {
-    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const goal = createMockGoal();
-    setupMocks({ goal, completion: 40 });
+    setupMocks({ goal: createMockGoal(), completion: 40 });
 
-    const { rerender } = render(<GoalCard modules={mockModules} />);
+    render(<GoalCard modules={mockModules} />);
 
     // Active goal displayed, modal hidden (line 149 false branch)
     expect(screen.getByText('Weekly Goal')).toBeInTheDocument();

@@ -182,7 +182,7 @@ describe('ChartTooltipContent', () => {
         <ChartTooltipContent
           active={true}
           payload={payload}
-          formatter={(value, name) => <span data-testid="formatted">{`${value}%`}</span>}
+          formatter={(value, _name) => <span data-testid="formatted">{`${value}%`}</span>}
         />
       </ChartContainer>
     );
