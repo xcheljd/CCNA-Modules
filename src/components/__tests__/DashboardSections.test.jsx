@@ -15,9 +15,7 @@ jest.mock('../StudyStreak', () => () => <div data-testid="study-streak" />);
 jest.mock('../GoalCard', () => () => <div data-testid="goal-card" />);
 jest.mock('../PerformanceCharts', () => () => <div data-testid="performance-charts" />);
 jest.mock('../UpcomingMilestones', () => () => <div data-testid="upcoming-milestones" />);
-jest.mock('../SmartRecommendations', () => () => (
-  <div data-testid="smart-recommendations" />
-));
+jest.mock('../SmartRecommendations', () => () => <div data-testid="smart-recommendations" />);
 
 jest.mock('../../utils/progressTracker', () => ({
   __esModule: true,
@@ -62,9 +60,7 @@ jest.mock('../ui/Icons', () => ({
   GridIcon: ({ className }) => <div data-testid="grid-icon" className={className} />,
   VideoIcon: ({ className }) => <div data-testid="video-icon" className={className} />,
   LabIcon: ({ className }) => <div data-testid="lab-icon" className={className} />,
-  FlashcardsIcon: ({ className }) => (
-    <div data-testid="flashcards-icon" className={className} />
-  ),
+  FlashcardsIcon: ({ className }) => <div data-testid="flashcards-icon" className={className} />,
 }));
 
 const mockStats = {
@@ -99,9 +95,7 @@ const mockModules = [
 
 describe('OverallProgressSection', () => {
   it('renders with CircularProgress and stats grid', () => {
-    render(
-      <OverallProgressSection overallProgress={25} stats={mockStats} onAction={jest.fn()} />
-    );
+    render(<OverallProgressSection overallProgress={25} stats={mockStats} onAction={jest.fn()} />);
 
     expect(screen.getByTestId('circular-progress')).toBeInTheDocument();
     expect(screen.getByTestId('circular-progress')).toHaveAttribute('data-percentage', '25');
@@ -116,26 +110,20 @@ describe('OverallProgressSection', () => {
   });
 
   it('shows Start Learning when progress is 0', () => {
-    render(
-      <OverallProgressSection overallProgress={0} stats={mockStats} onAction={jest.fn()} />
-    );
+    render(<OverallProgressSection overallProgress={0} stats={mockStats} onAction={jest.fn()} />);
 
     expect(screen.getByText(/📚 Start Learning/)).toBeInTheDocument();
   });
 
   it('shows Continue Learning when progress > 0', () => {
-    render(
-      <OverallProgressSection overallProgress={50} stats={mockStats} onAction={jest.fn()} />
-    );
+    render(<OverallProgressSection overallProgress={50} stats={mockStats} onAction={jest.fn()} />);
 
     expect(screen.getByText(/▶️ Continue Learning/)).toBeInTheDocument();
   });
 
   it('fires onAction on button click', () => {
     const onAction = jest.fn();
-    render(
-      <OverallProgressSection overallProgress={25} stats={mockStats} onAction={onAction} />
-    );
+    render(<OverallProgressSection overallProgress={25} stats={mockStats} onAction={onAction} />);
 
     const button = screen.getByTestId('button');
     fireEvent.click(button);
@@ -143,9 +131,7 @@ describe('OverallProgressSection', () => {
   });
 
   it('renders card with title', () => {
-    render(
-      <OverallProgressSection overallProgress={25} stats={mockStats} onAction={jest.fn()} />
-    );
+    render(<OverallProgressSection overallProgress={25} stats={mockStats} onAction={jest.fn()} />);
 
     expect(screen.getByText('Overall Progress')).toBeInTheDocument();
   });

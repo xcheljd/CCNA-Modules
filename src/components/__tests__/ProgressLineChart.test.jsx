@@ -11,13 +11,9 @@ jest.mock('recharts', () => ({
       {children}
     </div>
   ),
-  Line: ({ dataKey, stroke }) => (
-    <div data-testid="line" data-key={dataKey} data-stroke={stroke} />
-  ),
+  Line: ({ dataKey, stroke }) => <div data-testid="line" data-key={dataKey} data-stroke={stroke} />,
   XAxis: ({ dataKey }) => <div data-testid="x-axis" data-key={dataKey} />,
-  YAxis: ({ domain }) => (
-    <div data-testid="y-axis" data-domain={JSON.stringify(domain)} />
-  ),
+  YAxis: ({ domain }) => <div data-testid="y-axis" data-domain={JSON.stringify(domain)} />,
   CartesianGrid: () => <div data-testid="cartesian-grid" />,
 }));
 

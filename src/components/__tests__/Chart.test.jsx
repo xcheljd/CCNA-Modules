@@ -1,11 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import {
-  ChartContainer,
-  ChartTooltipContent,
-  ChartLegendContent,
-  ChartStyle,
-} from '../ui/chart';
+import { ChartContainer, ChartTooltipContent, ChartLegendContent, ChartStyle } from '../ui/chart';
 
 jest.mock('recharts', () => ({
   ResponsiveContainer: ({ children }) => <div data-testid="responsive-container">{children}</div>,
@@ -98,9 +93,7 @@ describe('ChartStyle', () => {
   });
 
   it('renders a style tag when config has color entries', () => {
-    const { container } = render(
-      <ChartStyle id="test" config={{ foo: { color: '#ff0000' } }} />
-    );
+    const { container } = render(<ChartStyle id="test" config={{ foo: { color: '#ff0000' } }} />);
 
     const style = container.querySelector('style');
     expect(style).toBeInTheDocument();
@@ -109,10 +102,7 @@ describe('ChartStyle', () => {
 
   it('renders a style tag when config has theme entries', () => {
     const { container } = render(
-      <ChartStyle
-        id="test"
-        config={{ bar: { theme: { light: '#00ff00', dark: '#00aa00' } } }}
-      />
+      <ChartStyle id="test" config={{ bar: { theme: { light: '#00ff00', dark: '#00aa00' } } }} />
     );
 
     const style = container.querySelector('style');
@@ -122,9 +112,7 @@ describe('ChartStyle', () => {
   });
 
   it('handles config items with no matching color or theme', () => {
-    const { container } = render(
-      <ChartStyle id="test" config={{ baz: { label: 'Baz' } }} />
-    );
+    const { container } = render(<ChartStyle id="test" config={{ baz: { label: 'Baz' } }} />);
 
     // Has label but no color/theme, so no style tag
     expect(container.querySelector('style')).toBeNull();
@@ -217,11 +205,7 @@ describe('ChartTooltipContent', () => {
 
     const { container } = render(
       <ChartContainer config={baseConfig}>
-        <ChartTooltipContent
-          active={true}
-          payload={payload}
-          hideIndicator={true}
-        />
+        <ChartTooltipContent active={true} payload={payload} hideIndicator={true} />
       </ChartContainer>
     );
 
@@ -352,7 +336,7 @@ describe('ChartTooltipContent', () => {
           active={true}
           payload={payload}
           label="test-label"
-          labelFormatter={(value) => `Formatted: ${value}`}
+          labelFormatter={value => `Formatted: ${value}`}
         />
       </ChartContainer>
     );
@@ -400,12 +384,7 @@ describe('ChartTooltipContent', () => {
 
     const { container } = render(
       <ChartContainer config={baseConfig}>
-        <ChartTooltipContent
-          active={true}
-          payload={payload}
-          indicator="line"
-          label="test-label"
-        />
+        <ChartTooltipContent active={true} payload={payload} indicator="line" label="test-label" />
       </ChartContainer>
     );
 
@@ -543,9 +522,7 @@ describe('ChartLegendContent', () => {
   });
 
   it('renders colored dots when no icon in config', () => {
-    const payload = [
-      { value: 'progress', dataKey: 'progress', color: '#22c55e', type: 'line' },
-    ];
+    const payload = [{ value: 'progress', dataKey: 'progress', color: '#22c55e', type: 'line' }];
 
     const { container } = render(
       <ChartContainer config={baseConfig}>
@@ -564,9 +541,7 @@ describe('ChartLegendContent', () => {
       progress: { label: 'Progress', icon: Icon },
     };
 
-    const payload = [
-      { value: 'progress', dataKey: 'progress', color: '#22c55e', type: 'line' },
-    ];
+    const payload = [{ value: 'progress', dataKey: 'progress', color: '#22c55e', type: 'line' }];
 
     render(
       <ChartContainer config={configWithIcon}>
@@ -583,9 +558,7 @@ describe('ChartLegendContent', () => {
       progress: { label: 'Progress', icon: Icon },
     };
 
-    const payload = [
-      { value: 'progress', dataKey: 'progress', color: '#22c55e', type: 'line' },
-    ];
+    const payload = [{ value: 'progress', dataKey: 'progress', color: '#22c55e', type: 'line' }];
 
     const { container } = render(
       <ChartContainer config={configWithIcon}>
@@ -630,9 +603,7 @@ describe('ChartLegendContent', () => {
   });
 
   it('applies verticalAlign top class', () => {
-    const payload = [
-      { value: 'progress', dataKey: 'progress', color: '#22c55e', type: 'line' },
-    ];
+    const payload = [{ value: 'progress', dataKey: 'progress', color: '#22c55e', type: 'line' }];
 
     const { container } = render(
       <ChartContainer config={baseConfig}>

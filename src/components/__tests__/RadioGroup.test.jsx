@@ -47,7 +47,8 @@ describe('RadioGroup', () => {
       </RadioGroup>
     );
 
-    const item = container.querySelector('[value="a"]') || container.querySelector('[role="radio"]');
+    const item =
+      container.querySelector('[value="a"]') || container.querySelector('[role="radio"]');
     expect(item).toBeTruthy();
     expect(item.className).toContain('custom-item-class');
   });

@@ -11,9 +11,7 @@ jest.mock('recharts', () => ({
       {children}
     </div>
   ),
-  Bar: ({ dataKey, fill }) => (
-    <div data-testid="bar" data-key={dataKey} data-fill={fill} />
-  ),
+  Bar: ({ dataKey, fill }) => <div data-testid="bar" data-key={dataKey} data-fill={fill} />,
   XAxis: ({ dataKey }) => <div data-testid="x-axis" data-key={dataKey} />,
   YAxis: () => <div data-testid="y-axis" />,
   CartesianGrid: () => <div data-testid="cartesian-grid" />,
