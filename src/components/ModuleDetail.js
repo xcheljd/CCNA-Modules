@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import VideoCard from './VideoCard';
 import ConfidenceRating from './ConfidenceRating';
 import { useToast } from '@/components/ui/toast';
@@ -131,36 +135,36 @@ function ModuleDetail({
   };
 
   return (
-    <div className={`module-detail ${animationClass}`}>
-      <div className="detail-header">
-        <div className="header-navigation">
-          <button onClick={onBack} className="back-button">
+    <div className={`module-detail px-5 pt-5 pb-5 ${animationClass}`}>
+      <div className="mb-4">
+        <div className="flex justify-between items-center mb-2.5 gap-2.5">
+          <Button variant="outline" className="gap-2" onClick={onBack}>
+            <ChevronLeft size={18} strokeWidth={2.5} />
             Back to Modules
-          </button>
-          <div className="module-navigation">
+          </Button>
+          <div className="flex gap-2.5 items-center">
             {prevModule && (
-              <button onClick={handlePrevModule} className="prev-button">
+              <Button variant="outline" className="gap-2" onClick={handlePrevModule}>
+                <ChevronLeft size={18} strokeWidth={2.5} />
                 Previous
-              </button>
+              </Button>
             )}
             {nextModule && (
-              <button onClick={handleNextModule} className="next-button">
+              <Button variant="outline" className="gap-2" onClick={handleNextModule}>
                 Next
-              </button>
+                <ChevronRight size={18} strokeWidth={2.5} />
+              </Button>
             )}
           </div>
         </div>
-        <h2>
+        <h2 className="text-[28px] font-semibold mt-4 mb-0 tracking-wide text-foreground">
           Day {module.day}: {module.title}
         </h2>
       </div>
 
-      <div className="detail-content">
-        <div className="video-section">
-          <h3>Videos</h3>
-          <p className="video-note">
-            Videos will open in a distraction-free window. Check them off as you watch!
-          </p>
+      <div className="grid grid-cols-[3fr_1fr] gap-5 max-md:grid-cols-1">
+        <div>
+          <h3 className="mb-2.5 text-foreground">Videos</h3>
           {module.videos.map(video => (
             <VideoCard
               key={video.id}
@@ -170,27 +174,40 @@ function ModuleDetail({
               onMarkComplete={handleVideoComplete}
             />
           ))}
+          <Alert className="mt-5">
+            <AlertDescription>
+              Videos will open in a distraction-free window. Check them off as you watch!
+            </AlertDescription>
+          </Alert>
         </div>
 
-        <div className="resources-section">
-          <h3>Resources</h3>
+        <div>
+          <h3 className="mb-2.5 text-foreground">Resources</h3>
 
           {labs.map((labFile, index) => (
-            <div className="resource-item" key={`lab-${index}`}>
-              <div className="resource-info">
-                <h4>Packet Tracer Lab{labs.length > 1 ? ` ${index + 1}` : ''}</h4>
-                <p>{labFile}</p>
+            <div
+              className="bg-card border border-border rounded-xl px-4 py-3 mb-3"
+              key={`lab-${index}`}
+            >
+              <div className="mb-1">
+                <h4 className="mb-1 text-foreground">
+                  Packet Tracer Lab{labs.length > 1 ? ` ${index + 1}` : ''}
+                </h4>
+                <p className="text-sm text-muted-foreground mb-4">{labFile}</p>
               </div>
-              <div className="resource-button-single">
-                <button onClick={() => handleOpenLab(labFile)} className="open-button">
+              <div className="flex justify-center mt-2 mb-2.5">
+                <Button
+                  size="sm"
+                  className="w-[140px] font-semibold"
+                  onClick={() => handleOpenLab(labFile)}
+                >
                   Open Lab
-                </button>
+                </Button>
               </div>
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
+              <label className="flex items-center gap-2 cursor-pointer text-sm">
+                <Checkbox
                   checked={labCompletions[index] || false}
-                  onChange={() => handleLabToggle(index)}
+                  onCheckedChange={() => handleLabToggle(index)}
                 />
                 <span>
                   {labs.length > 1 ? `Mark lab ${index + 1} as completed` : 'Mark lab as completed'}
@@ -200,55 +217,61 @@ function ModuleDetail({
           ))}
 
           {flashcards.length > 0 && (
-            <div className="resource-item">
-              <div className="resource-info">
-                <h4>Anki Flashcards</h4>
+            <div className="bg-card border border-border rounded-xl px-4 py-3 mb-3">
+              <div className="mb-1">
+                <h4 className="mb-1 text-foreground">Anki Flashcards</h4>
                 {flashcards.map((fc, index) => (
-                  <p key={`fc-label-${index}`}>{fc}</p>
+                  <p key={`fc-label-${index}`} className="text-sm text-muted-foreground mb-4">
+                    {fc}
+                  </p>
                 ))}
               </div>
-              <div className="resource-buttons">
-                <button onClick={handleOpenAnki} className="open-button">
+              <div className="flex gap-2.5 mt-2 mb-2.5 justify-center flex-wrap">
+                <Button size="sm" className="w-[140px] font-semibold" onClick={handleOpenAnki}>
                   Open Anki
-                </button>
+                </Button>
                 {flashcards.map((fc, index) => (
-                  <button
+                  <Button
                     key={`fc-btn-${index}`}
+                    variant={flashcardsAdded ? 'secondary' : 'default'}
+                    size="sm"
+                    className="font-semibold"
                     onClick={() => handleOpenFlashcards(fc)}
-                    className={`open-button add-flashcards-btn ${flashcardsAdded ? 'added' : ''}`}
                   >
                     {flashcardsAdded
                       ? '✓ Added to Deck'
                       : `Add${flashcards.length > 1 ? ` ${index + 1}` : ''}`}
-                  </button>
+                  </Button>
                 ))}
               </div>
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={flashcardsAdded}
-                  onChange={handleFlashcardsToggle}
-                />
+              <label className="flex items-center gap-2 cursor-pointer text-sm">
+                <Checkbox checked={flashcardsAdded} onCheckedChange={handleFlashcardsToggle} />
                 <span>Mark as added to Anki</span>
               </label>
             </div>
           )}
 
           {module.resources?.spreadsheet && (
-            <div className="resource-item">
-              <div className="resource-info">
-                <h4>Excel Spreadsheet</h4>
-                <p>{module.resources.spreadsheet}</p>
+            <div className="bg-card border border-border rounded-xl px-4 py-3 mb-3">
+              <div className="mb-1">
+                <h4 className="mb-1 text-foreground">Excel Spreadsheet</h4>
+                <p className="text-sm text-muted-foreground mb-4">{module.resources.spreadsheet}</p>
               </div>
-              <div className="resource-button-single">
-                <button onClick={handleOpenSpreadsheet} className="open-button spreadsheet-button">
+              <div className="flex justify-center mt-2 mb-2.5">
+                <Button
+                  size="sm"
+                  className="w-[140px] font-semibold"
+                  onClick={handleOpenSpreadsheet}
+                >
                   Open Spreadsheet
-                </button>
+                </Button>
               </div>
             </div>
           )}
 
-          {!hasResources && <p className="no-resources">No resources available for this module.</p>}
+          {!hasResources && (
+            <p className="text-muted-foreground italic">No resources available for this module.</p>
+          )}
 
           <ConfidenceRating confidence={confidence} onRate={handleConfidenceChange} />
         </div>

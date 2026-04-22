@@ -19,11 +19,12 @@ jest.mock('../../utils/goalTracker', () => ({
 
 // Mock GoalModal as a simple component that shows "GoalModal"
 jest.mock('../GoalModal', () => {
-  return function MockGoalModal({ onClose, onCreate }) {
+  return function MockGoalModal({ open, onOpenChange, onCreate }) {
+    if (!open) return null;
     return (
       <div data-testid="goal-modal">
         <span>GoalModal</span>
-        <button data-testid="modal-close" onClick={onClose}>
+        <button data-testid="modal-close" onClick={() => onOpenChange(false)}>
           Close
         </button>
         <button
@@ -298,8 +299,8 @@ describe('GoalCard', () => {
 
     const { container } = render(<GoalCard modules={mockModules} />);
 
-    // Find all metric fill bars
-    const fills = container.querySelectorAll('.goal-metric-fill');
+    // Find all metric fill bars - they are divs with inline style width
+    const fills = container.querySelectorAll('.h-full.transition-\\[width\\]');
     // First fill (Modules): 10/5 * 100 = 200, capped at 100
     expect(fills[0]).toHaveStyle({ width: '100%' });
   });
@@ -329,12 +330,10 @@ describe('GoalCard', () => {
   // =====================================================
   // VAL-GOALCARD-008: Deletes goal on trash button + confirm
   // =====================================================
-  it('should delete goal when trash button clicked and confirm returns true', async () => {
+  it('should delete goal when trash button clicked and confirm accepted', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const goal = createMockGoal();
     setupMocks({ goal, completion: 40 });
-
-    jest.spyOn(window, 'confirm').mockReturnValue(true);
 
     render(<GoalCard modules={mockModules} />);
 
@@ -342,26 +341,30 @@ describe('GoalCard', () => {
     const deleteButton = screen.getByTitle('Delete goal');
     await user.click(deleteButton);
 
-    expect(window.confirm).toHaveBeenCalledWith('Are you sure you want to delete this goal?');
+    // Confirm in the AlertDialog
+    const confirmBtn = screen.getByRole('button', { name: /delete/i });
+    await user.click(confirmBtn);
+
     expect(GoalTracker.deleteCurrentGoal).toHaveBeenCalledTimes(1);
   });
 
   // =====================================================
   // VAL-GOALCARD-009: Does not delete goal when confirm cancelled
   // =====================================================
-  it('should not delete goal when confirm returns false', async () => {
+  it('should not delete goal when confirm cancelled', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const goal = createMockGoal();
     setupMocks({ goal, completion: 40 });
-
-    jest.spyOn(window, 'confirm').mockReturnValue(false);
 
     render(<GoalCard modules={mockModules} />);
 
     const deleteButton = screen.getByTitle('Delete goal');
     await user.click(deleteButton);
 
-    expect(window.confirm).toHaveBeenCalled();
+    // Cancel the AlertDialog
+    const cancelBtn = screen.getByRole('button', { name: /cancel/i });
+    await user.click(cancelBtn);
+
     expect(GoalTracker.deleteCurrentGoal).not.toHaveBeenCalled();
   });
 
@@ -540,11 +543,12 @@ describe('GoalCard', () => {
 
     const { container } = render(<GoalCard modules={mockModules} />);
 
-    const metricBars = container.querySelectorAll('.goal-metric-bar');
+    // Metric bars are now divs with w-full h-1.5 rounded-full bg-muted
+    const metricBars = container.querySelectorAll('.h-1\\.5');
     expect(metricBars).toHaveLength(4); // All 4 metrics have non-zero targets
 
-    // Check fill widths
-    const fills = container.querySelectorAll('.goal-metric-fill');
+    // Check fill widths - fills are divs with h-full and inline style width
+    const fills = container.querySelectorAll('.h-full.transition-\\[width\\]');
     // Modules: 2/5 * 100 = 40%
     expect(fills[0]).toHaveStyle({ width: '40%' });
     // Videos: 10/20 * 100 = 50%
@@ -574,7 +578,7 @@ describe('GoalCard', () => {
 
     const { container } = render(<GoalCard modules={mockModules} />);
 
-    const fills = container.querySelectorAll('.goal-metric-fill');
+    const fills = container.querySelectorAll('.h-full.transition-\\[width\\]');
     // Modules: progress = 0 → 'hsl(var(--muted))'
     expect(fills[0]).toHaveStyle({ background: 'hsl(var(--muted))' });
     // Videos: progress = 100% → 'var(--color-progress-complete)'
@@ -593,11 +597,9 @@ describe('GoalCard', () => {
   });
 
   it('should open GoalModal from active goal state via delete cancel then create', async () => {
-    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const goal = createMockGoal();
-    setupMocks({ goal, completion: 40 });
+    setupMocks({ goal: createMockGoal(), completion: 40 });
 
-    const { rerender } = render(<GoalCard modules={mockModules} />);
+    render(<GoalCard modules={mockModules} />);
 
     // Active goal displayed, modal hidden (line 149 false branch)
     expect(screen.getByText('Weekly Goal')).toBeInTheDocument();

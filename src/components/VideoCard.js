@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useToast } from '@/components/ui/toast';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { YOUTUBE_THUMBNAIL_BASE } from '@/utils/constants';
-import '../styles/modules.css';
 
 function VideoCard({ video, moduleId, isCompleted, onMarkComplete }) {
   const { error } = useToast();
@@ -33,9 +34,15 @@ function VideoCard({ video, moduleId, isCompleted, onMarkComplete }) {
   };
 
   return (
-    <div className={`video-card ${hasError ? 'video-error' : ''}`}>
+    <div
+      className={`video-card bg-card rounded-xl overflow-hidden border border-border transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] mb-3 flex flex-row h-[140px] max-md:flex-col max-md:h-auto hover:shadow-[0_2px_6px_hsl(var(--primary-foreground)/0.1)] ${
+        hasError ? 'video-error' : ''
+      }`}
+    >
       <div
-        className={`video-thumbnail-container ${isLoading ? 'loading' : ''}`}
+        className={`video-thumbnail-container relative cursor-pointer overflow-hidden bg-background w-[240px] h-full shrink-0 max-md:w-full ${
+          isLoading ? 'loading' : ''
+        }`}
         onClick={openVideoWindow}
         role="button"
         tabIndex={0}
@@ -50,29 +57,43 @@ function VideoCard({ video, moduleId, isCompleted, onMarkComplete }) {
         <img
           src={`${YOUTUBE_THUMBNAIL_BASE}/${video.id}/mqdefault.jpg`}
           alt={video.title}
-          className="video-thumbnail"
+          className="w-full h-full object-cover object-center block transition-opacity ease-[cubic-bezier(0.25,0.1,0.25,1)]"
           loading="lazy"
         />
-        <div className="play-overlay">
-          <div className="play-button">▶</div>
+        <div className="absolute inset-0 flex items-center justify-center bg-primary-foreground/30 transition-colors ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:bg-primary-foreground/50">
+          <div className="play-button w-[50px] h-[50px] bg-primary/95 rounded-full flex items-center justify-center text-xl text-primary-foreground transition-all ease-[cubic-bezier(0.25,0.1,0.25,1)] pl-1 max-md:w-[60px] max-md:h-[60px] max-md:text-2xl">
+            ▶
+          </div>
         </div>
-        {video.duration && <span className="video-duration">{video.duration}</span>}
-        {isLoading && <div className="video-loading-overlay">Loading...</div>}
+        {video.duration && (
+          <span className="absolute bottom-1.5 right-1.5 bg-primary-foreground/80 text-primary px-1.5 py-0.5 rounded text-[11px] font-semibold max-md:bottom-2 max-md:right-2 max-md:text-xs max-md:px-[7px] py-[3px]">
+            {video.duration}
+          </span>
+        )}
+        {isLoading && (
+          <div className="video-loading-overlay absolute inset-0 flex items-center justify-center bg-background/80 text-primary-foreground text-lg">
+            Loading...
+          </div>
+        )}
       </div>
 
-      <div className="video-info">
-        <h4 className="video-title">{video.title}</h4>
-        <button onClick={openVideoWindow} className="watch-button" disabled={isLoading}>
+      <div className="p-4 flex flex-col justify-evenly flex-1 items-center">
+        <h4 className="m-0 text-base text-foreground leading-[1.3]">{video.title}</h4>
+        <Button
+          variant="youtube"
+          className="watch-button max-w-[145px] px-5 py-2.5 pl-4 m-0 whitespace-nowrap max-md:text-[15px] max-md:p-3"
+          onClick={openVideoWindow}
+          disabled={isLoading}
+        >
           {isLoading ? 'Opening...' : 'Watch Video'}
-        </button>
+        </Button>
 
-        <label className="completion-checkbox">
-          <input
-            type="checkbox"
+        <label className="flex items-center gap-2 cursor-pointer text-[13px] text-muted-foreground select-none">
+          <Checkbox
             checked={isCompleted}
-            onChange={e => onMarkComplete(moduleId, video.id, e.target.checked)}
+            onCheckedChange={checked => onMarkComplete(moduleId, video.id, checked)}
           />
-          <span>Mark as watched</span>
+          <span className="flex-1">Mark as watched</span>
         </label>
       </div>
     </div>

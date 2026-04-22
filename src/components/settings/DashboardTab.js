@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import SettingsManager from '../../utils/settingsManager';
@@ -10,6 +23,7 @@ function DashboardTab() {
   const [sections, setSections] = useState([]);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   useEffect(() => {
     loadDashboardConfig();
@@ -96,11 +110,10 @@ function DashboardTab() {
   };
 
   const handleReset = () => {
-    if (!window.confirm('Reset dashboard to default configuration?')) return;
-
     const defaultConfig = getDefaultDashboardConfig();
     SettingsManager.saveDashboardConfig(defaultConfig);
     loadDashboardConfig();
+    setShowResetConfirm(false);
   };
 
   const handleDragStart = (e, index) => {
@@ -150,19 +163,26 @@ function DashboardTab() {
   };
 
   return (
-    <div className="settings-tab-content">
-      <h3>Dashboard Customization</h3>
-      <p className="tab-description">
+    <div>
+      <h3 className="mt-0 mb-2 text-foreground">Dashboard Customization</h3>
+      <p className="text-muted-foreground mb-4">
         Customize which sections appear on your dashboard and in what order.
       </p>
 
-      <div className="dashboard-sections-list">
+      <div className="flex flex-col gap-2 mb-4 max-h-[400px] overflow-y-auto p-2 border border-border rounded-xl bg-muted/20">
         {sections.map((section, index) => (
           <div
             key={section.id}
-            className={`section-item ${!section.enabled ? 'disabled' : ''} ${
-              draggedIndex === index ? 'dragging' : ''
-            } ${dragOverIndex === index ? 'drag-over' : ''}`}
+            className={`section-item flex justify-between items-center py-2 px-3 pl-10 bg-card border border-border rounded-xl transition-all duration-200 relative overflow-visible min-h-[50px] ${
+              !section.enabled ? 'opacity-50' : ''
+            } ${draggedIndex === index ? 'dragging' : ''} ${
+              dragOverIndex === index ? 'drag-over' : ''
+            }`}
+            style={
+              {
+                // Left accent bar on hover (using CSS-in-JS for the ::before pseudo-element effect)
+              }
+            }
             draggable={true}
             onDragStart={e => handleDragStart(e, index)}
             onDragOver={e => handleDragOver(e, index)}
@@ -170,68 +190,105 @@ function DashboardTab() {
             onDrop={e => handleDrop(e, index)}
             onDragEnd={handleDragEnd}
           >
-            <div className="section-info">
-              <div className="section-header">
-                <div
-                  className={`section-checkbox ${section.enabled ? 'checked' : ''} ${!section.removable ? 'disabled' : ''}`}
-                  onClick={() => section.removable && handleToggle(section.id)}
-                  role="checkbox"
-                  aria-checked={section.enabled}
-                  aria-disabled={!section.removable}
-                  tabIndex={section.removable ? 0 : -1}
-                >
-                  {section.enabled && <span className="checkmark">✓</span>}
-                </div>
-                <h4>{section.title}</h4>
-                {!section.removable && <span className="required-badge">Required</span>}
-                {section.conditional && <span className="conditional-badge">Conditional</span>}
+            {/* Left accent bar */}
+            <div className="absolute left-0 top-0 bottom-0 w-1 bg-transparent group-hover:bg-primary transition-colors duration-300" />
+
+            <div className="flex-1 flex flex-col gap-0 justify-center">
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  checked={section.enabled}
+                  onCheckedChange={() => {
+                    if (section.removable) handleToggle(section.id);
+                  }}
+                  disabled={!section.removable}
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2"
+                />
+                <h4 className="m-0 text-base text-foreground leading-normal">{section.title}</h4>
+                {!section.removable && (
+                  <Badge variant="default" className="shadow-sm">
+                    Required
+                  </Badge>
+                )}
+                {section.conditional && (
+                  <Badge variant="secondary" className="bg-accent text-white shadow-sm">
+                    Conditional
+                  </Badge>
+                )}
               </div>
-              <p className="section-description">{section.description}</p>
+              <p className="text-muted-foreground text-[0.8125rem] m-0 leading-snug">
+                {section.description}
+              </p>
             </div>
 
-            <div className="section-controls">
-              <button
-                className="move-btn"
+            <div className="flex flex-row gap-2 self-center pt-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="move-btn w-8 h-8"
                 onClick={() => handleMoveUp(index)}
                 disabled={index === 0}
                 aria-label="Move up"
               >
                 <ChevronUp size={18} />
-              </button>
-              <button
-                className="move-btn"
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="move-btn w-8 h-8"
                 onClick={() => handleMoveDown(index)}
                 disabled={index === sections.length - 1}
                 aria-label="Move down"
               >
                 <ChevronDown size={18} />
-              </button>
-              <button className="drag-handle" aria-label="Drag to reorder">
-                <div className="drag-handle-dots">
-                  <div className="drag-handle-dot"></div>
-                  <div className="drag-handle-dot"></div>
-                  <div className="drag-handle-dot"></div>
-                  <div className="drag-handle-dot"></div>
-                  <div className="drag-handle-dot"></div>
-                  <div className="drag-handle-dot"></div>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="drag-handle !w-4 !min-w-4 !max-w-4 h-8 p-0 cursor-grab shrink-0"
+                aria-label="Drag to reorder"
+              >
+                <div className="grid grid-cols-2 grid-rows-3 gap-[3px] w-auto h-auto">
+                  <div className="w-[3px] h-[3px] bg-muted-foreground rounded-full" />
+                  <div className="w-[3px] h-[3px] bg-muted-foreground rounded-full" />
+                  <div className="w-[3px] h-[3px] bg-muted-foreground rounded-full" />
+                  <div className="w-[3px] h-[3px] bg-muted-foreground rounded-full" />
+                  <div className="w-[3px] h-[3px] bg-muted-foreground rounded-full" />
+                  <div className="w-[3px] h-[3px] bg-muted-foreground rounded-full" />
                 </div>
-              </button>
+              </Button>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="dashboard-actions">
+      <div className="flex gap-3 mb-4 flex-wrap">
         <Button onClick={saveDashboardConfig}>Save Configuration</Button>
-        <Button onClick={handleReset} variant="outline">
+        <Button onClick={() => setShowResetConfirm(true)} variant="outline">
           Reset to Defaults
         </Button>
       </div>
 
-      <div className="dashboard-note">
-        <strong>Note:</strong> Conditional sections only appear when relevant (for example, some
-        sections only show once you have enough progress data).
-      </div>
+      <Alert className="border-l-4 border-primary">
+        <AlertDescription>
+          <strong>Note:</strong> Conditional sections only appear when relevant (for example, some
+          sections only show once you have enough progress data).
+        </AlertDescription>
+      </Alert>
+
+      <AlertDialog open={showResetConfirm} onOpenChange={setShowResetConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset Dashboard</AlertDialogTitle>
+            <AlertDialogDescription>
+              Reset dashboard to default configuration? Your customizations will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleReset}>Reset</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

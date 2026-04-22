@@ -57,13 +57,13 @@ describe('ModuleList', () => {
 
     render(<ModuleListWrapper modules={mockModules} onModuleSelect={mockOnModuleSelect} />);
 
-    const gridButton = screen.getByRole('button', { name: /Grid view/i });
-    const listButton = screen.getByRole('button', { name: /List view/i });
+    const gridButton = screen.getByRole('radio', { name: /Grid view/i });
+    const listButton = screen.getByRole('radio', { name: /List view/i });
 
     await user.click(listButton);
     await waitFor(
       () => {
-        expect(listButton).toHaveClass('active');
+        expect(listButton).toHaveAttribute('data-state', 'on');
       },
       { timeout: 300 }
     );
@@ -71,7 +71,7 @@ describe('ModuleList', () => {
     await user.click(gridButton);
     await waitFor(
       () => {
-        expect(gridButton).toHaveClass('active');
+        expect(gridButton).toHaveAttribute('data-state', 'on');
       },
       { timeout: 300 }
     );

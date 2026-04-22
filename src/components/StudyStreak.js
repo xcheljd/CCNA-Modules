@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import StreakTracker from '../utils/streakTracker';
-import '../styles/dashboard.css';
 
 function StudyStreak({ refreshKey }) {
   const [streakInfo, setStreakInfo] = useState({
@@ -50,7 +51,7 @@ function StudyStreak({ refreshKey }) {
   };
 
   const getActivityIntensity = count => {
-    if (count === 0) return 'empty';
+    if (count === 0) return '';
     if (count <= 2) return 'low';
     if (count <= 5) return 'medium';
     return 'high';
@@ -68,79 +69,104 @@ function StudyStreak({ refreshKey }) {
 
   const nextMilestone = getNextMilestone();
 
+  const cellColor = intensity => {
+    if (!intensity) return 'bg-card';
+    if (intensity === 'low') return 'bg-[hsl(var(--primary)/0.3)]';
+    if (intensity === 'medium') return 'bg-[hsl(var(--primary)/0.5)]';
+    return 'bg-primary';
+  };
+
+  const cellText = intensity => {
+    if (intensity === 'high') return 'text-primary-foreground';
+    return 'text-foreground';
+  };
+
   return (
-    <div className="study-streak">
+    <div className="flex flex-col gap-5">
       {/* Current Streak Display */}
-      <div className="streak-header">
-        <div className="streak-main">
-          <div className="streak-icon">{getStreakEmoji(streakInfo.currentStreak)}</div>
-          <div className="streak-info">
-            <div className="streak-number">
+      <div className="flex justify-between gap-4 items-center max-[900px]:flex-col max-[900px]:items-start">
+        <div className="flex items-center gap-4">
+          <div className="w-[52px] h-[52px] rounded-[14px] bg-accent flex items-center justify-center text-2xl">
+            {getStreakEmoji(streakInfo.currentStreak)}
+          </div>
+          <div className="flex flex-col gap-1">
+            <div className="text-[32px] font-bold leading-none">
               {streakInfo.currentStreak}
-              <span className="streak-label">day streak</span>
+              <span className="ml-1.5 text-sm font-medium text-muted-foreground">day streak</span>
             </div>
-            <div className={`streak-message ${atRisk ? 'at-risk' : ''}`}>{getStreakMessage()}</div>
+            <div
+              className={`text-sm font-medium ${atRisk ? 'text-destructive' : 'text-muted-foreground'}`}
+            >
+              {getStreakMessage()}
+            </div>
           </div>
         </div>
 
         {streakInfo.longestStreak > 0 && (
-          <div className="longest-streak">
-            <div className="longest-streak-label">Longest Streak</div>
-            <div className="longest-streak-number">🏆 {streakInfo.longestStreak} days</div>
+          <div className="text-right">
+            <div className="text-xs text-muted-foreground">Longest Streak</div>
+            <div className="text-sm font-semibold">🏆 {streakInfo.longestStreak} days</div>
           </div>
         )}
       </div>
 
       {/* 7-Day Activity Calendar */}
-      <div className="activity-calendar">
-        <div className="calendar-label">Last 7 Days</div>
-        <div className="calendar-grid">
-          {recentActivity.map(day => (
-            <div key={day.date} className="calendar-day">
-              <div className="day-label">{getDayLabel(day.date)}</div>
-              <div
-                className={`activity-cell ${getActivityIntensity(day.activitiesCompleted)}`}
-                title={`${day.date}: ${day.activitiesCompleted} activities`}
-              >
-                {day.activitiesCompleted > 0 && (
-                  <span className="activity-count">{day.activitiesCompleted}</span>
-                )}
+      <div className="py-4 px-[18px] rounded-[14px] bg-muted">
+        <div className="text-[15px] font-semibold text-muted-foreground mb-2.5">Last 7 Days</div>
+        <div className="grid grid-cols-7 gap-1.5">
+          {recentActivity.map(day => {
+            const intensity = getActivityIntensity(day.activitiesCompleted);
+            return (
+              <div key={day.date} className="flex flex-col items-center gap-1.5">
+                <div className="text-[13px] font-medium text-muted-foreground">
+                  {getDayLabel(day.date)}
+                </div>
+                <div
+                  className={`w-[52px] h-[52px] rounded-xl ${cellColor(intensity)} flex items-center justify-center text-lg font-bold`}
+                  title={`${day.date}: ${day.activitiesCompleted} activities`}
+                >
+                  {day.activitiesCompleted > 0 && (
+                    <span className={cellText(intensity)}>{day.activitiesCompleted}</span>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
       {/* Next Milestone */}
       {nextMilestone && !nextMilestone.achieved && (
-        <div className="milestone-progress">
-          <div className="milestone-header">
-            <span className="milestone-name">Next: {nextMilestone.name}</span>
-            <span className="milestone-target">
+        <div className="flex flex-col items-center gap-3 mt-1">
+          <div className="flex justify-between items-center w-full gap-2">
+            <span className="text-sm font-semibold text-foreground">
+              Next: {nextMilestone.name}
+            </span>
+            <span className="text-[13px] font-medium text-muted-foreground">
               {streakInfo.currentStreak}/{nextMilestone.days} days
             </span>
           </div>
-          <div className="milestone-bar">
-            <div
-              className="milestone-fill"
-              style={{ width: `${Math.min(nextMilestone.progress, 100)}%` }}
-            />
-          </div>
+          <Progress value={Math.min(nextMilestone.progress, 100)} className="h-2" />
         </div>
       )}
 
       {/* Achieved Milestones */}
       {milestones.some(m => m.achieved) && (
-        <div className="achieved-milestones">
-          <div className="milestones-label">Achievements</div>
-          <div className="milestones-badges">
+        <div className="flex flex-col gap-2">
+          <div className="text-[13px] text-muted-foreground">Achievements</div>
+          <div className="flex flex-wrap gap-2">
             {milestones
               .filter(m => m.achieved)
               .map(milestone => (
-                <div key={milestone.days} className="milestone-badge" title={milestone.name}>
-                  <span className="badge-icon">🏆</span>
-                  <span className="badge-days">{milestone.days}d</span>
-                </div>
+                <Badge
+                  key={milestone.days}
+                  variant="outline"
+                  className="bg-[hsl(var(--primary)/0.1)] text-primary border-0"
+                  title={milestone.name}
+                >
+                  <span className="text-sm">🏆</span>
+                  <span className="font-semibold">{milestone.days}d</span>
+                </Badge>
               ))}
           </div>
         </div>

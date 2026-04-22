@@ -25,18 +25,18 @@ function ActivityHeatmap({ days = 30 }) {
   }
 
   return (
-    <div className="chart-container">
-      <div className="activity-heatmap">
-        <div className="heatmap-container">
+    <div className="my-2 mx-0">
+      <div className="p-4">
+        <div className="flex gap-1 mb-4 overflow-x-auto pb-2">
           {weeks.map((week, weekIndex) => (
-            <div key={weekIndex} className="heatmap-week">
+            <div key={weekIndex} className="flex flex-col gap-1">
               {week.map(day => (
                 <div
                   key={day.date}
-                  className={`heatmap-cell ${getIntensityClass(day.activitiesCompleted)}`}
+                  className={`heatmap-cell w-7 h-7 rounded flex items-center justify-center cursor-pointer transition-all duration-200 border border-transparent hover:border-primary hover:z-10 max-[768px]:w-6 max-[768px]:h-6 ${getIntensityClass(day.activitiesCompleted)}`}
                   title={`${formatDate(day.date)}: ${day.activitiesCompleted} activities`}
                 >
-                  <span className="cell-count">
+                  <span className="cell-count text-[13px] font-black text-foreground relative z-10 max-[768px]:text-[9px]">
                     {day.activitiesCompleted > 0 ? day.activitiesCompleted : ''}
                   </span>
                 </div>
@@ -45,16 +45,14 @@ function ActivityHeatmap({ days = 30 }) {
           ))}
         </div>
 
-        <div className="heatmap-legend">
-          <span className="legend-label">Less</span>
-          <div className="legend-cells">
-            <div className="legend-cell intensity-0" />
-            <div className="legend-cell intensity-1" />
-            <div className="legend-cell intensity-2" />
-            <div className="legend-cell intensity-3" />
-            <div className="legend-cell intensity-4" />
+        <div className="flex items-center justify-end gap-2">
+          <span className="text-[11px] text-muted-foreground">Less</span>
+          <div className="flex gap-[3px]">
+            {[0, 1, 2, 3, 4].map(i => (
+              <div key={i} className={`legend-cell w-4 h-4 rounded-[3px] intensity-${i}`} />
+            ))}
           </div>
-          <span className="legend-label">More</span>
+          <span className="text-[11px] text-muted-foreground">More</span>
         </div>
       </div>
     </div>

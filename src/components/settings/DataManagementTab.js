@@ -11,6 +11,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Save, Download, Upload, Trash2, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import ProgressTracker, { isProgressKey } from '../../utils/progressTracker';
@@ -181,82 +182,85 @@ function DataManagementTab() {
   };
 
   return (
-    <div className="settings-tab-content">
-      <h3>Data Management</h3>
-      <p className="tab-description">
+    <div>
+      <h3 className="mt-0 mb-2 text-foreground">Data Management</h3>
+      <p className="text-muted-foreground mb-4">
         Manage your progress data, create backups, and import from previous sessions.
       </p>
 
-      <div className="data-section">
-        <h4>Save & Backup</h4>
-        <div className="data-actions">
+      <div className="mb-5 p-4 bg-card border border-border rounded-xl transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
+        <h4 className="mt-0 mb-3 text-foreground font-semibold text-base">Save &amp; Backup</h4>
+        <div className="mb-4 last:mb-0">
           <Button onClick={handleSave} variant="outline">
             <Save size={16} />
             Save Progress
           </Button>
-          <p className="action-description">
+          <p className="text-sm text-muted-foreground mt-2 mb-0 leading-relaxed">
             Progress is automatically saved. This just confirms the current state.
           </p>
         </div>
 
-        <div className="data-actions">
+        <div className="mb-4 last:mb-0">
           <Button onClick={handleExport}>
             <Download size={16} />
             Export Progress
           </Button>
-          <p className="action-description">
+          <p className="text-sm text-muted-foreground mt-2 mb-0 leading-relaxed">
             Download a backup file containing all your progress and settings.
           </p>
         </div>
       </div>
 
-      <div className="data-section">
-        <h4>Restore</h4>
-        <div className="data-actions">
+      <div className="mb-5 p-4 bg-card border border-border rounded-xl transition-all hover:shadow-[0_2px_8px_hsl(var(--foreground)/0.08)]">
+        <h4 className="mt-0 mb-3 text-foreground font-semibold text-base">Restore</h4>
+        <div className="mb-4 last:mb-0">
           <Button onClick={handleImport} variant="outline">
             <Upload size={16} />
             Import Progress
           </Button>
-          <p className="action-description">
+          <p className="text-sm text-muted-foreground mt-2 mb-0 leading-relaxed">
             Restore progress from a previously exported backup file.
           </p>
         </div>
       </div>
 
-      <div className="data-section danger-zone">
-        <h4>
-          <AlertTriangle size={20} className="inline-block mr-2" />
-          Danger Zone
-        </h4>
-        <div className="data-actions">
-          <Button
-            onClick={handleClear}
-            variant="destructive"
-            className={showClearConfirm ? 'confirm-active' : ''}
-          >
-            {showClearConfirm ? (
-              <>
-                <AlertTriangle size={16} />
-                Click Again to Confirm
-              </>
-            ) : (
-              <>
-                <Trash2 size={16} />
-                Clear All Progress
-              </>
-            )}
-          </Button>
-          {showClearConfirm && (
-            <Button onClick={() => setShowClearConfirm(false)} variant="outline">
-              Cancel
+      <Alert
+        variant="destructive"
+        className="border-2 p-4 shadow-[0_2px_8px_hsl(var(--destructive)/0.15)] transition-all hover:shadow-[0_4px_12px_hsl(var(--destructive)/0.2)]"
+      >
+        <AlertTriangle size={20} className="shrink-0" />
+        <AlertTitle className="text-destructive">Danger Zone</AlertTitle>
+        <AlertDescription>
+          <div className="mt-3">
+            <Button
+              onClick={handleClear}
+              variant="destructive"
+              className={showClearConfirm ? 'confirm-active' : ''}
+            >
+              {showClearConfirm ? (
+                <>
+                  <AlertTriangle size={16} />
+                  Click Again to Confirm
+                </>
+              ) : (
+                <>
+                  <Trash2 size={16} />
+                  Clear All Progress
+                </>
+              )}
             </Button>
-          )}
-          <p className="action-description warning">
-            This will permanently delete all your progress, confidence ratings, and study history.
-            This action cannot be undone!
-          </p>
-        </div>
-      </div>
+            {showClearConfirm && (
+              <Button onClick={() => setShowClearConfirm(false)} variant="outline">
+                Cancel
+              </Button>
+            )}
+            <p className="text-sm text-destructive font-semibold mt-2 mb-0 leading-relaxed">
+              This will permanently delete all your progress, confidence ratings, and study history.
+              This action cannot be undone!
+            </p>
+          </div>
+        </AlertDescription>
+      </Alert>
 
       <Dialog
         open={pendingImport !== null}

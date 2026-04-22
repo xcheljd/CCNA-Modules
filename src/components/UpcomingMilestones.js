@@ -1,7 +1,6 @@
 import React from 'react';
 import ProgressTracker from '../utils/progressTracker';
 import { ColorHelpers } from '@/utils/colorHelpers';
-import '../styles/dashboard.css';
 
 function UpcomingMilestones({ modules }) {
   const getMilestones = () => {
@@ -35,7 +34,6 @@ function UpcomingMilestones({ modules }) {
   };
 
   const getUpcomingModules = () => {
-    // Get next 5 incomplete modules
     return modules.filter(module => ProgressTracker.getModuleProgress(module) < 100).slice(0, 5);
   };
 
@@ -44,21 +42,21 @@ function UpcomingMilestones({ modules }) {
   const upcomingModules = getUpcomingModules();
 
   return (
-    <div className="upcoming-milestones">
+    <div className="flex flex-col gap-4">
       {/* Milestone Progress */}
-      <div className="milestone-progress">
-        <h3>Course Milestones</h3>
-        <div className="milestone-track">
+      <div>
+        <h3 className="m-0 mb-3 text-base font-semibold">Course Milestones</h3>
+        <div className="flex flex-wrap gap-3">
           {milestones.map(milestone => (
             <div
               key={milestone.percent}
-              className={`milestone-marker ${milestone.isCompleted ? 'completed' : ''} ${milestone.isNext ? 'next' : ''}`}
+              className={`flex-1 min-w-[120px] py-2.5 px-3 rounded-[10px] border text-center ${milestone.isCompleted ? 'border-border bg-[hsl(var(--primary)/0.1)]' : milestone.isNext ? 'border-primary bg-card' : 'border-border bg-card'}`}
             >
-              <div className="milestone-icon">{milestone.icon}</div>
-              <div className="milestone-label">{milestone.label}</div>
-              <div className="milestone-percent">{milestone.percent}%</div>
+              <div className="text-xl mb-1">{milestone.icon}</div>
+              <div className="text-[13px] font-medium">{milestone.label}</div>
+              <div className="text-xs text-muted-foreground">{milestone.percent}%</div>
               {milestone.isNext && (
-                <div className="milestone-remaining">
+                <div className="mt-1 text-xs text-muted-foreground">
                   {milestone.modulesRemaining} modules to go
                 </div>
               )}
@@ -69,27 +67,27 @@ function UpcomingMilestones({ modules }) {
 
       {/* Next Milestone Card */}
       {nextMilestone && (
-        <div className="next-milestone-card">
-          <div className="next-milestone-header">
-            <span className="next-milestone-icon">{nextMilestone.icon}</span>
+        <div className="py-3.5 px-4 rounded-xl border border-border bg-card">
+          <div className="flex items-center gap-3 mb-2.5">
+            <span className="text-[22px]">{nextMilestone.icon}</span>
             <div>
-              <h4>Next Milestone</h4>
-              <p>{nextMilestone.label}</p>
+              <h4 className="m-0">Next Milestone</h4>
+              <p className="m-0">{nextMilestone.label}</p>
             </div>
           </div>
-          <div className="next-milestone-stats">
-            <div className="stat">
-              <span className="stat-value">{nextMilestone.modulesRemaining}</span>
-              <span className="stat-label">modules remaining</span>
+          <div className="flex gap-4 max-[900px]:flex-col">
+            <div>
+              <span className="text-base font-semibold">{nextMilestone.modulesRemaining}</span>
+              <span className="text-xs text-muted-foreground ml-1">modules remaining</span>
             </div>
-            <div className="stat">
-              <span className="stat-value">{nextMilestone.modulesNeeded}</span>
-              <span className="stat-label">total needed</span>
+            <div>
+              <span className="text-base font-semibold">{nextMilestone.modulesNeeded}</span>
+              <span className="text-xs text-muted-foreground ml-1">total needed</span>
             </div>
           </div>
-          <div className="milestone-progress-bar">
+          <div className="mt-2.5 w-full h-1.5 rounded-full bg-muted">
             <div
-              className="milestone-progress-fill"
+              className="h-full rounded-[inherit]"
               style={{
                 width: `${((nextMilestone.modulesNeeded - nextMilestone.modulesRemaining) / nextMilestone.modulesNeeded) * 100}%`,
                 background: ColorHelpers.getProgressColor(
@@ -105,29 +103,31 @@ function UpcomingMilestones({ modules }) {
 
       {/* Upcoming Modules */}
       {upcomingModules.length > 0 && (
-        <div className="upcoming-modules-list">
-          <h4>Up Next</h4>
+        <div className="flex flex-col gap-2.5">
+          <h4 className="m-0">Up Next</h4>
           {upcomingModules.map((module, index) => {
             const progress = ProgressTracker.getModuleProgress(module);
             return (
-              <div key={module.id} className="upcoming-module-item">
-                <div className="upcoming-module-number">{index + 1}</div>
-                <div className="upcoming-module-info">
-                  <div className="upcoming-module-title">
+              <div key={module.id} className="flex items-center gap-2.5">
+                <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center text-xs">
+                  {index + 1}
+                </div>
+                <div>
+                  <div className="text-sm">
                     Day {module.day}: {module.title}
                   </div>
                   {progress > 0 && (
-                    <div className="upcoming-module-progress">
-                      <div className="upcoming-progress-bar">
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <div className="flex-1 h-1.5 rounded-full bg-muted">
                         <div
-                          className="upcoming-progress-fill"
+                          className="h-full"
                           style={{
                             width: `${progress}%`,
                             background: ColorHelpers.getProgressColor(progress),
                           }}
                         />
                       </div>
-                      <span className="upcoming-progress-text">{Math.round(progress)}%</span>
+                      <span className="text-xs">{Math.round(progress)}%</span>
                     </div>
                   )}
                 </div>
@@ -139,10 +139,10 @@ function UpcomingMilestones({ modules }) {
 
       {/* Completion Achievement */}
       {milestones[3].isCompleted && (
-        <div className="completion-achievement">
-          <div className="achievement-icon">🎉</div>
-          <h3>Congratulations!</h3>
-          <p>You've completed the entire CCNA course!</p>
+        <div className="mt-2 py-3 px-3.5 rounded-xl border border-primary bg-[hsl(var(--primary)/0.1)] text-center">
+          <div className="text-2xl">🎉</div>
+          <h3 className="m-0">Congratulations!</h3>
+          <p className="m-0">You've completed the entire CCNA course!</p>
         </div>
       )}
     </div>

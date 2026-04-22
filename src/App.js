@@ -3,13 +3,16 @@ import LoadingScreen from './components/LoadingScreen';
 import WelcomeDialog from './components/WelcomeDialog';
 import YoutubeSigninDialog from './components/YoutubeSigninDialog';
 import { ToastProvider, useToast } from '@/components/ui/toast';
-import { LayoutDashboard, List } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Settings as SettingsIcon } from 'lucide-react';
 import modules from './data/modules';
 import ProgressTracker from './utils/progressTracker';
 import ActivityTracker from './utils/activityTracker';
 import themes from './utils/themes';
 import { RESOURCE_DOWNLOAD_URL } from '@/utils/constants';
-import { GridIcon } from '@/components/ui/Icons';
 import { Migrations } from './utils/migrations';
 
 // Lazy load heavy components for code splitting
@@ -20,8 +23,8 @@ const Settings = lazy(() => import('./components/Settings'));
 
 // Loading fallback component
 const LazyLoadingFallback = () => (
-  <div className="lazy-loading">
-    <div className="spinner lazy-loading-spinner"></div>
+  <div className="p-5 text-center">
+    <div className="w-10 h-10 border-[3px] border-black/10 border-t-[3px] border-t-primary rounded-full animate-[spin_1s_linear_infinite] mx-auto my-5"></div>
     <p>Loading...</p>
   </div>
 );
@@ -39,7 +42,6 @@ function AppContent() {
     const saved = localStorage.getItem('app-theme');
     return saved || 'light';
   });
-  const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [showWelcome, setShowWelcome] = useState(() => {
     const hasSeenWelcome = localStorage.getItem('hasSeenWelcome');
@@ -239,130 +241,87 @@ function AppContent() {
     }
   };
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
   if (isLoading) {
     return <LoadingScreen status={loadingStatus} progress={loadingProgress} />;
   }
 
   return (
-    <div className={`app ${menuOpen ? 'menu-open' : ''}`}>
-      <header className="app-header">
-        <div className="header-content">
-          <button className="hamburger-menu" onClick={toggleMenu} aria-label="Toggle menu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-
-          <div className="header-title-group">
-            <h1>CCNA 200-301 Course</h1>
-            <div className="view-toggle">
-              <button
-                className={`view-toggle-btn ${currentView === 'dashboard' ? 'active' : ''}`}
-                onClick={() => setCurrentView('dashboard')}
-                aria-label="Dashboard view"
+    <div className="min-h-screen w-full bg-background text-foreground transition-[background,color] duration-250 ease-[ease]">
+      <header className="bg-header text-header-foreground px-5 py-2.5 shadow-[0_1px_4px_hsl(var(--header-foreground)/0.1)] sticky top-0 z-[45]">
+        <div className="max-w-[1200px] mx-auto flex justify-between items-center gap-6">
+          <div className="flex items-center gap-3">
+            <h1 className="m-0 text-[20px] font-semibold text-header-foreground">
+              CCNA 200-301 Course
+            </h1>
+            <div className="relative flex items-center bg-[hsl(var(--header-foreground)/0.1)] rounded-md p-1">
+              <div
+                className="absolute top-1 left-1 h-[calc(100%-8px)] rounded-sm bg-header-foreground shadow-[0_2px_6px_hsl(var(--header-foreground)/0.3),inset_0_1px_0_hsl(var(--header)/0.1)] transition-transform duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+                style={{
+                  width: 'calc((100% - 8px) / 2)',
+                  transform: `translateX(calc(${{ dashboard: 0, list: 1, detail: 1 }[currentView]} * 100%))`,
+                }}
+              />
+              <ToggleGroup
+                type="single"
+                value={currentView === 'detail' ? 'list' : currentView}
+                onValueChange={value => {
+                  if (value) setCurrentView(value);
+                }}
+                className="gap-0 grid grid-cols-2"
               >
-                <LayoutDashboard size={20} />
-              </button>
-              <button
-                className={`view-toggle-btn ${currentView === 'list' ? 'active' : ''}`}
-                onClick={() => setCurrentView('list')}
-                aria-label="Modules view"
-              >
-                <List size={20} />
-              </button>
+                <ToggleGroupItem
+                  value="dashboard"
+                  aria-label="Dashboard view"
+                  className="relative z-[1] px-3 py-1.5 text-[13px] font-medium rounded-sm border-0 bg-transparent text-header-foreground opacity-70 hover:opacity-100 hover:bg-[hsl(var(--header-foreground)/0.15)] data-[state=on]:bg-transparent data-[state=on]:text-header data-[state=on]:opacity-100 data-[state=on]:shadow-none data-[state=on]:border-0 data-[state=on]:hover:bg-transparent"
+                >
+                  Dashboard
+                </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="list"
+                  aria-label="Modules view"
+                  className="relative z-[1] px-3 py-1.5 text-[13px] font-medium rounded-sm border-0 bg-transparent text-header-foreground opacity-70 hover:opacity-100 hover:bg-[hsl(var(--header-foreground)/0.15)] data-[state=on]:bg-transparent data-[state=on]:text-header data-[state=on]:opacity-100 data-[state=on]:shadow-none data-[state=on]:border-0 data-[state=on]:hover:bg-transparent"
+                >
+                  Modules
+                </ToggleGroupItem>
+              </ToggleGroup>
             </div>
           </div>
 
-          <div className="header-right">
-            <div className="header-stats">
-              <span>Overall Progress: {Math.round(overallProgress)}%</span>
-              <div className="progress-bar-small">
-                <div
-                  className="progress-fill-small"
-                  style={{
-                    width: `${overallProgress}%`,
-                    background:
-                      overallProgress === 100 ? 'var(--color-progress-complete)' : undefined,
-                  }}
-                />
-              </div>
+          <div className="flex items-center gap-4 z-[1]">
+            <div className="flex items-center gap-[15px] text-[13px] text-header-foreground">
+              <span>Progress: {Math.round(overallProgress)}%</span>
+              <Progress value={overallProgress} className="w-[160px] h-2" />
             </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="p-2 text-header-foreground opacity-80 hover:opacity-100 hover:bg-[hsl(var(--header-foreground)/0.15)] [&_svg]:size-[18px]"
+              onClick={() => setSettingsOpen(true)}
+              aria-label="Settings"
+            >
+              <SettingsIcon />
+            </Button>
           </div>
         </div>
-
-        {menuOpen && (
-          <>
-            <div className="menu-overlay" onClick={toggleMenu}></div>
-            <div className="dropdown-menu">
-              <button
-                onClick={() => {
-                  setCurrentView('dashboard');
-                  setMenuOpen(false);
-                }}
-                className="menu-item"
-              >
-                <GridIcon className="menu-icon" />
-                Dashboard
-              </button>
-              <button
-                onClick={() => {
-                  setCurrentView('list');
-                  setMenuOpen(false);
-                }}
-                className="menu-item"
-              >
-                <svg
-                  className="menu-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <rect x="3" y="3" width="18" height="4" />
-                  <rect x="3" y="10" width="18" height="4" />
-                  <rect x="3" y="17" width="18" height="4" />
-                </svg>
-                All Modules
-              </button>
-              <button
-                onClick={() => {
-                  setSettingsOpen(true);
-                  setMenuOpen(false);
-                }}
-                className="menu-item"
-                aria-label="Settings"
-              >
-                <svg
-                  className="menu-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-                Settings
-              </button>
-            </div>
-          </>
-        )}
       </header>
 
       {!resourcesAvailable && (
-        <div className="warning-banner">
-          ⚠️ Resources folder not found. Some features may not work.
-          <a href={RESOURCE_DOWNLOAD_URL} target="_blank" rel="noopener noreferrer">
-            Download resources from Jeremy's IT Lab
-          </a>
-        </div>
+        <Alert variant="destructive" className="rounded-none border-x-0 border-t-0">
+          <AlertDescription className="text-center">
+            ⚠️ Resources folder not found. Some features may not work.
+            <a
+              href={RESOURCE_DOWNLOAD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary ml-2.5"
+            >
+              Download resources from Jeremy's IT Lab
+            </a>
+          </AlertDescription>
+        </Alert>
       )}
 
-      <main className="app-content">
+      <main className="max-w-[1400px] mx-auto px-5 pt-0 pb-5 overflow-x-clip">
         <Suspense fallback={<LazyLoadingFallback />}>
           {currentView === 'dashboard' && (
             <Dashboard modules={modules} onModuleSelect={handleModuleSelect} />
@@ -371,10 +330,14 @@ function AppContent() {
           {currentView === 'list' && (
             <>
               {ProgressTracker.getLastWatchedVideo() && (
-                <div className="continue-watching">
-                  <button onClick={handleContinueWatching} className="continue-button">
+                <div className="mb-[30px] text-center">
+                  <Button
+                    size="lg"
+                    className="rounded-[30px] px-10 py-4 text-lg shadow-[0_4px_12px_hsl(var(--primary)/0.3)] hover:shadow-[0_6px_16px_hsl(var(--primary)/0.4)]"
+                    onClick={handleContinueWatching}
+                  >
                     ▶ Continue Watching
-                  </button>
+                  </Button>
                 </div>
               )}
               <ModuleList modules={modules} onModuleSelect={handleModuleSelect} />

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 180 180">
+  <!-- Transparent background - only the globe has fill -->
+  <circle cx="90" cy="90" r="89" fill="#14120f"/>
+  <!-- Globe outline -->
+  <circle cx="90" cy="90" r="88" fill="none" stroke="#2a2520" stroke-width="2"/>
+  <!-- Equator -->
+  <ellipse cx="90" cy="90" rx="88" ry="28" fill="none" stroke="#25211c" stroke-width="1.2"/>
+  <!-- Vertical meridian -->
+  <ellipse cx="90" cy="90" rx="28" ry="88" fill="none" stroke="#25211c" stroke-width="1.2"/>
+  <!-- Latitude lines -->
+  <ellipse cx="90" cy="52" rx="75" ry="23" fill="none" stroke="#221e19" stroke-width="0.8"/>
+  <ellipse cx="90" cy="128" rx="75" ry="23" fill="none" stroke="#221e19" stroke-width="0.8"/>
+  <!-- Completed trail -->
+  <path d="M 24 110 Q 42 48, 72 60 T 112 30" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Remaining trail -->
+  <path d="M 112 30 Q 145 8, 125 55 T 92 102" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 7" opacity="0.3"/>
+  <!-- Packet dot -->
+  <circle cx="112" cy="30" r="6" fill="#fbbf24"/>
+  <circle cx="112" cy="30" r="11" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.4"/>
+  <!-- Visited nodes -->
+  <circle cx="24" cy="110" r="4" fill="#f59e0b" opacity="0.6"/>
+  <circle cx="72" cy="60" r="4" fill="#f59e0b" opacity="0.8"/>
+  <!-- Unvisited node -->
+  <circle cx="92" cy="102" r="3.5" fill="none" stroke="#3a3530" stroke-width="1.5"/>
+</svg>
