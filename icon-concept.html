@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCNA Modules — Icon Concepts</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #e0e0e8;
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+  }
+
+  h1 {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 60px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 60px;
+    max-width: 1500px;
+    width: 100%;
+  }
+
+  .icon-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .icon-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #444;
+  }
+
+  .icon-frame {
+    width: 320px;
+    height: 320px;
+    border-radius: 70px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon-frame.light {
+    background: linear-gradient(145deg, #f8f9fc, #e8eaf0);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+
+  .icon-frame.dark {
+    background: linear-gradient(145deg, #1a1b2e, #0d0e1a);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+
+  .icon-frame.accent {
+    background: linear-gradient(145deg, #0f172a, #1e1b4b);
+    box-shadow: 0 4px 24px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+
+  .icon-frame.warm {
+    background: linear-gradient(145deg, #1c1917, #0c0a09);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03);
+  }
+
+  .packet-trail {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .size-previews {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    margin-top: 12px;
+  }
+
+  .size-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .size-preview span {
+    font-size: 9px;
+    color: #333;
+  }
+
+  .mini-frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 22%;
+  }
+
+  .mini-frame.sm48 { width: 48px; height: 48px; border-radius: 11px; }
+  .mini-frame.sm32 { width: 32px; height: 32px; border-radius: 7px; }
+  .mini-frame.sm16 { width: 20px; height: 20px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<h1>CCNA Modules — Icon Concepts</h1>
+
+<div class="grid">
+
+  <!-- Variant 1: Light theme — blue trail -->
+  <div class="icon-card">
+    <div class="icon-frame light">
+      <svg width="300" height="300" viewBox="0 0 180 180" fill="none">
+        <circle cx="90" cy="90" r="88" fill="none" stroke="#c8ccd4" stroke-width="2"/>
+        <ellipse cx="90" cy="90" rx="88" ry="28" fill="none" stroke="#d0d4dc" stroke-width="1.2"/>
+        <ellipse cx="90" cy="90" rx="28" ry="88" fill="none" stroke="#d0d4dc" stroke-width="1.2"/>
+        <ellipse cx="90" cy="52" rx="75" ry="23" fill="none" stroke="#dddfe6" stroke-width="0.8"/>
+        <ellipse cx="90" cy="128" rx="75" ry="23" fill="none" stroke="#dddfe6" stroke-width="0.8"/>
+        <path d="M 32 118 Q 50 60, 78 72 T 118 42" class="packet-trail" stroke="#3b82f6" stroke-width="4"/>
+        <path d="M 118 42 Q 145 22, 128 62 T 100 98" class="packet-trail" stroke="#93b4f8" stroke-width="2.5" stroke-dasharray="5 7" opacity="0.5"/>
+        <circle cx="118" cy="42" r="6" fill="#3b82f6">
+          <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="118" cy="42" r="11" fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.3">
+          <animate attributeName="r" values="11;18;11" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.3;0;0.3" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="32" cy="118" r="4" fill="#3b82f6" opacity="0.7"/>
+        <circle cx="78" cy="72" r="4" fill="#3b82f6" opacity="0.85"/>
+        <circle cx="100" cy="98" r="3.5" fill="none" stroke="#c0c4cc" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <span class="icon-label">Light — Blue Trail</span>
+    <div class="size-previews">
+      <div class="size-preview">
+        <div class="mini-frame sm48" style="background: linear-gradient(145deg, #f8f9fc, #e8eaf0);">
+          <svg width="36" height="36" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="88" fill="none" stroke="#c8ccd4" stroke-width="3"/>
+            <path d="M 32 118 Q 50 60, 78 72 T 118 42" fill="none" stroke="#3b82f6" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="118" cy="42" r="8" fill="#3b82f6"/>
+          </svg>
+        </div>
+        <span>48px</span>
+      </div>
+      <div class="size-preview">
+        <div class="mini-frame sm32" style="background: linear-gradient(145deg, #f8f9fc, #e8eaf0);">
+          <svg width="24" height="24" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="88" fill="none" stroke="#c8ccd4" stroke-width="4"/>
+            <path d="M 32 118 Q 50 60, 78 72 T 118 42" fill="none" stroke="#3b82f6" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="118" cy="42" r="10" fill="#3b82f6"/>
+          </svg>
+        </div>
+        <span>32px</span>
+      </div>
+      <div class="size-preview">
+        <div class="mini-frame sm16" style="background: linear-gradient(145deg, #f8f9fc, #e8eaf0);">
+          <svg width="14" height="14" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="88" fill="none" stroke="#c8ccd4" stroke-width="6"/>
+            <path d="M 32 118 Q 50 60, 78 72 T 118 42" fill="none" stroke="#3b82f6" stroke-width="12" stroke-linecap="round"/>
+            <circle cx="118" cy="42" r="14" fill="#3b82f6"/>
+          </svg>
+        </div>
+        <span>16px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Variant 2: Dark theme — cyan trail -->
+  <div class="icon-card">
+    <div class="icon-frame dark">
+      <svg width="300" height="300" viewBox="0 0 180 180" fill="none">
+        <circle cx="90" cy="90" r="88" fill="none" stroke="#2a2d45" stroke-width="2"/>
+        <ellipse cx="90" cy="90" rx="88" ry="28" fill="none" stroke="#252840" stroke-width="1.2"/>
+        <ellipse cx="90" cy="90" rx="28" ry="88" fill="none" stroke="#252840" stroke-width="1.2"/>
+        <ellipse cx="90" cy="52" rx="75" ry="23" fill="none" stroke="#22253c" stroke-width="0.8"/>
+        <ellipse cx="90" cy="128" rx="75" ry="23" fill="none" stroke="#22253c" stroke-width="0.8"/>
+        <path d="M 28 112 Q 46 52, 74 64 T 112 36" class="packet-trail" stroke="#06b6d4" stroke-width="4"/>
+        <path d="M 112 36 Q 142 14, 122 58 T 96 100" class="packet-trail" stroke="#06b6d4" stroke-width="2.5" stroke-dasharray="5 7" opacity="0.35"/>
+        <circle cx="112" cy="36" r="6" fill="#22d3ee">
+          <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="112" cy="36" r="11" fill="none" stroke="#22d3ee" stroke-width="1" opacity="0.4">
+          <animate attributeName="r" values="11;18;11" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.4;0;0.4" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="28" cy="112" r="4" fill="#06b6d4" opacity="0.6"/>
+        <circle cx="74" cy="64" r="4" fill="#06b6d4" opacity="0.8"/>
+        <circle cx="96" cy="100" r="3.5" fill="none" stroke="#3a3d55" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <span class="icon-label">Dark — Cyan Trail</span>
+    <div class="size-previews">
+      <div class="size-preview">
+        <div class="mini-frame sm48" style="background: linear-gradient(145deg, #1a1b2e, #0d0e1a);">
+          <svg width="36" height="36" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="88" fill="none" stroke="#2a2d45" stroke-width="3"/>
+            <path d="M 28 112 Q 46 52, 74 64 T 112 36" fill="none" stroke="#06b6d4" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="112" cy="36" r="8" fill="#22d3ee"/>
+          </svg>
+        </div>
+        <span>48px</span>
+      </div>
+      <div class="size-preview">
+        <div class="mini-frame sm32" style="background: linear-gradient(145deg, #1a1b2e, #0d0e1a);">
+          <svg width="24" height="24" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="88" fill="none" stroke="#2a2d45" stroke-width="4"/>
+            <path d="M 28 112 Q 46 52, 74 64 T 112 36" fill="none" stroke="#06b6d4" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="112" cy="36" r="10" fill="#22d3ee"/>
+          </svg>
+        </div>
+        <span>32px</span>
+      </div>
+      <div class="size-preview">
+        <div class="mini-frame sm16" style="background: linear-gradient(145deg, #1a1b2e, #0d0e1a);">
+          <svg width="14" height="14" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="88" fill="none" stroke="#2a2d45" stroke-width="6"/>
+            <path d="M 28 112 Q 46 52, 74 64 T 112 36" fill="none" stroke="#06b6d4" stroke-width="12" stroke-linecap="round"/>
+            <circle cx="112" cy="36" r="14" fill="#22d3ee"/>
+          </svg>
+        </div>
+        <span>16px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Variant 3: Accent — indigo + green gradient -->
+  <div class="icon-card">
+    <div class="icon-frame accent">
+      <svg width="300" height="300" viewBox="0 0 180 180" fill="none">
+        <defs>
+          <linearGradient id="trail-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#6366f1"/>
+            <stop offset="100%" stop-color="#22c55e"/>
+          </linearGradient>
+        </defs>
+        <circle cx="90" cy="90" r="88" fill="none" stroke="#2e2b5f" stroke-width="2"/>
+        <ellipse cx="90" cy="90" rx="88" ry="28" fill="none" stroke="#282555" stroke-width="1.2"/>
+        <ellipse cx="90" cy="90" rx="28" ry="88" fill="none" stroke="#282555" stroke-width="1.2"/>
+        <ellipse cx="90" cy="52" rx="75" ry="23" fill="none" stroke="#25224e" stroke-width="0.8"/>
+        <ellipse cx="90" cy="128" rx="75" ry="23" fill="none" stroke="#25224e" stroke-width="0.8"/>
+        <path d="M 30 116 Q 48 55, 80 68 T 120 38" class="packet-trail" stroke="url(#trail-grad)" stroke-width="4"/>
+        <path d="M 120 38 Q 150 15, 130 60 T 98 104" class="packet-trail" stroke="#818cf8" stroke-width="2.5" stroke-dasharray="5 7" opacity="0.3"/>
+        <circle cx="120" cy="38" r="6" fill="#22c55e">
+          <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="120" cy="38" r="11" fill="none" stroke="#22c55e" stroke-width="1" opacity="0.4">
+          <animate attributeName="r" values="11;18;11" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.4;0;0.4" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="30" cy="116" r="4" fill="#6366f1" opacity="0.7"/>
+        <circle cx="80" cy="68" r="4" fill="#818cf8" opacity="0.85"/>
+        <circle cx="98" cy="104" r="3.5" fill="none" stroke="#3b3870" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <span class="icon-label">Accent — Indigo to Green Gradient</span>
+    <div class="size-previews">
+      <div class="size-preview">
+        <div class="mini-frame sm48" style="background: linear-gradient(145deg, #0f172a, #1e1b4b);">
+          <svg width="36" height="36" viewBox="0 0 180 180">
+            <defs><linearGradient id="tg48" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#22c55e"/></linearGradient></defs>
+            <circle cx="90" cy="90" r="88" fill="none" stroke="#2e2b5f" stroke-width="3"/>
+            <path d="M 30 116 Q 48 55, 80 68 T 120 38" fill="none" stroke="url(#tg48)" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="120" cy="38" r="8" fill="#22c55e"/>
+          </svg>
+        </div>
+        <span>48px</span>
+      </div>
+      <div class="size-preview">
+        <div class="mini-frame sm32" style="background: linear-gradient(145deg, #0f172a, #1e1b4b);">
+          <svg width="24" height="24" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="88" fill="none" stroke="#2e2b5f" stroke-width="4"/>
+            <path d="M 30 116 Q 48 55, 80 68 T 120 38" fill="none" stroke="#22c55e" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="120" cy="38" r="10" fill="#22c55e"/>
+          </svg>
+        </div>
+        <span>32px</span>
+      </div>
+      <div class="size-preview">
+        <div class="mini-frame sm16" style="background: linear-gradient(145deg, #0f172a, #1e1b4b);">
+          <svg width="14" height="14" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="88" fill="none" stroke="#2e2b5f" stroke-width="6"/>
+            <path d="M 30 116 Q 48 55, 80 68 T 120 38" fill="none" stroke="#22c55e" stroke-width="12" stroke-linecap="round"/>
+            <circle cx="120" cy="38" r="14" fill="#22c55e"/>
+          </svg>
+        </div>
+        <span>16px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Variant 4: Warm — amber packet (selected) -->
+  <div class="icon-card">
+    <div class="icon-frame warm">
+      <svg width="300" height="300" viewBox="0 0 180 180" fill="none">
+        <circle cx="90" cy="90" r="88" fill="none" stroke="#2a2520" stroke-width="2"/>
+        <ellipse cx="90" cy="90" rx="88" ry="28" fill="none" stroke="#25211c" stroke-width="1.2"/>
+        <ellipse cx="90" cy="90" rx="28" ry="88" fill="none" stroke="#25211c" stroke-width="1.2"/>
+        <ellipse cx="90" cy="52" rx="75" ry="23" fill="none" stroke="#221e19" stroke-width="0.8"/>
+        <ellipse cx="90" cy="128" rx="75" ry="23" fill="none" stroke="#221e19" stroke-width="0.8"/>
+        <path d="M 24 110 Q 42 48, 72 60 T 112 30" class="packet-trail" stroke="#f59e0b" stroke-width="4"/>
+        <path d="M 112 30 Q 145 8, 125 55 T 92 102" class="packet-trail" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="5 7" opacity="0.3"/>
+        <circle cx="112" cy="30" r="6" fill="#fbbf24">
+          <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="112" cy="30" r="11" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.4">
+          <animate attributeName="r" values="11;18;11" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.4;0;0.4" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="24" cy="110" r="4" fill="#f59e0b" opacity="0.6"/>
+        <circle cx="72" cy="60" r="4" fill="#f59e0b" opacity="0.8"/>
+        <circle cx="92" cy="102" r="3.5" fill="none" stroke="#3a3530" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <span class="icon-label">Warm — Amber Packet (selected)</span>
+    <div class="size-previews">
+      <div class="size-preview">
+        <div class="mini-frame sm48" style="background: linear-gradient(145deg, #1c1917, #0c0a09);">
+          <svg width="36" height="36" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="88" fill="none" stroke="#2a2520" stroke-width="3"/>
+            <path d="M 24 110 Q 42 48, 72 60 T 112 30" fill="none" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="112" cy="30" r="8" fill="#fbbf24"/>
+          </svg>
+        </div>
+        <span>48px</span>
+      </div>
+      <div class="size-preview">
+        <div class="mini-frame sm32" style="background: linear-gradient(145deg, #1c1917, #0c0a09);">
+          <svg width="24" height="24" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="88" fill="none" stroke="#2a2520" stroke-width="4"/>
+            <path d="M 24 110 Q 42 48, 72 60 T 112 30" fill="none" stroke="#f59e0b" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="112" cy="30" r="10" fill="#fbbf24"/>
+          </svg>
+        </div>
+        <span>32px</span>
+      </div>
+      <div class="size-preview">
+        <div class="mini-frame sm16" style="background: linear-gradient(145deg, #1c1917, #0c0a09);">
+          <svg width="14" height="14" viewBox="0 0 180 180">
+            <circle cx="90" cy="90" r="88" fill="none" stroke="#2a2520" stroke-width="6"/>
+            <path d="M 24 110 Q 42 48, 72 60 T 112 30" fill="none" stroke="#f59e0b" stroke-width="12" stroke-linecap="round"/>
+            <circle cx="112" cy="30" r="14" fill="#fbbf24"/>
+          </svg>
+        </div>
+        <span>16px</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
