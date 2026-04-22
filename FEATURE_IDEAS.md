@@ -36,7 +36,7 @@ Practice quizzes generated from module content; flashcard review with spaced rep
 
 ### Video playback controls (speed, resume, PiP, quality)
 
-Cannot ship with the current approach — videos open in a dedicated Electron window loading `youtube.com/watch?v=…` without API access. Resume, playback speed, chapter scrubbing, and PiP all require the YouTube IFrame Player API + authenticated session. Would be a major rework (IFrame embed + OAuth flow).
+Partially unblocked since v1.2.0 — optional YouTube sign-in now provides an authenticated session in a partitioned window, which enables resume position and watch history through YouTube natively. However, programmatic control of playback (speed, PiP, chapter scrubbing, quality selection) still requires embedding via the YouTube IFrame Player API rather than loading the full youtube.com page. This remains a major rework but the auth foundation is now in place.
 
 ## Ideas parked
 

@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-04-19
+
+### Added
+
+- Custom application icon (warm amber globe) for all platforms: .icns (macOS),
+  .ico (Windows), .png (Linux), .svg.
+- shadcn/ui component integration — 22 primitives including Sheet, ToggleGroup,
+  AlertDialog, Dialog, Select, Table, RadioGroup, Toast, Chart container, and
+  Badge.
+- Table view and compact list view for the module browser.
+- Sticky search bar with symmetric spacing.
+- Theme-aware loading screen.
+- Chart sub-components: ProgressLineChart, VelocityBarChart,
+  ConfidenceDistribution (replaces monolithic PerformanceCharts).
+- DashboardSections extracted as a dedicated component.
+- 602+ tests across UI components, charts, and utility modules (all coverage
+  thresholds passing).
+- Tests for dateHelpers, helpers, and restored method wrappers.
+
+### Changed
+
+- Migrated all CSS files to Tailwind utilities — core.css (−59%),
+  modules.css (−77%), dashboard.css (−95%), charts.css (−89%), Settings.css
+  (−79%).
+- Replaced inline `getProgressColor` calls with shared `ColorHelpers` import.
+- Extracted `GoalMetricCard` component; deduplicated progress color logic.
+- Deduplicated theme definitions; extracted shared helpers.
+- Removed duplicated legacy lab migration from `progressTracker`.
+- Removed subtle lift hover effects; fixed hardcoded shadow colors.
+- Prettier formatting pass on all new and modified files.
+- Fixed unused variable warnings (prefixed with underscore).
+
+### Fixed
+
+- CI pipeline stability: formatting and unused-variable fixes for all platforms.
+- ModuleDetail alignment in certain themes.
+- Dialog positioning and animation consistency across themes.
+
 ## [1.2.0] - 2026-04-18
 
 ### Added

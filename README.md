@@ -1,10 +1,10 @@
 # CCNA Modules Desktop Application
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)]()
-[![Electron](https://img.shields.io/badge/Electron-39-47848F?logo=electron&logoColor=white)]()
+[![Version](https://img.shields.io/badge/version-1.2.1-blue.svg)]()
+[![Electron](https://img.shields.io/badge/Electron-41-47848F?logo=electron&logoColor=white)]()
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)]()
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-06B6D4?logo=tailwindcss&logoColor=white)]()
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.2-06B6D4?logo=tailwindcss&logoColor=white)]()
 
 A desktop application for organizing and tracking progress through Jeremy's IT Lab CCNA 200-301 course content.
 
@@ -59,14 +59,19 @@ _Choose from 14 beautiful color themes including Nord, Catppuccin, Ayu, Rose Pin
 
 ## Tech Stack
 
-- **Electron 39** - Desktop application framework
+- **Electron 41** - Desktop application framework
 - **React 19** - UI framework with new createRoot API
-- **Tailwind CSS 4.1** - Utility-first CSS framework
-- **shadcn/ui** - Pre-built accessible React components
-- **Webpack 5** - Module bundler
+- **Tailwind CSS 4.2** - Utility-first CSS framework (migrated from custom CSS)
+- **shadcn/ui** - Pre-built accessible React components (22 components)
+- **Radix UI** - Accessible primitives for dialogs, selects, toggles, etc.
+- **Recharts** - Charting library for analytics visualizations
+- **Lucide React** - Icon library
+- **Webpack 5** - Module bundler with code splitting
 - **electron-builder** - Application packaging
 - **ESLint + Prettier** - Code quality and formatting
-- **LocalStorage** - Progress persistence
+- **Jest + Testing Library** - Unit and component testing (600+ tests)
+- **GitHub Actions CI/CD** - Cross-platform build, lint, test, and release pipeline
+- **LocalStorage** - Progress persistence with schema versioning and migrations
 
 ## Installation & Setup
 
@@ -163,22 +168,53 @@ builds each platform on its native runner.
 ```
 CCNA-Modules/
 ├── src/
-│   ├── components/        # React components
+│   ├── components/
+│   │   ├── charts/          # Chart sub-components (ActivityHeatmap, etc.)
+│   │   ├── dashboard/       # Dashboard section layouts
+│   │   ├── settings/        # Settings tabs (About, Data, Resources, Theme, YouTube)
+│   │   ├── ui/              # shadcn/ui primitives (22 components)
+│   │   ├── __tests__/       # Component tests
+│   │   ├── Dashboard.js     # Main dashboard
+│   │   ├── ModuleDetail.js  # Single module view
+│   │   ├── ModuleList.js    # Module browser with table/list views
+│   │   ├── SmartRecommendations.js
+│   │   ├── StudyStreak.js
+│   │   ├── VideoCard.js
+│   │   └── ...              # Other components
 │   ├── data/
-│   │   └── modules.js     # All 63 modules data
-│   ├── utils/             # Utility functions
-│   ├── styles/            # Global CSS files
-│   ├── App.js             # Main React app
-│   └── index.js           # React entry point
+│   │   └── modules.js       # All 63 modules data
+│   ├── lib/
+│   │   └── utils.js         # Shared utility (cn helper)
+│   ├── utils/               # Business logic and helpers
+│   │   ├── __tests__/       # Utility tests
+│   │   ├── activityTracker.js
+│   │   ├── colorHelpers.js
+│   │   ├── constants.js
+│   │   ├── dashboardConfig.js
+│   │   ├── dateHelpers.js
+│   │   ├── goalTracker.js
+│   │   ├── helpers.js
+│   │   ├── migrations.js    # localStorage schema migrations
+│   │   ├── performanceTracker.js
+│   │   ├── progressTracker.js
+│   │   ├── settingsManager.js
+│   │   ├── streakTracker.js
+│   │   └── themes.js        # 14 color theme definitions
+│   ├── styles/              # CSS files (migrating to Tailwind utilities)
+│   ├── App.js               # Main React app
+│   └── index.js             # React entry point
+├── .github/workflows/
+│   └── build.yml            # CI/CD: lint, test, build, release
 ├── public/
 │   └── index.html
-├── resources/             # User-provided lab/flashcard files (not in repo, see Setup)
-├── build/                 # Build assets (icons)
-├── main.js               # Electron main process
-├── preload.js            # Electron preload script
-├── webpack.config.js     # Webpack configuration
+├── resources/               # User-provided lab/flashcard files (not in repo)
+├── build/                   # Build assets (icons: .icns, .ico, .png, .svg)
+├── main.js                  # Electron main process
+├── preload.js               # Electron preload script
+├── webpack.config.js        # Webpack configuration
+├── components.json          # shadcn/ui configuration
 ├── package.json
-└── dist/                 # Webpack build output
+└── dist/                    # Webpack build output
 ```
 
 ## Available Scripts
