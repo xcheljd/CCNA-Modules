@@ -25,7 +25,24 @@ function YoutubeTab() {
     const unsubscribe = window.electronAPI.onYoutubeSigninChanged(payload => {
       setSignedIn(!!payload.signedIn);
     });
-    return unsubscribe;
+
+    // Periodically verify the session hasn't expired server-side (every 5 minutes)
+    const SESSION_CHECK_INTERVAL = 5 * 60 * 1000;
+    const intervalId = setInterval(async () => {
+      try {
+        const result = await window.electronAPI.checkYoutubeSessionExpiry();
+        if (!result.signedIn) {
+          setSignedIn(false);
+        }
+      } catch {
+        // Silently ignore — next interval will retry
+      }
+    }, SESSION_CHECK_INTERVAL);
+
+    return () => {
+      unsubscribe();
+      clearInterval(intervalId);
+    };
   }, []);
 
   const handleSignIn = async () => {

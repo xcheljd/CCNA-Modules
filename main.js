@@ -18,7 +18,8 @@ function isAllowedHostname(urlString, allowedDomains) {
 
 const YOUTUBE_PARTITION = 'persist:youtube-session';
 
-// YouTube treats the session as Chrome only when the Electron identifier is absent from the UA
+// YouTube treats the session as Chrome only when the Electron identifier is absent from the UA.
+// Also strip other Electron-fingerprintable identifiers for robustness.
 function getChromeUserAgent(sess) {
   return sess
     .getUserAgent()
@@ -343,6 +344,7 @@ ipcMain.handle('open-video-window', async (event, { videoId, moduleId: _moduleId
         contextIsolation: true,
         partition: YOUTUBE_PARTITION, // Critical for login persistence
         webSecurity: true,
+        allowRunningInsecureContent: false,
       },
     });
 
@@ -357,7 +359,8 @@ ipcMain.handle('open-video-window', async (event, { videoId, moduleId: _moduleId
 
     // Inject CSS to hide distractions after page loads
     videoWindow.webContents.on('did-finish-load', () => {
-      videoWindow.webContents.insertCSS(`
+      try {
+        videoWindow.webContents.insertCSS(`
         /* Hide top navigation bar elements */
         #start,
         #logo,
@@ -413,30 +416,34 @@ ipcMain.handle('open-video-window', async (event, { videoId, moduleId: _moduleId
           display: block !important;
         }
        `);
+      } catch (cssError) {
+        console.error('Failed to inject YouTube CSS:', cssError.message);
+      }
 
-      // Enable theatre mode by default if not already active
-      videoWindow.webContents.executeJavaScript(`
-        setTimeout(() => {
-          // Check if theater mode is already active
-          const player = document.querySelector('ytd-watch-flexy');
-          const isTheaterMode = player && player.hasAttribute('theater');
-
-          if (!isTheaterMode) {
-            // Theater mode is not active, so click the button
-            const theatreButton = document.querySelector('button[aria-label="Theater mode (t)"]') ||
-                                  document.querySelector('.ytp-size-button[aria-label*="Theater"]') ||
-                                  document.querySelector('button.ytp-size-button');
-            if (theatreButton) {
-              console.log('Activating theater mode...');
-              theatreButton.click();
-            } else {
-              console.log('Theater mode button not found');
+      // Enable theatre mode using MutationObserver instead of fixed timeout
+      try {
+        videoWindow.webContents.executeJavaScript(`
+          (function activateTheaterMode() {
+            function tryActivate() {
+              const player = document.querySelector('ytd-watch-flexy');
+              if (player && player.hasAttribute('theater')) return true;
+              const btn = document.querySelector('button[aria-label="Theater mode (t)"]') ||
+                          document.querySelector('.ytp-size-button[aria-label*="Theater"]') ||
+                          document.querySelector('button.ytp-size-button');
+              if (btn) { btn.click(); return true; }
+              return false;
             }
-          } else {
-            console.log('Theater mode already active');
-          }
-        }, 3000);
-      `);
+            if (tryActivate()) return;
+            const observer = new MutationObserver(function(mutations, obs) {
+              if (tryActivate()) obs.disconnect();
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+            setTimeout(function() { observer.disconnect(); }, 15000);
+          })();
+        `);
+      } catch (jsError) {
+        console.error('Failed to activate theater mode:', jsError.message);
+      }
     });
 
     // Cleanup on close
@@ -534,6 +541,7 @@ ipcMain.handle('open-youtube-signin', async () => {
         contextIsolation: true,
         partition: YOUTUBE_PARTITION,
         webSecurity: true,
+        allowRunningInsecureContent: false,
       },
     });
 
@@ -548,14 +556,11 @@ ipcMain.handle('open-youtube-signin', async () => {
       }
     });
 
-    // Deterministic signal that YouTube has finished its own session handshake:
-    // SAPISID is only written to .youtube.com once the user has an authenticated
-    // YouTube session. Listening for the cookie event avoids load-timing guesses.
-    const onCookieChanged = (_event, cookie, _cause, removed) => {
-      if (removed) return;
-      if (cookie.name !== 'SAPISID') return;
-      const domain = cookie.domain || '';
-      if (!domain.endsWith('youtube.com')) return;
+    let resolved = false;
+
+    function resolveSignIn() {
+      if (resolved) return;
+      resolved = true;
       youtubeSession.cookies.removeListener('changed', onCookieChanged);
       if (mainWindow && !mainWindow.isDestroyed()) {
         mainWindow.webContents.send('youtube-signin-changed', { signedIn: true });
@@ -563,8 +568,37 @@ ipcMain.handle('open-youtube-signin', async () => {
       if (!signinWindow.isDestroyed()) {
         signinWindow.close();
       }
+    }
+
+    // Primary signal: SAPISID cookie written to .youtube.com indicates an authenticated session.
+    const onCookieChanged = (_event, cookie, _cause, removed) => {
+      if (removed) return;
+      if (cookie.name !== 'SAPISID') return;
+      const domain = cookie.domain || '';
+      if (!domain.endsWith('youtube.com')) return;
+      resolveSignIn();
     };
     youtubeSession.cookies.on('changed', onCookieChanged);
+
+    // Fallback: after the sign-in flow redirects back to youtube.com, check for SAPISID
+    // in case the cookie event was missed (e.g. set during a redirect chain).
+    signinWindow.webContents.on('did-navigate', async _event => {
+      if (resolved) return;
+      try {
+        const url = signinWindow.webContents.getURL();
+        if (!url.includes('youtube.com')) return;
+        const cookies = await youtubeSession.cookies.get({
+          domain: '.youtube.com',
+          name: 'SAPISID',
+        });
+        if (cookies.length > 0) {
+          resolveSignIn();
+        }
+      } catch {
+        // Silently ignore -- cookie check is opportunistic
+      }
+    });
+
     signinWindow.on('closed', () => {
       youtubeSession.cookies.removeListener('changed', onCookieChanged);
     });
@@ -611,7 +645,11 @@ ipcMain.handle('youtube-signin-status', async () => {
 ipcMain.handle('youtube-signout', async () => {
   try {
     closeAllVideoWindows();
-    await session.fromPartition(YOUTUBE_PARTITION).clearStorageData();
+    // Clear session cookies/localStorage but preserve autofill credentials
+    // so the user doesn't have to retype email/password on next sign-in.
+    await session.fromPartition(YOUTUBE_PARTITION).clearStorageData({
+      storages: ['cookies', 'localstorage', 'sessionstorage', 'indexdb', 'caches'],
+    });
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.webContents.send('youtube-signin-changed', { signedIn: false });
     }
@@ -619,6 +657,24 @@ ipcMain.handle('youtube-signout', async () => {
   } catch (error) {
     console.error('Error signing out of YouTube:', error);
     return { success: false, error: error.message };
+  }
+});
+
+// Periodically check if the YouTube session has expired server-side and notify the renderer.
+// The renderer calls this IPC; the main process reuses the SAPISID cookie check.
+ipcMain.handle('youtube-check-session-expiry', async () => {
+  try {
+    const cookies = await session
+      .fromPartition(YOUTUBE_PARTITION)
+      .cookies.get({ domain: '.youtube.com', name: 'SAPISID' });
+    const stillSignedIn = cookies.length > 0;
+    if (!stillSignedIn && mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('youtube-signin-changed', { signedIn: false });
+    }
+    return { signedIn: stillSignedIn };
+  } catch (error) {
+    console.error('Error checking YouTube session expiry:', error);
+    return { signedIn: false, error: error.message };
   }
 });
 

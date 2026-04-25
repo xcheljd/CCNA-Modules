@@ -20,6 +20,7 @@ beforeAll(() => {
     openYoutubeSignin: jest.fn().mockResolvedValue({ success: true }),
     getYoutubeSigninStatus: jest.fn().mockResolvedValue({ signedIn: false }),
     signOutYoutube: jest.fn().mockResolvedValue({ success: true }),
+    checkYoutubeSessionExpiry: jest.fn().mockResolvedValue({ signedIn: false }),
     onYoutubeSigninChanged: jest.fn(() => () => {}),
   };
 });

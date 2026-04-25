@@ -39,8 +39,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   signOutYoutube: () => ipcRenderer.invoke('youtube-signout'),
 
+  checkYoutubeSessionExpiry: () => ipcRenderer.invoke('youtube-check-session-expiry'),
+
   onYoutubeSigninChanged: callback => {
-    const listener = (_event, payload) => callback(payload);
+    const listener = (_event, payload) => {
+      if (payload && typeof payload.signedIn === 'boolean') {
+        callback(payload);
+      }
+    };
     ipcRenderer.on('youtube-signin-changed', listener);
     return () => ipcRenderer.removeListener('youtube-signin-changed', listener);
   },
