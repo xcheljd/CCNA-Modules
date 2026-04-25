@@ -1,4 +1,3 @@
-/* eslint-env browser */
 /* global CustomEvent */
 
 import React, { useState, useEffect } from 'react';

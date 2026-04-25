@@ -580,9 +580,9 @@ ipcMain.handle('open-youtube-signin', async () => {
     };
     youtubeSession.cookies.on('changed', onCookieChanged);
 
-    // Fallback: after the sign-in flow redirects back to youtube.com, check for SAPISID
-    // in case the cookie event was missed (e.g. set during a redirect chain).
-    signinWindow.webContents.on('did-navigate', async _event => {
+    // YouTube sets SAPISID asynchronously after page load, not during navigation.
+    // Poll for it when the window is on youtube.com as a fallback.
+    async function pollForSAPISID() {
       if (resolved) return;
       try {
         const url = signinWindow.webContents.getURL();
@@ -595,7 +595,24 @@ ipcMain.handle('open-youtube-signin', async () => {
           resolveSignIn();
         }
       } catch {
-        // Silently ignore -- cookie check is opportunistic
+        // Window may have been destroyed
+      }
+    }
+
+    signinWindow.webContents.on('did-navigate', async _event => {
+      if (resolved) return;
+      if (signinWindow.webContents.getURL().includes('youtube.com')) {
+        setTimeout(pollForSAPISID, 2000);
+        setTimeout(pollForSAPISID, 5000);
+      }
+    });
+
+    signinWindow.webContents.on('did-finish-load', () => {
+      if (resolved) return;
+      if (signinWindow.webContents.getURL().includes('youtube.com')) {
+        setTimeout(pollForSAPISID, 2000);
+        setTimeout(pollForSAPISID, 5000);
+        setTimeout(pollForSAPISID, 10000);
       }
     });
 

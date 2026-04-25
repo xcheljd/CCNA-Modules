@@ -1,4 +1,3 @@
-/* eslint-env browser */
 /* global Blob, URL, FileReader */
 
 import React, { useState } from 'react';

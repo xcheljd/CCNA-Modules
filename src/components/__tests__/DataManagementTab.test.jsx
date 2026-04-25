@@ -1,4 +1,3 @@
-/* eslint-env browser, jest, node */
 /* global queueMicrotask, File */
 
 import React from 'react';
