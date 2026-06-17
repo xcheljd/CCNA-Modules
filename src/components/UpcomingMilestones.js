@@ -5,10 +5,7 @@ import { ColorHelpers } from '@/utils/colorHelpers';
 function UpcomingMilestones({ modules }) {
   const getMilestones = () => {
     const totalModules = modules.length;
-    const completedModules = modules.filter(
-      module => ProgressTracker.getModuleProgress(module) === 100
-    ).length;
-    const overallProgress = (completedModules / totalModules) * 100;
+    const overallProgress = ProgressTracker.getOverallProgress(modules);
 
     const milestoneTargets = [
       { percent: 25, label: 'Quarter Complete', icon: '🎯' },
@@ -19,9 +16,12 @@ function UpcomingMilestones({ modules }) {
 
     return milestoneTargets.map(target => {
       const modulesNeeded = Math.ceil((target.percent / 100) * totalModules);
-      const modulesRemaining = modulesNeeded - completedModules;
+      const modulesRemaining = Math.max(
+        0,
+        modulesNeeded - Math.ceil((overallProgress / 100) * totalModules)
+      );
       const isCompleted = overallProgress >= target.percent;
-      const isNext = !isCompleted && overallProgress < target.percent;
+      const isNext = totalModules > 0 && !isCompleted && overallProgress < target.percent;
 
       return {
         ...target,

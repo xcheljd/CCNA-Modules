@@ -9,6 +9,7 @@ jest.mock('../../utils/progressTracker', () => ({
   default: {
     getModuleProgress: jest.fn(),
     getModuleConfidence: jest.fn(),
+    getOverallProgress: jest.fn(),
   },
 }));
 
@@ -32,6 +33,15 @@ describe('UpcomingMilestones', () => {
     // Default: return 0 progress for all modules
     ProgressTracker.getModuleProgress.mockReturnValue(0);
     ProgressTracker.getModuleConfidence.mockReturnValue(0);
+    // Default: derive overall progress from per-module progress (mirrors the
+    // real ProgressTracker.getOverallProgress implementation) so existing tests
+    // that only mock getModuleProgress keep working. Tests that need a specific
+    // overall value can override this with mockReturnValue/mockImplementation.
+    ProgressTracker.getOverallProgress.mockImplementation(modules => {
+      if (!modules || modules.length === 0) return 0;
+      const sum = modules.reduce((acc, m) => acc + ProgressTracker.getModuleProgress(m), 0);
+      return sum / modules.length;
+    });
   });
 
   // VAL-MILESTONES-001: Renders four milestone markers (25%, 50%, 75%, 100%)
@@ -280,5 +290,66 @@ describe('UpcomingMilestones', () => {
       return percentDivs[0] ? percentDivs[0].textContent : '';
     });
     expect(labels).toEqual(['25%', '50%', '75%', '100%']);
+  });
+
+  // VAL-MILESTONES-009: Partial completion lights up the 25% milestone
+  it('should light up the 25% milestone (and mark 50% as next) when overall progress is 30%', () => {
+    const modules = createModules(10);
+    ProgressTracker.getOverallProgress.mockReturnValue(30);
+
+    const { container } = render(<UpcomingMilestones modules={modules} />);
+
+    const markers = container.querySelectorAll('[class*="min-w-"]');
+    expect(markers).toHaveLength(4);
+
+    // 25% card (index 0) is completed → bg-[hsl(var(--primary)/0.1)]
+    expect(markers[0].className).toContain('--primary');
+    expect(markers[0].className).toContain('0.1)');
+    // 50% card (index 1) is the next one → border-primary (no completed bg).
+    // (The component marks every non-completed milestone below its threshold
+    // as "next", so 50%, 75% and 100% all carry border-primary. We assert the
+    // 50% card specifically since the plan calls it out as the next milestone.)
+    expect(markers[1].className).toContain('border-primary');
+    expect(markers[1].className).not.toContain('0.1)');
+  });
+
+  // VAL-MILESTONES-010: Zero progress shows the 25% milestone as next
+  it('should show no completed milestones and mark the 25% card as next when overall progress is 0%', () => {
+    const modules = createModules(10);
+    ProgressTracker.getOverallProgress.mockReturnValue(0);
+
+    const { container } = render(<UpcomingMilestones modules={modules} />);
+
+    const markers = container.querySelectorAll('[class*="min-w-"]');
+    expect(markers).toHaveLength(4);
+
+    // No card is completed
+    markers.forEach(marker => {
+      expect(marker.className).not.toContain('0.1)');
+    });
+
+    // The 25% card (index 0) is among the "next" milestones
+    expect(markers[0].className).toContain('border-primary');
+  });
+
+  // VAL-MILESTONES-011: Regression — full completion lights up all four cards
+  it('should mark all four milestone cards as completed and render the congratulations banner when overall progress is 100%', () => {
+    const modules = createModules(10);
+    ProgressTracker.getOverallProgress.mockReturnValue(100);
+
+    const { container } = render(<UpcomingMilestones modules={modules} />);
+
+    const markers = container.querySelectorAll('[class*="min-w-"]');
+    expect(markers).toHaveLength(4);
+
+    markers.forEach(marker => {
+      expect(marker.className).toContain('--primary');
+      expect(marker.className).toContain('0.1)');
+    });
+
+    // Congratulations banner renders
+    expect(screen.getByText('Congratulations!')).toBeInTheDocument();
+    expect(screen.getByText("You've completed the entire CCNA course!")).toBeInTheDocument();
+    expect(screen.getByText('🎉')).toBeInTheDocument();
   });
 });
