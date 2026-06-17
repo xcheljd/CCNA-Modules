@@ -19,7 +19,7 @@ function ModuleDetail({
   onModuleSelect,
   onProgressChange,
 }) {
-  const { info } = useToast();
+  const { info, error } = useToast();
   const [labCompletions, setLabCompletions] = useState({});
   const [flashcardsAdded, setFlashcardsAdded] = useState(false);
   const [videoCompletions, setVideoCompletions] = useState({});
@@ -109,11 +109,18 @@ function ModuleDetail({
     onOpenResource('lab', labFile);
   };
 
-  const handleOpenAnki = () => {
-    if (window.electronAPI && window.electronAPI.openAnki) {
-      window.electronAPI.openAnki();
-    } else {
+  const handleOpenAnki = async () => {
+    if (!window.electronAPI || !window.electronAPI.openAnki) {
       info('Opening Anki requires the desktop app. Please install Anki separately.');
+      return;
+    }
+    try {
+      const result = await window.electronAPI.openAnki();
+      if (!result.success) {
+        error(`${result.error}. Please make sure Anki is installed and try launching it manually.`);
+      }
+    } catch (err) {
+      error(`Failed to open Anki: ${err.message || 'Unknown error'}`);
     }
   };
 
