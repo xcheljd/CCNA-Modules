@@ -2,6 +2,50 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
+const themeColors = require('./src/utils/theme-colors.json');
+
+// CSS-variable keys used by the loading screen's first-paint theme script.
+// Only these keys are extracted from the JSON and passed to the HTML template.
+const loadingScreenCssVarKeys = [
+  'primary',
+  'primaryForeground',
+  'background',
+  'foreground',
+  'card',
+  'cardForeground',
+  'popover',
+  'popoverForeground',
+  'secondary',
+  'secondaryForeground',
+  'muted',
+  'mutedForeground',
+  'accent',
+  'accentForeground',
+  'destructive',
+  'destructiveForeground',
+  'border',
+  'input',
+  'ring',
+  'header',
+  'headerForeground',
+  'loading',
+  'loadingForeground',
+  'sidebar',
+  'sidebarForeground',
+];
+
+const loadingScreenThemes = JSON.stringify(
+  Object.fromEntries(
+    Object.entries(themeColors).map(([key, colors]) => {
+      const subset = {};
+      for (const k of loadingScreenCssVarKeys) {
+        if (colors[k]) subset[k] = colors[k];
+      }
+      return [key, subset];
+    })
+  )
+);
+
 module.exports = (env, argv) => {
   const isProduction =
     (argv && argv.mode === 'production') || process.env.NODE_ENV === 'production';
@@ -61,6 +105,7 @@ module.exports = (env, argv) => {
         filename: 'index.html',
         templateParameters: {
           isProduction: isProduction,
+          loadingScreenThemes: loadingScreenThemes,
         },
       }),
       new webpack.DefinePlugin({
