@@ -1,8 +1,12 @@
-import ProgressTracker, { isProgressKey } from '../progressTracker';
+import ProgressTracker, { isProgressKey, __invalidateReadCache } from '../progressTracker';
 
 describe('ProgressTracker', () => {
   beforeEach(() => {
     localStorage.clear();
+    // Tests seed localStorage directly to simulate prior-session state, which
+    // bypasses the write-through cache. Reset the cache so those seeds are
+    // visible to the read methods.
+    __invalidateReadCache();
   });
 
   describe('isProgressKey', () => {
@@ -454,6 +458,69 @@ describe('ProgressTracker', () => {
       ProgressTracker.clearAllProgress();
 
       expect(localStorage.getItem('performance-history')).toBeNull();
+    });
+  });
+
+  describe('read cache', () => {
+    it('returns the same value as a direct localStorage read after a write', () => {
+      ProgressTracker.markVideoComplete(1, 'abc');
+
+      expect(ProgressTracker.isVideoComplete(1, 'abc')).toBe(true);
+      expect(localStorage.getItem('video_1_abc_completed')).toBe('true');
+    });
+
+    it('invalidates on unmarkVideoComplete', () => {
+      ProgressTracker.markVideoComplete(1, 'abc');
+      expect(ProgressTracker.isVideoComplete(1, 'abc')).toBe(true);
+
+      ProgressTracker.unmarkVideoComplete(1, 'abc');
+
+      expect(ProgressTracker.isVideoComplete(1, 'abc')).toBe(false);
+    });
+
+    it('invalidates on clearAllProgress', () => {
+      ProgressTracker.markVideoComplete(7, 'v1');
+      ProgressTracker.markLabComplete(7, 0);
+      ProgressTracker.markFlashcardsAdded(7);
+      ProgressTracker.setModuleConfidence(7, 3);
+
+      ProgressTracker.clearAllProgress();
+
+      expect(ProgressTracker.isVideoComplete(7, 'v1')).toBe(false);
+      expect(ProgressTracker.isLabComplete(7, 0)).toBe(false);
+      expect(ProgressTracker.areFlashcardsAdded(7)).toBe(false);
+      expect(ProgressTracker.getModuleConfidence(7)).toBe(0);
+    });
+
+    it('invalidates on importProgress so directly-written values become visible', () => {
+      // Seed localStorage directly, bypassing the tracker (simulating a value
+      // written by a prior session or another code path).
+      localStorage.setItem('video_5_xyz_completed', 'true');
+
+      // Empty import still triggers cache invalidation.
+      ProgressTracker.importProgress({});
+
+      // The directly-written value is visible through the cache.
+      expect(ProgressTracker.isVideoComplete(5, 'xyz')).toBe(true);
+    });
+
+    it('getModuleProgress returns the correct aggregate after mixed updates', () => {
+      const module = {
+        id: 99,
+        videos: [{ id: 'vid1' }, { id: 'vid2' }],
+        resources: { lab: 'lab.pkt', flashcards: 'cards.apkg' },
+      };
+
+      ProgressTracker.markVideoComplete(99, 'vid1');
+      ProgressTracker.markLabComplete(99, 0);
+
+      // 2 of 4 items complete (1 video + 1 lab out of 2 videos + 1 lab + 1 flashcards).
+      expect(ProgressTracker.getModuleProgress(module)).toBe(50);
+
+      ProgressTracker.markVideoComplete(99, 'vid2');
+
+      // 3 of 4 items complete.
+      expect(ProgressTracker.getModuleProgress(module)).toBe(75);
     });
   });
 });
