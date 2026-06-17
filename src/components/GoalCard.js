@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { differenceInCalendarDays, parseISO } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -110,7 +111,7 @@ function GoalCard({ modules }) {
     );
   }
 
-  const daysRemaining = Math.ceil((new Date(goal.endDate) - new Date()) / (1000 * 60 * 60 * 24));
+  const daysRemaining = Math.max(0, differenceInCalendarDays(parseISO(goal.endDate), new Date()));
 
   return (
     <div className="flex flex-col gap-4">
