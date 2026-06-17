@@ -16,27 +16,62 @@ export function isProgressKey(key) {
   return PROGRESS_KEY_PREFIXES.some(prefix => key.startsWith(prefix));
 }
 
+// In-memory write-through cache for localStorage reads.
+// The cache is invalidated on every write and on bulk operations
+// (clearAllProgress, importProgress). Keyed by the same string passed to
+// localStorage.getItem.
+const readCache = new Map();
+
+function cachedRead(key) {
+  if (readCache.has(key)) return readCache.get(key);
+  const value = localStorage.getItem(key);
+  readCache.set(key, value);
+  return value;
+}
+
+function cachedWrite(key, value) {
+  localStorage.setItem(key, value);
+  readCache.set(key, value);
+}
+
+function cachedRemove(key) {
+  localStorage.removeItem(key);
+  readCache.set(key, null);
+}
+
+function invalidateCache() {
+  readCache.clear();
+}
+
+// Exposed for test isolation only: tests seed localStorage directly to simulate
+// prior sessions, which bypasses the cache. Resetting the cache between tests
+// keeps those direct seeds visible to the read methods. Not intended for
+// production use.
+export function __invalidateReadCache() {
+  invalidateCache();
+}
+
 export const ProgressTracker = {
   // Video progress
   saveVideoProgress(moduleId, videoId, timestamp) {
-    localStorage.setItem(`video_${moduleId}_${videoId}`, timestamp.toString());
+    cachedWrite(`video_${moduleId}_${videoId}`, timestamp.toString());
   },
 
   getVideoProgress(moduleId, videoId) {
-    const progress = localStorage.getItem(`video_${moduleId}_${videoId}`);
+    const progress = cachedRead(`video_${moduleId}_${videoId}`);
     return progress ? parseFloat(progress) : 0;
   },
 
   markVideoComplete(moduleId, videoId) {
-    localStorage.setItem(`video_${moduleId}_${videoId}_completed`, 'true');
+    cachedWrite(`video_${moduleId}_${videoId}_completed`, 'true');
   },
 
   unmarkVideoComplete(moduleId, videoId) {
-    localStorage.removeItem(`video_${moduleId}_${videoId}_completed`);
+    cachedRemove(`video_${moduleId}_${videoId}_completed`);
   },
 
   isVideoComplete(moduleId, videoId) {
-    return localStorage.getItem(`video_${moduleId}_${videoId}_completed`) === 'true';
+    return cachedRead(`video_${moduleId}_${videoId}_completed`) === 'true';
   },
 
   getVideoWatchPercentage(moduleId, videoId, duration) {
@@ -47,15 +82,15 @@ export const ProgressTracker = {
 
   // Lab progress
   markLabComplete(moduleId, labIndex) {
-    localStorage.setItem(`lab_${moduleId}_${labIndex}_completed`, 'true');
+    cachedWrite(`lab_${moduleId}_${labIndex}_completed`, 'true');
   },
 
   unmarkLabComplete(moduleId, labIndex) {
-    localStorage.removeItem(`lab_${moduleId}_${labIndex}_completed`);
+    cachedRemove(`lab_${moduleId}_${labIndex}_completed`);
   },
 
   isLabComplete(moduleId, labIndex) {
-    return localStorage.getItem(`lab_${moduleId}_${labIndex}_completed`) === 'true';
+    return cachedRead(`lab_${moduleId}_${labIndex}_completed`) === 'true';
   },
 
   // Check if all labs in a module are completed
@@ -79,15 +114,15 @@ export const ProgressTracker = {
 
   // Flashcard progress
   markFlashcardsAdded(moduleId) {
-    localStorage.setItem(`flashcards_${moduleId}_added`, 'true');
+    cachedWrite(`flashcards_${moduleId}_added`, 'true');
   },
 
   unmarkFlashcardsAdded(moduleId) {
-    localStorage.removeItem(`flashcards_${moduleId}_added`);
+    cachedRemove(`flashcards_${moduleId}_added`);
   },
 
   areFlashcardsAdded(moduleId) {
-    return localStorage.getItem(`flashcards_${moduleId}_added`) === 'true';
+    return cachedRead(`flashcards_${moduleId}_added`) === 'true';
   },
 
   // Module overall progress
@@ -175,6 +210,8 @@ export const ProgressTracker = {
         localStorage.setItem(key, data[key]);
       }
     });
+    // Bulk writes bypass cachedWrite, so invalidate to force fresh reads.
+    invalidateCache();
   },
 
   // Clear all progress-related data while preserving app settings & theme
@@ -189,6 +226,7 @@ export const ProgressTracker = {
     keysToRemove.forEach(key => {
       localStorage.removeItem(key);
     });
+    invalidateCache();
   },
 
   // Confidence rating (1-5 scale)
@@ -197,16 +235,16 @@ export const ProgressTracker = {
       console.error('Confidence must be between 1 and 5');
       return;
     }
-    localStorage.setItem(`confidence_${moduleId}`, confidence.toString());
+    cachedWrite(`confidence_${moduleId}`, confidence.toString());
   },
 
   getModuleConfidence(moduleId) {
-    const confidence = localStorage.getItem(`confidence_${moduleId}`);
+    const confidence = cachedRead(`confidence_${moduleId}`);
     return confidence ? parseInt(confidence, 10) : 0; // 0 means not rated
   },
 
   clearModuleConfidence(moduleId) {
-    localStorage.removeItem(`confidence_${moduleId}`);
+    cachedRemove(`confidence_${moduleId}`);
   },
 
   // Get modules that need review (low confidence or completed but low confidence)
