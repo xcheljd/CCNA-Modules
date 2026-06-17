@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { format, addDays, subDays } from 'date-fns';
 import GoalCard, { getProgressPercentage } from '../GoalCard';
 import GoalTracker from '../../utils/goalTracker';
 
@@ -165,14 +166,18 @@ describe('GoalCard', () => {
   // VAL-GOALCARD-003: Renders active goal header with type, dates, days remaining
   // =====================================================
   it('should render weekly goal header with type, dates, and days remaining', () => {
-    const goal = createMockGoal({ type: 'weekly' });
+    // Use relative dates so the test is timezone-robust. The default mock goal
+    // has endDate 5 days from "now" (faked system time).
+    const startDate = format(subDays(new Date(), 2), 'yyyy-MM-dd');
+    const endDate = format(addDays(new Date(), 5), 'yyyy-MM-dd');
+    const goal = createMockGoal({ type: 'weekly', startDate, endDate });
     setupMocks({ goal, completion: 40 });
 
     render(<GoalCard modules={mockModules} />);
 
     expect(screen.getByText('Weekly Goal')).toBeInTheDocument();
-    expect(screen.getByText(/2025-01-13 to 2025-01-20/)).toBeInTheDocument();
-    // Days remaining: (2025-01-20 - 2025-01-15) = 5 days
+    expect(screen.getByText(new RegExp(`${startDate} to ${endDate}`))).toBeInTheDocument();
+    // differenceInCalendarDays between endDate (5 days from now) and today = 5
     expect(screen.getByText(/5 days left/)).toBeInTheDocument();
   });
 
@@ -512,16 +517,60 @@ describe('GoalCard', () => {
   });
 
   it('should calculate days remaining correctly', () => {
+    // Use relative dates so the test is timezone-robust.
     const goal = createMockGoal({
-      startDate: '2025-01-13',
-      endDate: '2025-01-22', // 7 days from Jan 15
+      startDate: format(subDays(new Date(), 2), 'yyyy-MM-dd'),
+      endDate: format(addDays(new Date(), 7), 'yyyy-MM-dd'), // 7 days from now
     });
     setupMocks({ goal, completion: 20 });
 
     render(<GoalCard modules={mockModules} />);
 
-    // (2025-01-22 - 2025-01-15) / (1000*60*60*24) = 7 days, Math.ceil(7) = 7
+    // differenceInCalendarDays(endDate 7 days from now, today) = 7
     expect(screen.getByText(/7 days left/)).toBeInTheDocument();
+  });
+
+  // =====================================================
+  // daysRemaining midnight edge case (Plan 005)
+  // =====================================================
+
+  // VAL-GOALCARD-DAYS-001: daysRemaining shows correct count 3 days before end date
+  it('should show correct daysRemaining 3 days before end date', () => {
+    const goal = createMockGoal({
+      endDate: format(addDays(new Date(), 3), 'yyyy-MM-dd'),
+    });
+    setupMocks({ goal, completion: 20 });
+
+    render(<GoalCard modules={mockModules} />);
+
+    expect(screen.getByText(/3 days left/)).toBeInTheDocument();
+  });
+
+  // VAL-GOALCARD-DAYS-002: daysRemaining shows 0 on the end date itself
+  it('should show 0 daysRemaining on the end date itself', () => {
+    const goal = createMockGoal({
+      endDate: format(new Date(), 'yyyy-MM-dd'),
+    });
+    setupMocks({ goal, completion: 20 });
+
+    render(<GoalCard modules={mockModules} />);
+
+    // Goal is still active on its end date; should show 0, not negative or undefined
+    expect(screen.getByText(/0 days left/)).toBeInTheDocument();
+  });
+
+  // VAL-GOALCARD-DAYS-003: daysRemaining clamps to 0 for a past-due goal
+  it('should clamp daysRemaining to 0 for a past-due goal', () => {
+    const goal = createMockGoal({
+      endDate: format(subDays(new Date(), 2), 'yyyy-MM-dd'),
+    });
+    setupMocks({ goal, completion: 20 });
+
+    render(<GoalCard modules={mockModules} />);
+
+    // Past-due goal should show 0, not -2
+    expect(screen.getByText(/0 days left/)).toBeInTheDocument();
+    expect(screen.queryByText(/-2 days left/)).not.toBeInTheDocument();
   });
 
   it('should render metric cards with progress bars', () => {
