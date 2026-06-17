@@ -162,7 +162,13 @@ ipcMain.handle('open-anki', async () => {
       ankiPath = 'anki';
     }
 
-    await shell.openPath(ankiPath);
+    const errorMessage = await shell.openPath(ankiPath);
+    if (errorMessage) {
+      return {
+        success: false,
+        error: `Could not open Anki: ${errorMessage}`,
+      };
+    }
     return { success: true };
   } catch (error) {
     return { success: false, error: error.message };
@@ -188,8 +194,16 @@ ipcMain.handle('open-resource', async (event, filename) => {
     // Check if file exists
     await fs.promises.access(filePath);
 
-    // Open file with default application
-    await shell.openPath(filePath);
+    // Open file with default application.
+    // shell.openPath resolves with '' on success or an error string on failure
+    // (it does not reject).
+    const errorMessage = await shell.openPath(filePath);
+    if (errorMessage) {
+      return {
+        success: false,
+        error: `Could not open file: ${errorMessage}`,
+      };
+    }
     return { success: true };
   } catch (error) {
     return { success: false, error: error.message };
