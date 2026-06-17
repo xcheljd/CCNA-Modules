@@ -1,8 +1,18 @@
-import ProgressTracker from '../progressTracker';
+import ProgressTracker, { isProgressKey } from '../progressTracker';
 
 describe('ProgressTracker', () => {
   beforeEach(() => {
     localStorage.clear();
+  });
+
+  describe('isProgressKey', () => {
+    it('recognizes performance-history as a progress key', () => {
+      expect(isProgressKey('performance-history')).toBe(true);
+    });
+
+    it('does not recognize the obsolete performance-data key', () => {
+      expect(isProgressKey('performance-data')).toBe(false);
+    });
   });
 
   describe('video completion', () => {
@@ -367,6 +377,14 @@ describe('ProgressTracker', () => {
       expect(exported['confidence_1']).toBe('4');
     });
 
+    it('should include performance-history data in export', () => {
+      localStorage.setItem('performance-history', JSON.stringify({ daily: [] }));
+
+      const exported = ProgressTracker.exportProgress();
+
+      expect(exported['performance-history']).toBeDefined();
+    });
+
     it('should import progress data', () => {
       const data = {
         video_1_v1_completed: 'true',
@@ -428,6 +446,14 @@ describe('ProgressTracker', () => {
       expect(localStorage.getItem('lab_1_0_completed')).toBeNull();
       expect(localStorage.getItem('flashcards_1_added')).toBeNull();
       expect(localStorage.getItem('confidence_1')).toBeNull();
+    });
+
+    it('should remove performance-history on clear', () => {
+      localStorage.setItem('performance-history', JSON.stringify({ daily: [] }));
+
+      ProgressTracker.clearAllProgress();
+
+      expect(localStorage.getItem('performance-history')).toBeNull();
     });
   });
 });

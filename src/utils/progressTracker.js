@@ -9,7 +9,7 @@ export const PROGRESS_KEY_PREFIXES = [
   'last_watched',
   'study-streak',
   'learning-goals',
-  'performance-data',
+  'performance-history',
 ];
 
 export function isProgressKey(key) {
