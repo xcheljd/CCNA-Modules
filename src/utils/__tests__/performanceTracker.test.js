@@ -392,9 +392,138 @@ describe('PerformanceTracker', () => {
       expect(result[1].date).toBe('2025-01-14');
       expect(result[1].overallProgress).toBe(50);
       expect(result[1].modulesCompleted).toBe(5);
-      // Third day: 2025-01-15 (no data → zeroed)
+      // Third day: 2025-01-15 (no data → carries forward 2025-01-14's totals)
       expect(result[2].date).toBe('2025-01-15');
-      expect(result[2].overallProgress).toBe(0);
+      expect(result[2].overallProgress).toBe(50);
+      expect(result[2].modulesCompleted).toBe(5);
+    });
+
+    it('carries forward across multiple consecutive missing days', () => {
+      const entries = [
+        {
+          date: '2025-01-13',
+          overallProgress: 30,
+          modulesCompleted: 3,
+          videosCompleted: 6,
+          labsCompleted: 2,
+          flashcardsAdded: 1,
+          avgConfidence: 3.0,
+        },
+      ];
+      localStorage.setItem(
+        'performance-history',
+        JSON.stringify({
+          daily: entries,
+          weekly: [],
+          lastSnapshotDate: '2025-01-13',
+        })
+      );
+
+      const result = PerformanceTracker.getRecentPerformance(5);
+
+      expect(result).toHaveLength(5);
+      // Days before the first snapshot remain zeroed.
+      expect(result[0].date).toBe('2025-01-11');
+      expect(result[0].overallProgress).toBe(0);
+      expect(result[0].modulesCompleted).toBe(0);
+      expect(result[1].date).toBe('2025-01-12');
+      expect(result[1].overallProgress).toBe(0);
+      expect(result[1].modulesCompleted).toBe(0);
+      // Real snapshot on Jan 13.
+      expect(result[2].date).toBe('2025-01-13');
+      expect(result[2].overallProgress).toBe(30);
+      expect(result[2].modulesCompleted).toBe(3);
+      // Carried forward to Jan 14 and Jan 15.
+      expect(result[3].date).toBe('2025-01-14');
+      expect(result[3].overallProgress).toBe(30);
+      expect(result[3].modulesCompleted).toBe(3);
+      expect(result[4].date).toBe('2025-01-15');
+      expect(result[4].overallProgress).toBe(30);
+      expect(result[4].modulesCompleted).toBe(3);
+    });
+
+    it('updates lastSeen when a later snapshot supersedes an earlier one', () => {
+      const entries = [
+        {
+          date: '2025-01-12',
+          overallProgress: 20,
+          modulesCompleted: 2,
+          videosCompleted: 4,
+          labsCompleted: 1,
+          flashcardsAdded: 1,
+          avgConfidence: 2.5,
+        },
+        {
+          date: '2025-01-14',
+          overallProgress: 60,
+          modulesCompleted: 6,
+          videosCompleted: 12,
+          labsCompleted: 3,
+          flashcardsAdded: 2,
+          avgConfidence: 4.0,
+        },
+      ];
+      localStorage.setItem(
+        'performance-history',
+        JSON.stringify({
+          daily: entries,
+          weekly: [],
+          lastSnapshotDate: '2025-01-14',
+        })
+      );
+
+      const result = PerformanceTracker.getRecentPerformance(5);
+
+      expect(result).toHaveLength(5);
+      // Jan 11: before first snapshot → zeros.
+      expect(result[0].date).toBe('2025-01-11');
+      expect(result[0].overallProgress).toBe(0);
+      expect(result[0].modulesCompleted).toBe(0);
+      // Jan 12: real snapshot (20% / 2).
+      expect(result[1].date).toBe('2025-01-12');
+      expect(result[1].overallProgress).toBe(20);
+      expect(result[1].modulesCompleted).toBe(2);
+      // Jan 13: carried forward from Jan 12.
+      expect(result[2].date).toBe('2025-01-13');
+      expect(result[2].overallProgress).toBe(20);
+      expect(result[2].modulesCompleted).toBe(2);
+      // Jan 14: real snapshot supersedes (60% / 6).
+      expect(result[3].date).toBe('2025-01-14');
+      expect(result[3].overallProgress).toBe(60);
+      expect(result[3].modulesCompleted).toBe(6);
+      // Jan 15: carried forward from Jan 14.
+      expect(result[4].date).toBe('2025-01-15');
+      expect(result[4].overallProgress).toBe(60);
+      expect(result[4].modulesCompleted).toBe(6);
+    });
+
+    it('gives each returned entry its own date string and object identity', () => {
+      const entries = [
+        {
+          date: '2025-01-14',
+          overallProgress: 50,
+          modulesCompleted: 5,
+          videosCompleted: 10,
+          labsCompleted: 3,
+          flashcardsAdded: 2,
+          avgConfidence: 3.5,
+        },
+      ];
+      localStorage.setItem(
+        'performance-history',
+        JSON.stringify({
+          daily: entries,
+          weekly: [],
+          lastSnapshotDate: '2025-01-14',
+        })
+      );
+
+      const result = PerformanceTracker.getRecentPerformance(3);
+
+      expect(result[1].date).toBe('2025-01-14');
+      expect(result[2].date).toBe('2025-01-15');
+      // Different object identities: mutating one must not affect the other.
+      expect(result[1]).not.toBe(result[2]);
     });
 
     it('returns entries ordered oldest to newest', () => {

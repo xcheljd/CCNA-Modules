@@ -88,31 +88,43 @@ export const PerformanceTracker = {
   // Get last N days of performance data
   getRecentPerformance(days = 30) {
     const today = new Date();
-    const startDate = format(subDays(today, days - 1), 'yyyy-MM-dd');
-    const endDate = format(today, 'yyyy-MM-dd');
 
-    const data = this.getPerformanceRange(startDate, endDate);
-
-    // Fill in missing days with previous values or zeros
     const allDays = eachDayOfInterval({
       start: subDays(today, days - 1),
       end: today,
     });
 
+    // Index existing snapshots by date for O(1) lookup.
+    const data = this.getPerformanceRange(
+      format(subDays(today, days - 1), 'yyyy-MM-dd'),
+      format(today, 'yyyy-MM-dd')
+    );
+    const byDate = new Map(data.map(entry => [entry.date, entry]));
+
+    // Walk oldest -> newest, carrying forward the last seen snapshot so
+    // missing days inherit the prior cumulative totals instead of dropping
+    // to zero. Days before the first snapshot remain zeroed (no progress
+    // had been recorded yet).
+    let lastSeen = null;
     return allDays.map(date => {
       const dateStr = format(date, 'yyyy-MM-dd');
-      const existing = data.find(d => d.date === dateStr);
-      return (
-        existing || {
-          date: dateStr,
-          overallProgress: 0,
-          modulesCompleted: 0,
-          videosCompleted: 0,
-          labsCompleted: 0,
-          flashcardsAdded: 0,
-          avgConfidence: 0,
-        }
-      );
+      const existing = byDate.get(dateStr);
+      if (existing) {
+        lastSeen = existing;
+        return existing;
+      }
+      if (lastSeen) {
+        return { ...lastSeen, date: dateStr };
+      }
+      return {
+        date: dateStr,
+        overallProgress: 0,
+        modulesCompleted: 0,
+        videosCompleted: 0,
+        labsCompleted: 0,
+        flashcardsAdded: 0,
+        avgConfidence: 0,
+      };
     });
   },
 
