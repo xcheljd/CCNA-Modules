@@ -15,6 +15,7 @@ import { Save, Download, Upload, Trash2, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import ProgressTracker, { isProgressKey } from '../../utils/progressTracker';
 import SettingsManager from '../../utils/settingsManager';
+import { Migrations } from '../../utils/migrations';
 
 function DataManagementTab() {
   const { success, error, info } = useToast();
@@ -28,6 +29,7 @@ function DataManagementTab() {
         exportVersion: '1.0',
         exportDate: new Date().toISOString(),
         appVersion: '1.0.0',
+        schemaVersion: Migrations.getCurrentVersion(),
         data: {
           progress: {},
           settings: SettingsManager.getSettings(),
@@ -154,6 +156,13 @@ function DataManagementTab() {
           localStorage.setItem('defaultView', importData.data.preferences.defaultView);
         }
       }
+
+      // Treat imported progress as version-unknown and advance it through every
+      // migration. Each migration is idempotent (see migrations.js), so already-
+      // migrated data is unaffected. This protects against a future non-idempotent
+      // migration re-firing against already-migrated imported data on next launch.
+      Migrations.setCurrentVersion(0);
+      Migrations.runMigrations();
 
       success('Import successful! Refresh to see changes', { duration: 5000 });
     } catch (err) {
