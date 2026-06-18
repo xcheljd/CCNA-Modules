@@ -285,13 +285,16 @@ ipcMain.handle('reset-resources-path', async () => {
 // Open external URL in default browser
 ipcMain.handle('open-external-url', async (event, url) => {
   try {
-    // Validate URL: only allow https: and http: protocols
+    // Validate URL: only allow https: protocol
     if (typeof url !== 'string') {
       return { success: false, error: 'Invalid URL: expected a string' };
     }
     const parsed = new URL(url);
-    if (!['https:', 'http:'].includes(parsed.protocol)) {
-      return { success: false, error: `Protocol not allowed: ${parsed.protocol}` };
+    if (parsed.protocol !== 'https:') {
+      return {
+        success: false,
+        error: `Protocol not allowed: ${parsed.protocol}. Only HTTPS is allowed.`,
+      };
     }
     await shell.openExternal(url);
     return { success: true };
