@@ -186,6 +186,45 @@ describe('SmartRecommendations', () => {
     expect(screen.queryByText('Maintain Your Streak')).not.toBeInTheDocument();
   });
 
+  // VAL-SMARTREC-016: Streak recommendation shows when all modules complete
+  it('should show "Maintain Your Streak" when all modules are complete and streak is at risk', () => {
+    const modules = createModules(3);
+    setupMocks({
+      // Every module at 100% — no incomplete module to recommend
+      progressMap: { 1: 100, 2: 100, 3: 100 },
+      defaultProgress: 100,
+      // Active streak, last studied yesterday (today is 2025-01-15 per fake timer)
+      streakInfo: { currentStreak: 5, longestStreak: 10, lastStudyDate: '2025-01-14' },
+    });
+
+    render(<SmartRecommendations modules={modules} onModuleSelect={jest.fn()} />);
+
+    expect(screen.getByText('Maintain Your Streak')).toBeInTheDocument();
+    expect(screen.getByText(/You're on a 5-day streak!/)).toBeInTheDocument();
+  });
+
+  // VAL-SMARTREC-017: Streak card renders with default cursor when no module attached
+  it('should render streak card with default cursor when course is complete', () => {
+    const modules = createModules(3);
+    const onModuleSelect = jest.fn();
+
+    setupMocks({
+      progressMap: { 1: 100, 2: 100, 3: 100 },
+      defaultProgress: 100,
+      streakInfo: { currentStreak: 5, longestStreak: 10, lastStudyDate: '2025-01-14' },
+    });
+
+    render(<SmartRecommendations modules={modules} onModuleSelect={onModuleSelect} />);
+
+    const streakCard = screen.getByText('Maintain Your Streak').closest('[style*="cursor"]');
+    expect(streakCard).toBeInTheDocument();
+    // No arrow indicator on a non-clickable card
+    expect(streakCard.querySelector('.text-lg')).toBeNull();
+    // Clicking should not navigate
+    fireEvent.click(streakCard);
+    expect(onModuleSelect).not.toHaveBeenCalled();
+  });
+
   // VAL-SMARTREC-008: Recommendations sorted by priority, max 4
   it('should sort recommendations by descending priority and limit to 4', () => {
     const modules = createModules(5);

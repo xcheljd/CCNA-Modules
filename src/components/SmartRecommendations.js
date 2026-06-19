@@ -78,10 +78,12 @@ function buildRecommendations(modules) {
     });
   }
 
-  // Study streak motivation
+  // Study streak motivation.
+  // The card does NOT depend on nextIncomplete — a user who has finished
+  // the entire course still has a streak worth maintaining.
   const streakInfo = StreakTracker.getStreakInfo();
   const currentStreak = streakInfo.currentStreak || 0;
-  if (currentStreak > 0 && nextIncomplete) {
+  if (currentStreak > 0) {
     const today = format(new Date(), 'yyyy-MM-dd');
     const lastStudyDate = streakInfo.lastStudyDate;
     const isToday = lastStudyDate === today;
