@@ -1,5 +1,5 @@
 // Performance tracking utilities for historical data and analytics
-import { format, subDays, startOfWeek, endOfWeek, eachDayOfInterval } from 'date-fns';
+import { format, subDays, eachDayOfInterval } from 'date-fns';
 import { getTodayDate as getTodayDateFn } from './dateHelpers';
 import ProgressTracker from './progressTracker';
 
@@ -126,44 +126,6 @@ export const PerformanceTracker = {
         avgConfidence: 0,
       };
     });
-  },
-
-  // Calculate weekly aggregated data
-  calculateWeeklyData(_modules) {
-    const today = new Date();
-    const weekStart = startOfWeek(today, { weekStartsOn: 1 }); // Monday
-    const weekEnd = endOfWeek(today, { weekStartsOn: 1 }); // Sunday
-
-    const weekStartStr = format(weekStart, 'yyyy-MM-dd');
-    const weekData = this.getPerformanceRange(weekStartStr, format(weekEnd, 'yyyy-MM-dd'));
-
-    // Deltas require at least two snapshots (baseline + current); one snapshot
-    // means the week just started and weekly progress can't be computed yet.
-    if (weekData.length < 2) {
-      return weekData.length === 1
-        ? {
-            weekStart: weekStartStr,
-            modulesCompletedThisWeek: 0,
-            videosCompletedThisWeek: 0,
-            labsCompletedThisWeek: 0,
-            progressGain: 0,
-            avgConfidence: weekData[0].avgConfidence,
-            insufficientData: true,
-          }
-        : null;
-    }
-
-    const firstDay = weekData[0];
-    const lastDay = weekData[weekData.length - 1];
-
-    return {
-      weekStart: weekStartStr,
-      modulesCompletedThisWeek: lastDay.modulesCompleted - (firstDay.modulesCompleted || 0),
-      videosCompletedThisWeek: lastDay.videosCompleted - (firstDay.videosCompleted || 0),
-      labsCompletedThisWeek: lastDay.labsCompleted - (firstDay.labsCompleted || 0),
-      progressGain: lastDay.overallProgress - (firstDay.overallProgress || 0),
-      avgConfidence: lastDay.avgConfidence,
-    };
   },
 
   // Get modules completed per week (velocity)
