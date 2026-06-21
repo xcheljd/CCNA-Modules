@@ -1,8 +1,12 @@
-import { StreakTracker } from '../streakTracker';
+import { StreakTracker, __invalidateReadCache } from '../streakTracker';
 
 describe('StreakTracker', () => {
   beforeEach(() => {
     localStorage.clear();
+    // Tests seed localStorage directly to simulate prior-session state,
+    // which bypasses the write-through cache. Reset the cache so direct
+    // seeds are visible to the read methods. Mirrors progressTracker.test.js.
+    __invalidateReadCache();
     jest.clearAllMocks();
     jest.useRealTimers();
   });
@@ -646,6 +650,79 @@ describe('StreakTracker', () => {
       StreakTracker.resetStreakData();
 
       expect(localStorage.getItem('study-streak')).toBeNull();
+    });
+  });
+
+  // ============================================================
+  // read cache
+  // ============================================================
+  describe('read cache', () => {
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2025-01-15T12:00:00'));
+    });
+
+    it('returns the same value as a direct localStorage read after a write', () => {
+      StreakTracker.recordStudyActivity('video');
+
+      const data = StreakTracker.getStreakData();
+      const raw = JSON.parse(localStorage.getItem('study-streak'));
+
+      expect(data).toEqual(raw);
+      expect(data.currentStreak).toBe(1);
+    });
+
+    it('invalidates on recordStudyActivity so successive reads see fresh data', () => {
+      StreakTracker.recordStudyActivity('video');
+      expect(StreakTracker.getStreakData().currentStreak).toBe(1);
+
+      StreakTracker.recordStudyActivity('lab');
+      expect(StreakTracker.getStreakData().currentStreak).toBe(1);
+      const today = StreakTracker.getStreakData().streakHistory.find(e => e.date === '2025-01-15');
+      expect(today.activitiesCompleted).toBe(2);
+    });
+
+    it('invalidates on resetStreakData', () => {
+      StreakTracker.recordStudyActivity('video');
+      expect(StreakTracker.getStreakData().currentStreak).toBe(1);
+
+      StreakTracker.resetStreakData();
+
+      const data = StreakTracker.getStreakData();
+      expect(data.currentStreak).toBe(0);
+      expect(data.lastStudyDate).toBeNull();
+      expect(data.streakHistory).toEqual([]);
+    });
+
+    it('invalidates on checkStreakStatus when it resets the streak', () => {
+      localStorage.setItem(
+        'study-streak',
+        JSON.stringify({
+          currentStreak: 5,
+          longestStreak: 10,
+          lastStudyDate: '2025-01-10',
+          streakHistory: [],
+        })
+      );
+      __invalidateReadCache();
+
+      const data = StreakTracker.checkStreakStatus();
+      expect(data.currentStreak).toBe(0);
+    });
+
+    it('sees directly-seeded localStorage values after __invalidateReadCache', () => {
+      localStorage.setItem(
+        'study-streak',
+        JSON.stringify({
+          currentStreak: 7,
+          longestStreak: 7,
+          lastStudyDate: '2025-01-15',
+          streakHistory: [{ date: '2025-01-15', activitiesCompleted: 3 }],
+        })
+      );
+
+      __invalidateReadCache();
+      expect(StreakTracker.getStreakData().currentStreak).toBe(7);
+      expect(StreakTracker.isStreakAtRisk()).toBe(false);
     });
   });
 });
