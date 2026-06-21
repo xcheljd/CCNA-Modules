@@ -45,6 +45,19 @@ describe('GoalTracker', () => {
       expect(firstGoal).toBeDefined();
       expect(firstGoal.type).toBe('weekly');
     });
+
+    it('falls back to monthly for unknown goal type', () => {
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      const goal = GoalTracker.createGoal('custom', {}, []);
+      expect(goal.type).toBe('custom');
+      const today = new Date();
+      const end = new Date(goal.endDate);
+      const daysDiff = Math.round((end - today) / (1000 * 60 * 60 * 24));
+      expect(daysDiff).toBeGreaterThan(20);
+      expect(daysDiff).toBeLessThan(35);
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringMatching(/Unknown goal type/));
+      consoleSpy.mockRestore();
+    });
   });
 
   describe('goal retrieval', () => {
