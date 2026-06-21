@@ -154,7 +154,6 @@ describe('StreakTracker', () => {
           {
             date: '2025-01-15',
             activitiesCompleted: 1,
-            activities: [{ type: 'video', timestamp: '2025-01-15T10:00:00.000Z' }],
           },
         ],
       };
@@ -164,8 +163,8 @@ describe('StreakTracker', () => {
 
       const todayEntry = data.streakHistory.find(e => e.date === '2025-01-15');
       expect(todayEntry.activitiesCompleted).toBe(2);
-      expect(todayEntry.activities).toHaveLength(2);
-      expect(todayEntry.activities[1].type).toBe('lab');
+      // activities array no longer written (migration 1->2 also strips legacy data)
+      expect(todayEntry.activities).toBeUndefined();
     });
 
     it('resets streak to 1 when streak is broken', () => {
@@ -206,13 +205,18 @@ describe('StreakTracker', () => {
       expect(data.streakHistory[0]).toEqual({
         date: '2025-01-15',
         activitiesCompleted: 1,
-        activities: [
-          {
-            type: 'video',
-            timestamp: new Date().toISOString(),
-          },
-        ],
       });
+    });
+
+    it('does not write a per-activity activities array', () => {
+      StreakTracker.recordStudyActivity('video');
+      StreakTracker.recordStudyActivity('lab');
+      StreakTracker.recordStudyActivity('flashcard');
+
+      const data = StreakTracker.getStreakData();
+      const todayEntry = data.streakHistory.find(e => e.date === '2025-01-15');
+      expect(todayEntry.activitiesCompleted).toBe(3);
+      expect(todayEntry.activities).toBeUndefined();
     });
 
     it('trims history to 365 entries when exceeded', () => {
@@ -237,12 +241,6 @@ describe('StreakTracker', () => {
       // The latest entry should be today
       expect(data.streakHistory[364].date).toBe('2025-01-15');
       // The oldest entry should be from 364 days ago (the original first entry was trimmed)
-    });
-
-    it('uses "general" as default activity type', () => {
-      const data = StreakTracker.recordStudyActivity();
-
-      expect(data.streakHistory[0].activities[0].type).toBe('general');
     });
   });
 

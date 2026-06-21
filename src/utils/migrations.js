@@ -38,6 +38,39 @@ const MIGRATIONS = [
     keysToAdd.forEach(({ key, value }) => localStorage.setItem(key, value));
     keysToRemove.forEach(key => localStorage.removeItem(key));
   },
+
+  // Migration 1 -> 2: Strip unused per-activity timestamps from streak history
+  // recordStudyActivity no longer writes the activities[] array (only the
+  // activitiesCompleted counter is read by consumers). This one-shot
+  // migration removes legacy arrays from existing data so the localStorage
+  // blob shrinks immediately rather than over a year of aging out.
+  // Idempotent: re-running on already-clean data is a no-op.
+  function migrate1to2() {
+    const raw = localStorage.getItem('study-streak');
+    if (!raw) return;
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      // Corrupt data is left for streakTracker's own recovery path
+      return;
+    }
+    if (!data || !Array.isArray(data.streakHistory)) return;
+    let changed = false;
+    for (const entry of data.streakHistory) {
+      if (entry && Object.prototype.hasOwnProperty.call(entry, 'activities')) {
+        delete entry.activities;
+        changed = true;
+      }
+    }
+    if (changed) {
+      try {
+        localStorage.setItem('study-streak', JSON.stringify(data));
+      } catch {
+        // Write failure leaves the legacy arrays in place; next launch retries.
+      }
+    }
+  },
 ];
 
 export const Migrations = {

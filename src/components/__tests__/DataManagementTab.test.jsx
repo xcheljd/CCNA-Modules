@@ -115,9 +115,9 @@ describe('DataManagementTab - import pipeline', () => {
     expect(localStorage.getItem('app-settings')).toBe('{"original":true}');
     // 'schema-version' is not in PROGRESS_KEY_PREFIXES, so the attacker's
     // value never enters the progress map. After this plan, applyImport also
-    // resets to 0 and re-runs migrations, ending at version 1 (the current
+    // resets to 0 and re-runs migrations, ending at version 2 (the current
     // schema). The assertion below holds for both reasons.
-    expect(localStorage.getItem('schema-version')).toBe('1');
+    expect(localStorage.getItem('schema-version')).toBe('2');
 
     // Attacker-injected non-progress keys not written
     expect(localStorage.getItem('app-theme')).toBeNull();
@@ -201,8 +201,8 @@ describe('DataManagementTab - import pipeline', () => {
     expect(localStorage.getItem('lab_42_0_completed')).toBe('true');
     // Legacy key removed
     expect(localStorage.getItem('lab_42_completed')).toBeNull();
-    // schema-version reset from 99 to 0, then advanced through migration to 1
-    expect(localStorage.getItem('schema-version')).toBe('1');
+    // schema-version reset from 99 to 0, then advanced through migrations to 2
+    expect(localStorage.getItem('schema-version')).toBe('2');
 
     createSpy.mockRestore();
   });

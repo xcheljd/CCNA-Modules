@@ -44,7 +44,7 @@ export const StreakTracker = {
   },
 
   // Record a study activity (video, lab, or flashcard)
-  recordStudyActivity(activityType = 'general') {
+  recordStudyActivity(_activityType = 'general') {
     const data = this.getStreakData();
     const today = this.getTodayDate();
     const yesterday = this.getYesterdayDate();
@@ -55,21 +55,13 @@ export const StreakTracker = {
       const todayEntry = data.streakHistory.find(entry => entry.date === today);
       if (todayEntry) {
         todayEntry.activitiesCompleted += 1;
-        todayEntry.activities.push({
-          type: activityType,
-          timestamp: new Date().toISOString(),
-        });
       } else {
-        // Create today's entry
+        // Create today's entry (activitiesCompleted only -- per-activity
+        // timestamps were removed as unused; see migration 1->2 for cleanup
+        // of legacy data).
         data.streakHistory.push({
           date: today,
           activitiesCompleted: 1,
-          activities: [
-            {
-              type: activityType,
-              timestamp: new Date().toISOString(),
-            },
-          ],
         });
       }
       this.saveStreakData(data);
@@ -96,16 +88,12 @@ export const StreakTracker = {
     // Update last study date
     data.lastStudyDate = today;
 
-    // Add today to history
+    // Add today to history (activitiesCompleted only -- per-activity
+    // timestamps were removed as unused; see migration 1->2 for cleanup
+    // of legacy data).
     data.streakHistory.push({
       date: today,
       activitiesCompleted: 1,
-      activities: [
-        {
-          type: activityType,
-          timestamp: new Date().toISOString(),
-        },
-      ],
     });
 
     // Keep only last 365 days of history
