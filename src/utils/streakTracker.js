@@ -5,10 +5,47 @@ import {
   getYesterdayDate as getYesterdayDateFn,
 } from './dateHelpers';
 
+// In-memory write-through cache for the study-streak localStorage key.
+// The cache stores the raw string from localStorage.getItem (NOT the
+// parsed object) and is invalidated on every write. All StreakTracker
+// reads and writes MUST go through cachedRead/cachedWrite to maintain
+// consistency. Mirrors the pattern in progressTracker.js.
+const STREAK_KEY = 'study-streak';
+const streakReadCache = new Map();
+
+function cachedRead() {
+  if (streakReadCache.has(STREAK_KEY)) return streakReadCache.get(STREAK_KEY);
+  const value = localStorage.getItem(STREAK_KEY);
+  streakReadCache.set(STREAK_KEY, value);
+  return value;
+}
+
+function cachedWrite(value) {
+  localStorage.setItem(STREAK_KEY, value);
+  streakReadCache.set(STREAK_KEY, value);
+}
+
+function cachedRemove() {
+  localStorage.removeItem(STREAK_KEY);
+  streakReadCache.set(STREAK_KEY, null);
+}
+
+function invalidateCache() {
+  streakReadCache.clear();
+}
+
+// Exposed for test isolation only: tests seed localStorage directly to
+// simulate prior sessions, which bypasses the cache. Resetting the cache
+// between tests keeps those direct seeds visible to the read methods.
+// Not intended for production use.
+export function __invalidateReadCache() {
+  invalidateCache();
+}
+
 export const StreakTracker = {
   // Initialize or get streak data
   getStreakData() {
-    const data = localStorage.getItem('study-streak');
+    const data = cachedRead();
     if (!data) {
       return {
         currentStreak: 0,
@@ -21,7 +58,7 @@ export const StreakTracker = {
       return JSON.parse(data);
     } catch {
       console.error('Corrupted study-streak data, resetting to defaults');
-      localStorage.removeItem('study-streak');
+      cachedRemove();
       return { currentStreak: 0, longestStreak: 0, lastStudyDate: null, streakHistory: [] };
     }
   },
@@ -29,7 +66,7 @@ export const StreakTracker = {
   // Save streak data
   saveStreakData(data) {
     try {
-      localStorage.setItem('study-streak', JSON.stringify(data));
+      cachedWrite(JSON.stringify(data));
     } catch (error) {
       console.error('Error saving streak data:', error);
     }
@@ -197,7 +234,7 @@ export const StreakTracker = {
 
   // Reset all streak data
   resetStreakData() {
-    localStorage.removeItem('study-streak');
+    cachedRemove();
   },
 };
 
