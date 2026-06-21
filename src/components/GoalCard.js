@@ -16,6 +16,11 @@ import GoalModal from './GoalModal';
 import { GridIcon, VideoIcon, LabIcon, FlashcardsIcon, CircularProgress } from './ui/Icons';
 import { ColorHelpers } from '@/utils/colorHelpers';
 
+const GOAL_TYPE_LABELS = {
+  weekly: 'Weekly',
+  monthly: 'Monthly',
+};
+
 const GOAL_METRICS = [
   { icon: GridIcon, label: 'Modules', key: 'modulesCompleted' },
   { icon: VideoIcon, label: 'Videos', key: 'videosWatched' },
@@ -117,7 +122,9 @@ function GoalCard({ modules }) {
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center gap-4">
         <div>
-          <h3 className="m-0">{goal.type === 'weekly' ? 'Weekly' : 'Monthly'} Goal</h3>
+          <h3 className="m-0">
+            {GOAL_TYPE_LABELS[goal.type] ? `${GOAL_TYPE_LABELS[goal.type]} Goal` : 'Goal'}
+          </h3>
           <p className="text-[13px] text-muted-foreground m-0">
             {goal.startDate} to {goal.endDate} &bull; {daysRemaining} days left
           </p>

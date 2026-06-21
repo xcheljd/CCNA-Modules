@@ -1,5 +1,5 @@
 // Learning goals tracking utility using localStorage
-import { format, addDays, addWeeks, addMonths, endOfWeek } from 'date-fns';
+import { format, addWeeks, addMonths, endOfWeek } from 'date-fns';
 import ProgressTracker from './progressTracker';
 
 export const GoalTracker = {
@@ -42,14 +42,13 @@ export const GoalTracker = {
 
     const today = new Date();
     let endDate;
-
     if (type === 'weekly') {
       endDate = endOfWeek(addWeeks(today, 1), { weekStartsOn: 1 }); // End of next Sunday
     } else if (type === 'monthly') {
       endDate = addMonths(today, 1);
     } else {
-      // Custom duration
-      endDate = addDays(today, targets.customDays || 7);
+      console.warn(`Unknown goal type "${type}", falling back to monthly`);
+      endDate = addMonths(today, 1);
     }
 
     // Snapshot current lifetime totals as baseline for delta tracking
