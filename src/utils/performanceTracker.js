@@ -1,5 +1,5 @@
 // Performance tracking utilities for historical data and analytics
-import { format, subDays, eachDayOfInterval } from 'date-fns';
+import { format, subDays, eachDayOfInterval, parseISO, differenceInCalendarDays } from 'date-fns';
 import { getTodayDate as getTodayDateFn } from './dateHelpers';
 import ProgressTracker from './progressTracker';
 
@@ -130,21 +130,49 @@ export const PerformanceTracker = {
 
   // Get modules completed per week (velocity)
   getWeeklyVelocity(weeks = 8) {
+    const today = new Date();
     const velocityData = [];
 
+    // Build a single carry-forward view of the entire window (oldest week's
+    // start through today). This is consistent with getRecentPerformance:
+    // missing days inherit the last seen snapshot's cumulative totals so a
+    // week with sparse data is not undercounted. Previously this method used
+    // getPerformanceRange, which dropped missing days entirely and produced
+    // misleading velocity whenever a week had gaps.
+    const totalDays = weeks * 7;
+    const windowStart = subDays(today, totalDays - 1);
+    const windowStartStr = format(windowStart, 'yyyy-MM-dd');
+    const todayStr = format(today, 'yyyy-MM-dd');
+
+    const allDays = eachDayOfInterval({ start: windowStart, end: today });
+    const realSnapshots = this.getPerformanceRange(windowStartStr, todayStr);
+    const byDate = new Map(realSnapshots.map(entry => [entry.date, entry]));
+    const carryForwardByDate = new Map();
+
+    let lastSeen = null;
+    for (const date of allDays) {
+      const dateStr = format(date, 'yyyy-MM-dd');
+      const existing = byDate.get(dateStr);
+      if (existing) {
+        lastSeen = existing;
+      }
+      if (lastSeen) {
+        carryForwardByDate.set(dateStr, lastSeen);
+      }
+    }
+
     for (let i = weeks - 1; i >= 0; i--) {
-      const weekEnd = subDays(new Date(), i * 7);
+      const weekEnd = subDays(today, i * 7);
       const weekStart = subDays(weekEnd, 6);
 
       const weekStartStr = format(weekStart, 'yyyy-MM-dd');
       const weekEndStr = format(weekEnd, 'yyyy-MM-dd');
 
-      const weekData = this.getPerformanceRange(weekStartStr, weekEndStr);
+      const firstDay = carryForwardByDate.get(weekStartStr);
+      const lastDay = carryForwardByDate.get(weekEndStr);
 
       let modulesCompleted = 0;
-      if (weekData.length >= 2) {
-        const firstDay = weekData[0];
-        const lastDay = weekData[weekData.length - 1];
+      if (firstDay && lastDay) {
         modulesCompleted = Math.max(0, lastDay.modulesCompleted - firstDay.modulesCompleted);
       }
 
@@ -162,21 +190,33 @@ export const PerformanceTracker = {
     const data = this.getPerformanceData();
     if (data.daily.length < 7) return null; // Need at least a week of data
 
-    // Get last 14 days of data
-    const recentData = this.getRecentPerformance(14);
-    const firstDay = recentData[0];
-    const lastDay = recentData[recentData.length - 1];
+    // Compute velocity directly from real snapshots within the last 14 days.
+    // Using getRecentPerformance() here would zero-fill synthetic leading days
+    // (days before the first real snapshot), which inflates the delta and
+    // overstates velocity. Instead, we look at the actual snapshots recorded
+    // in the 14-day window and divide by the number of elapsed days between
+    // the first and last real snapshot (minimum 1 to avoid divide-by-zero).
+    const today = getTodayDateFn();
+    const cutoff = format(subDays(new Date(), 13), 'yyyy-MM-dd');
+    const recentSnapshots = data.daily.filter(entry => entry.date >= cutoff && entry.date <= today);
 
-    if (!firstDay || !lastDay) return null;
+    if (recentSnapshots.length === 0) return null;
 
-    const completedModules = lastDay.modulesCompleted;
+    const firstSnapshot = recentSnapshots[0];
+    const lastSnapshot = recentSnapshots[recentSnapshots.length - 1];
+
+    const completedModules = lastSnapshot.modulesCompleted;
     const remainingModules = totalModules - completedModules;
 
     if (remainingModules <= 0) return 'Completed';
 
-    // Calculate velocity (modules per day)
-    const modulesGain = lastDay.modulesCompleted - firstDay.modulesCompleted;
-    const daysElapsed = 14;
+    const modulesGain = lastSnapshot.modulesCompleted - firstSnapshot.modulesCompleted;
+    // Days between the first and last real snapshot (inclusive). Use parseISO
+    // for timezone-safe parsing of yyyy-MM-dd, then differenceInCalendarDays.
+    const daysElapsed = Math.max(
+      1,
+      differenceInCalendarDays(parseISO(lastSnapshot.date), parseISO(firstSnapshot.date))
+    );
     const velocity = modulesGain / daysElapsed;
 
     if (velocity <= 0) return 'Unknown';

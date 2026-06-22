@@ -173,22 +173,19 @@ export const ProgressTracker = {
 
   // Get last watched video
   getLastWatchedVideo() {
-    const lastWatched = localStorage.getItem('last_watched');
+    const lastWatched = cachedRead('last_watched');
     if (!lastWatched) return null;
     try {
       return JSON.parse(lastWatched);
     } catch {
       console.error('Corrupted last_watched data, clearing');
-      localStorage.removeItem('last_watched');
+      cachedRemove('last_watched');
       return null;
     }
   },
 
   setLastWatchedVideo(moduleId, videoId) {
-    localStorage.setItem(
-      'last_watched',
-      JSON.stringify({ moduleId, videoId, timestamp: Date.now() })
-    );
+    cachedWrite('last_watched', JSON.stringify({ moduleId, videoId, timestamp: Date.now() }));
   },
 
   // Export all progress-related data (without settings or UI-only keys)

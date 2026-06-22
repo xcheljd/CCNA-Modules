@@ -14,12 +14,22 @@ const MIGRATIONS = [
   // to the indexed format (lab_{moduleId}_0_completed). This is the sole migration
   // path -- progressTracker no longer performs per-call migration.
   function migrate0to1() {
-    // Scan for legacy lab keys that progressTracker might not have migrated yet
+    // Snapshot all keys up front. The body of this migration does not mutate
+    // localStorage during iteration (it queues writes into keysToAdd /
+    // keysToRemove and applies them after the loop), but snapshotting the key
+    // list guards against a future edit inside the loop body that does.
+    // Mutating localStorage.length during iteration would otherwise skip or
+    // revisit keys unpredictably.
+    const snapshotKeys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key !== null) snapshotKeys.push(key);
+    }
+
     const keysToRemove = [];
     const keysToAdd = [];
 
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
+    snapshotKeys.forEach(key => {
       // Match legacy format: lab_{moduleId}_completed (no index)
       const match = key.match(/^lab_(\d+)_completed$/);
       if (match && localStorage.getItem(key) === 'true') {
@@ -33,7 +43,7 @@ const MIGRATIONS = [
         }
         keysToRemove.push(key);
       }
-    }
+    });
 
     keysToAdd.forEach(({ key, value }) => localStorage.setItem(key, value));
     keysToRemove.forEach(key => localStorage.removeItem(key));

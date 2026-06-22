@@ -313,6 +313,42 @@ describe('StreakTracker', () => {
       expect(data.currentStreak).toBe(0);
       expect(data.lastStudyDate).toBeNull();
     });
+
+    it('preserves streak when gap is exactly 1 calendar day even if string compare diverges', () => {
+      // Regression for the timezone edge case: parseISO-based day gap of 1
+      // must not be treated as a lapsed streak, even when the legacy string
+      // comparison against getYesterdayDate() would have flagged it. This
+      // guards against a future refactor of dateHelpers that changes how
+      // yesterday is computed.
+      const existing = {
+        currentStreak: 4,
+        longestStreak: 9,
+        lastStudyDate: '2025-01-14',
+        streakHistory: [],
+      };
+      localStorage.setItem('study-streak', JSON.stringify(existing));
+
+      const data = StreakTracker.checkStreakStatus();
+
+      expect(data.currentStreak).toBe(4);
+    });
+
+    it('resets streak when gap is more than 1 calendar day', () => {
+      // Defensive cross-check: even without relying on yesterday string
+      // comparison, a 2-day gap from lastStudyDate to today must reset.
+      const existing = {
+        currentStreak: 7,
+        longestStreak: 12,
+        lastStudyDate: '2025-01-13',
+        streakHistory: [],
+      };
+      localStorage.setItem('study-streak', JSON.stringify(existing));
+
+      const data = StreakTracker.checkStreakStatus();
+
+      expect(data.currentStreak).toBe(0);
+      expect(data.longestStreak).toBe(12);
+    });
   });
 
   // ============================================================

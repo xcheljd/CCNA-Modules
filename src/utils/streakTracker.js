@@ -1,5 +1,5 @@
 // Study streak tracking utility using localStorage
-import { format, subDays } from 'date-fns';
+import { format, subDays, differenceInCalendarDays, parseISO } from 'date-fns';
 import {
   getTodayDate as getTodayDateFn,
   getYesterdayDate as getYesterdayDateFn,
@@ -40,6 +40,25 @@ function invalidateCache() {
 // Not intended for production use.
 export function __invalidateReadCache() {
   invalidateCache();
+}
+
+// Compute the calendar-day gap between the stored lastStudyDate and today.
+// Uses parseISO + differenceInCalendarDays so the comparison is robust to
+// timezone quirks: parsing an 'yyyy-MM-dd' string with new Date() is
+// interpreted as UTC midnight, which can shift to a different calendar day
+// in negative-offset timezones (e.g. America/Los_Angeles). parseISO returns
+// a local-tz Date, and differenceInCalendarDays compares wall-clock days in
+// the same timezone, so the result is unambiguous.
+//
+// Returns Number.POSITIVE_INFINITY when lastStudyDate is missing or malformed.
+function daysSinceLastStudy(lastStudyDate, todayStr) {
+  if (!lastStudyDate) return Number.POSITIVE_INFINITY;
+  const today = parseISO(todayStr);
+  const last = parseISO(lastStudyDate);
+  if (Number.isNaN(today.getTime()) || Number.isNaN(last.getTime())) {
+    return Number.POSITIVE_INFINITY;
+  }
+  return differenceInCalendarDays(today, last);
 }
 
 export const StreakTracker = {
@@ -148,8 +167,23 @@ export const StreakTracker = {
     const today = this.getTodayDate();
     const yesterday = this.getYesterdayDate();
 
-    // If last study was before yesterday, streak is broken
-    if (data.lastStudyDate && data.lastStudyDate !== today && data.lastStudyDate !== yesterday) {
+    if (!data.lastStudyDate) {
+      return data;
+    }
+
+    // Same-day or yesterday: streak is still alive.
+    if (data.lastStudyDate === today || data.lastStudyDate === yesterday) {
+      return data;
+    }
+
+    // Otherwise the streak has lapsed. As a defensive cross-check, also
+    // verify via timezone-safe calendar-day arithmetic (parseISO handles
+    // 'yyyy-MM-dd' correctly in negative-offset timezones where new Date()
+    // would shift it to the prior calendar day). A negative or 0/1 gap
+    // here means the string comparison lied due to a timezone edge case,
+    // and we should not reset the streak.
+    const gap = daysSinceLastStudy(data.lastStudyDate, today);
+    if (gap > 1) {
       data.currentStreak = 0;
       this.saveStreakData(data);
     }

@@ -693,6 +693,52 @@ describe('PerformanceTracker', () => {
 
       expect(result).toHaveLength(8);
     });
+
+    it('uses carry-forward for missing days within a week (no undercounting)', () => {
+      // Regression: previously, getPerformanceRange dropped days without a
+      // real snapshot, so a week where only the last day had a snapshot
+      // (after a gap) computed delta = 0. With carry-forward, the snapshot
+      // from the gap day is inherited, and the delta reflects actual growth.
+      //
+      // Setup: today = Jan 15. Week = Jan 9 - Jan 15.
+      // Jan 9 snapshot: 5 modules (week start baseline).
+      // Jan 13 snapshot: 8 modules (only entry after week start).
+      // Without carry-forward, weekData = [Jan 13 only] → delta = 0.
+      // With carry-forward: firstDay=5 (Jan 9 carry), lastDay=8 (Jan 13 carry to Jan 15) → delta = 3.
+      const entries = [
+        {
+          date: '2025-01-09',
+          overallProgress: 50,
+          modulesCompleted: 5,
+          videosCompleted: 0,
+          labsCompleted: 0,
+          flashcardsAdded: 0,
+          avgConfidence: 0,
+        },
+        {
+          date: '2025-01-13',
+          overallProgress: 80,
+          modulesCompleted: 8,
+          videosCompleted: 0,
+          labsCompleted: 0,
+          flashcardsAdded: 0,
+          avgConfidence: 0,
+        },
+      ];
+      localStorage.setItem(
+        'performance-history',
+        JSON.stringify({
+          daily: entries,
+          weekly: [],
+          lastSnapshotDate: '2025-01-13',
+        })
+      );
+
+      const result = PerformanceTracker.getWeeklyVelocity(1);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].modulesCompleted).toBe(3);
+    });
   });
 
   // ============================================================
@@ -899,6 +945,52 @@ describe('PerformanceTracker', () => {
 
       const result = PerformanceTracker.predictCompletionDate(mockModules, 10);
       expect(result).toBeNull();
+    });
+
+    it('does not inflate velocity when recent data has fewer than 14 real snapshots', () => {
+      // Regression: previously, getRecentPerformance(14) zero-filled synthetic
+      // leading days, and the delta between the first synthetic zero and the
+      // latest real snapshot overstated velocity. Here we provide 7 real
+      // snapshots (enough to pass the < 7 guard) and verify the prediction
+      // uses the actual snapshot delta, not a synthetic-zero baseline.
+      //
+      // Setup: 7 real snapshots Jan 9 -> Jan 15, modules going 3 -> 6.
+      // If the buggy code path were still active, the prediction would treat
+      // Jan 2 (synthetic zero) as the baseline and divide 6 modules over 14
+      // days. The correct path divides 3 modules over 6 elapsed days.
+      const entries = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date('2025-01-15');
+        d.setDate(d.getDate() - i);
+        const dateStr = d.toISOString().split('T')[0];
+        // Modules go from 3 (oldest) to 6 (newest) → 3-module gain
+        const modulesCompleted = 6 - i;
+        entries.push({
+          date: dateStr,
+          overallProgress: modulesCompleted * 10,
+          modulesCompleted,
+          videosCompleted: 0,
+          labsCompleted: 0,
+          flashcardsAdded: 0,
+          avgConfidence: 0,
+        });
+      }
+      localStorage.setItem(
+        'performance-history',
+        JSON.stringify({
+          daily: entries,
+          weekly: [],
+          lastSnapshotDate: '2025-01-15',
+        })
+      );
+
+      const result = PerformanceTracker.predictCompletionDate(mockModules, 10);
+
+      expect(result).toMatch(/^[A-Z][a-z]{2} \d{1,2}, \d{4}$/);
+      // Correct velocity: 6-module gain over 6 elapsed days = 1.0 modules/day.
+      // Remaining: 10 - 6 = 4 modules. daysNeeded = ceil(4 / 1.0) = 4.
+      // Completion date: Jan 15 + 4 = Jan 19, 2025.
+      expect(result).toBe('Jan 19, 2025');
     });
   });
 
