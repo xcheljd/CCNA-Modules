@@ -5,6 +5,60 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2026-06-23
+
+### Added
+
+- Theme parity test that fails CI if `theme-colors.json` and `themes.js`
+  drift out of sync (key sets, theme count, metadata, color values).
+- Shared `CourseCreditContent` component used by both the first-run
+  `WelcomeDialog` and the Settings -> About tab.
+- StreakTracker regression tests for timezone-safe day-gap computation and
+  exact 1-day / >1-day boundary cases.
+- PerformanceTracker regression tests for `predictCompletionDate` (no
+  velocity inflation with <14 real snapshots) and `getWeeklyVelocity`
+  (carry-forward for missing days within a week).
+- Track `AGENTS.md` and `CLAUDE.md` as authoritative repo documentation.
+- 640+ tests across UI components, charts, and utility modules (all coverage
+  thresholds passing).
+
+### Changed
+
+- `predictCompletionDate` now computes velocity from real snapshots within
+  the 14-day window (using `differenceInCalendarDays` on actual snapshot
+  dates) instead of zero-filled synthetic leading days, which previously
+  overstated the completion ETA.
+- `getLastWatchedVideo` / `setLastWatchedVideo` now route through the
+  ProgressTracker write-through cache (`cachedRead` / `cachedWrite` /
+  `cachedRemove`) for consistency with every other read/write path.
+- `getWeeklyVelocity` now uses carry-forward for missing days (mirrors
+  `getRecentPerformance`) so weeks with sparse data are no longer
+  undercounted.
+- `migrate0to1` now snapshots the `localStorage` key list before iterating,
+  guarding against a future in-loop mutation skipping or revisiting keys.
+- `StreakTracker.checkStreakStatus` adds a `parseISO` +
+  `differenceInCalendarDays` defensive cross-check so a timezone edge case
+  cannot falsely reset an active streak.
+- Raised Jest coverage thresholds to match actual coverage.
+- Normalized `package-lock.json` peer-dependency flags.
+
+### Fixed
+
+- Performance charts no longer drop to zero for days without a snapshot:
+  missing days inherit the prior cumulative totals (carry-forward).
+- Goal `daysRemaining` midnight edge case.
+- `UpcomingMilestones` now uses the canonical overall progress calculation.
+- YouTube sign-in auto-close: poll for `SAPISID` after page load rather than
+  relying on navigation events alone.
+- `shell.openPath` errors now propagate for labs and Anki (return value is
+  a string, not a rejection).
+- `performance-history` key now included in progress export / clear.
+- Tightened `open-external-url` IPC handler to HTTPS-only.
+- Removed dead code: `PerformanceTracker.calculateWeeklyData`, unreachable
+  `'custom'` goal type, unused per-activity timestamps in StreakTracker.
+- Hardened YouTube sign-in window: security hardening, auto-close, autofill
+  preservation, and server-side session-expiry detection.
+
 ## [1.2.1] - 2026-04-19
 
 ### Added
